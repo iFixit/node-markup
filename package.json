@@ -1,0 +1,20 @@
+{
+  "name"            : "imagemarkup",
+  "description"     : "iFixit's image markup backend library",
+  "homepage"        : "http://www.ifixit.com/",
+  "author"          : "iFixit",
+  "contributors"    : [
+    {
+      "name"      : "Cedric Wienold",
+      "email"     : "cedric@ifixit.com"
+    }
+  ],
+  "repository"      : {
+    "type"        : "git",
+    "url"         : "git@github.com:iFixit/node-canvas.git"
+  },
+  "dependencies"    : {
+    "fabric"      : "git://github.com/kangax/fabric.js.git"
+  },
+  "version"         : "0.0.1"
+}
