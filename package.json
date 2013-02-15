@@ -14,7 +14,9 @@
     "url"         : "git@github.com:iFixit/node-canvas.git"
   },
   "dependencies"    : {
-    "fabric"      : "git://github.com/kangax/fabric.js.git"
+    "canvas"      : "~1.0.0",
+    "fabric"      : "*",
+    "gm"          : "1.8.x"
   },
   "version"         : "0.0.1"
 }

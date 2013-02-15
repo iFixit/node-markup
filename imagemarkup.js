@@ -1,22 +1,43 @@
 var FS = require('fs');
-var Fabric = require('fabric').fabric,
-    canvas = Fabric.createCanvasForNode(800,600);
+var Fabric = require('fabric').fabric;
+var GM = require('gm');
 
-console.log(canvas);
+var canvas = Fabric.createCanvasForNode(3260,2445);
 
-var rect = new Fabric.Rect({
-  top: 100,
-  left: 100,
-  width: 60,
-  height: 70,
-  fill: 'red'
-});
+var imagePath = __dirname + "/testimage.jpg";
+var imageURL = "http://localhost/test.jpg";
+console.log("Setting background image to " + imagePath);
 
-canvas.add(rect);
+function applyBackground(canvas) {
+  FS.readFile(imagePath, function (err, blob) {
+    if (err) throw err;
 
-var writeStream = FS.createWriteStream('out.jpg'),
-    stream = canvas.createPNGStream();
+    var dimensions;
+    GM(imagePath).size(function (err, size) {
+      if (err) throw err;
+      dimensions = size;
 
-stream.on('data', function(data) {
-  writeStream.write(data);
-});
+      img = {'width': dimensions['width'], 'height': dimensions['height'], 'src':blob};
+
+      Fabric.Image.fromObject(img, function(fimg) {
+        canvas.add(fimg.set('top', img.height/2).set('left',img.width/2));
+
+        writeCanvas(canvas);
+      });
+
+    });
+  });
+}
+
+function writeCanvas(canvas) {
+  var outstream = FS.createWriteStream('out.jpg'),
+      stream = canvas.createJPEGStream({
+        quality: 93
+      });
+
+  stream.on('data', function(chunk) {
+    outstream.write(chunk);
+  });
+}
+
+applyBackground(canvas);
