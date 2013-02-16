@@ -14,9 +14,8 @@
     "url"         : "git@github.com:iFixit/node-canvas.git"
   },
   "dependencies"    : {
-    "canvas"      : "~1.0.0",
-    "fabric"      : "*",
-    "gm"          : "1.8.x"
+    "canvas"      : "git://github.com/LearnBoost/node-canvas.git",
+    "fabric"      : "git://github.com/iFixit/fabric.js.git"
   },
   "version"         : "0.0.1"
 }

@@ -1,6 +1,5 @@
 var FS = require('fs');
 var Fabric = require('fabric').fabric;
-var GM = require('gm');
 
 var json = JSON.parse(process.argv[2]);
 var canvas = Fabric.createCanvasForNode(json['dimensions']['width'],json['dimensions']['height']);
