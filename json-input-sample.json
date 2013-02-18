@@ -7,31 +7,43 @@
     "width": "2588",
     "height": "1941"
   },
-  "instructions": [
-    {
-      "circle": {
-        "from": {
-          "x": "1633",
-          "y": "2140"
-        },
-        "radius": "147",
-        "color": "red"
+  "instructions": {
+    "crop": {
+      "from": {
+        "x": "330",
+        "y": "330"
+      },
+      "size": {
+        "width": "2588",
+        "height": "1941"
       }
     },
-    {
-      "rectangle": {
-        "from": {
-          "x": "815",
-          "y": "1187"
-        },
-        "size": {
-          "width": "520",
-          "height": "350"
-        },
-        "color": "yellow"
+    "draw": [
+      {
+        "circle": {
+          "from": {
+            "x": "1633",
+            "y": "2140"
+          },
+          "radius": "147",
+          "color": "red"
+        }
+      },
+      {
+        "rectangle": {
+          "from": {
+            "x": "811",
+            "y": "1187"
+          },
+          "size": {
+            "width": "520",
+            "height": "350"
+          },
+          "color": "yellow"
+        }
       }
-    }
-  ],
+    ]
+  },
   "sourceFile": ".\/monitor.jpg",
-  "destinationFile": "\/tmp\/monitor_out.jpg"
+  "destinationFile": ".\/out.jpg"
 }
