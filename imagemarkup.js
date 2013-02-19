@@ -282,10 +282,9 @@ function processImage(json) {
                   canvas.add(new Fabric.Circle(circleBorder));
                   canvas.add(new Fabric.Circle(circleShadow));
                   canvas.add(new Fabric.Circle(circle));
-                  //console.log('サークル：実装されていない動作');
                   break;
                 default:
-                  console.log('予期しないシェープ：' + shapeName);
+                  console.error('Unsupported Shape: ' + shapeName);
               }
             }
 
@@ -296,7 +295,7 @@ function processImage(json) {
           //もう処理していたから無視する
           break;
         default:
-          console.log('予期しない動作：' + instruction);
+          console.error('Unsupported Instruction: ' + instruction);
       }
     }
   }
