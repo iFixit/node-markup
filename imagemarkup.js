@@ -23,17 +23,90 @@ if (argv.json && argv.markup) {
   console.error('Invalid usage.');
   usage(-1);
 } else if (argv.json) {
-  var json = JSON.parse(argv.json);
+  json = JSON.parse(argv.json);
+  cleanJSON(json);
 } else if (argv.markup) {
   if (!argv.input || !argv.output) {
     console.error('Invalid usage. Input or output path missing.');
     usage(-1);
   }
-  console.log(argv.markup);
-  process.exit(0);
+  json = convertMarkupToJSON(argv.markup, argv.input, argv.output);
 } else {
   console.error('Invalid uage.');
   usage(-1);
+}
+
+function validateJSON(json, level) {
+  String.prototype.repeat = function (num) {
+    return new Array(num+1).join(this);
+  }
+  if (!level) {
+    console.log("{");
+    validateJSON(json, 1);
+    console.log("}");
+  } else {
+    for (property in json) {
+      console.log("\t".repeat(level) + property + ": " + json[property] + " [" + typeof(json[property]) + "]");
+      if (typeof(json[property]) == 'object') {
+        console.log("\t".repeat(level) + "{");
+        validateJSON(json[property], level+1);
+        console.log("\t".repeat(level) + "}");
+      }
+    }
+  }
+}
+
+/**
+ * Cycles through an object and changes all numeric fields to ints
+ * where necessary.
+ */
+function cleanJSON(json) {
+  for (property in json) {
+
+    if (typeof(json[property]) == 'object') {
+      cleanJSON(json[property]);
+    }
+    else if (property == 'x' || property == 'y' ||
+             property == 'width' || property == 'height' ||
+             property == 'radius') {
+      if (typeof(json[property]) == 'string') {
+        json[property] = parseInt(json[property]);
+      }
+    }
+  }
+}
+
+function convertMarkupToJSON(markup, infile, outfile) {
+  console.log("Converting:");
+  console.log(markup);
+  console.log("Input: " + infile);
+  console.log("Output: " + outfile + "\n");
+
+  var instructions = markup.split(";");
+  for (var i = 0; i < instructions.length; ++i) {
+    if (instructions[i] == '') continue;
+
+    var args = instructions[i].split(",");
+    var command = args[0];
+    switch (command) {
+      case 'crop':
+        var position = args[1].split("x");
+        var dimensions = args[2].split("x");
+
+        console.log(command);
+        console.log(position);
+        console.log(dimensions);
+        break;
+      case 'circle':
+        var position = args[1].split("x");
+        var radius = args[2];
+        var color = args[3];
+      case 'rectangle':
+      default:
+    }
+  }
+
+  process.exit(0);
 }
 
 //Values obtained from contemporary image markup dialog, 2013-02-18
@@ -48,14 +121,14 @@ var colorValues = {
 };
 
 //var json = JSON.parse(process.argv[2]);
-var canvas = Fabric.createCanvasForNode(parseInt(json['finalDimensions']['width']),parseInt(json['finalDimensions']['height']));
+var canvas = Fabric.createCanvasForNode(json['finalDimensions']['width'],json['finalDimensions']['height']);
 
 var imagePath = json['sourceFile'];
 
 var crop = json['instructions']['crop'];
 var imageOffset = crop != "undefined" ?
- {'x':parseInt(crop['from']['x']),
-  'y':parseInt(crop['from']['y'])} :
+ {'x':crop['from']['x'],
+  'y':crop['from']['y']} :
  {'x':0,'y':0};
 
 function applyBackground(canvas) {
@@ -97,11 +170,11 @@ function applyMarkup(canvas) {
                 shape['stroke'] = Math.max(Math.round(json['finalDimensions']['width'] / 300 * 2), 2);
 
                 var rect = {
-                  left: parseInt(shape['from']['x'])-imageOffset['x'],
-                  top: parseInt(shape['from']['y'])-imageOffset['y'],
-                  width: parseInt(shape['size']['width']),
-                  height: parseInt(shape['size']['height']),
-                  strokeWidth: parseInt(shape['stroke']),
+                  left: shape['from']['x']-imageOffset['x'],
+                  top: shape['from']['y']-imageOffset['y'],
+                  width: shape['size']['width'],
+                  height: shape['size']['height'],
+                  strokeWidth: shape['stroke'],
                   stroke: colorValues[shape['color']],
                   fill: 'transparent'
                 }
@@ -116,10 +189,10 @@ function applyMarkup(canvas) {
                 shape['stroke'] = Math.max(Math.round(shape['radius'] / 4), 5);
 
                 var circle = {
-                  left: parseInt(shape['from']['x'])-imageOffset['x'],
-                  top: parseInt(shape['from']['y'])-imageOffset['y'],
-                  radius: parseInt(shape['radius']),
-                  strokeWidth: parseInt(shape['stroke']),
+                  left: shape['from']['x']-imageOffset['x'],
+                  top: shape['from']['y']-imageOffset['y'],
+                  radius: shape['radius'],
+                  strokeWidth: shape['stroke'],
                   stroke: colorValues[shape['color']],
                   fill: 'transparent'
                 };
