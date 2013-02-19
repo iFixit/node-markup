@@ -45,7 +45,7 @@ function processArgs() {
       console.error('Invalid usage. Input or output path missing.');
       usage(-1);
     }
-    json = convertMarkupToJSON(argv.markup, argv.input, argv.output);
+    convertMarkupToJSON(argv.markup, argv.input, argv.output);
   } else {
     console.error('Invalid uage.');
     usage(-1);
