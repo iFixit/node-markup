@@ -14,8 +14,10 @@
     "url"         : "git@github.com:iFixit/node-canvas.git"
   },
   "dependencies"    : {
-    "canvas"      : "git://github.com/LearnBoost/node-canvas.git",
-    "fabric"      : "git://github.com/iFixit/fabric.js.git"
+    "fabric"      : "git://github.com/iFixit/fabric.js.git",
+    "cloneextend" : "git://github.com/shimondoodkin/nodejs-clone-extend.git",
+    "jsdom"       : "0.5.x",
+    "xmldom"      : ">= 0.1.13"
   },
   "version"         : "0.0.1"
 }
