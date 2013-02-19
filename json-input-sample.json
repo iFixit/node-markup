@@ -32,7 +32,7 @@
       {
         "rectangle": {
           "from": {
-            "x": "811",
+            "x": "815",
             "y": "1187"
           },
           "size": {
@@ -45,5 +45,5 @@
     ]
   },
   "sourceFile": ".\/monitor.jpg",
-  "destinationFile": ".\/out.jpg"
+  "destinationFile": ".\/out.json.jpg"
 }
