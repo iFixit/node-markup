@@ -242,46 +242,11 @@ function processImage(json) {
               switch (shapeName) {
                 case 'rectangle':
                   shape = e[shapeName];
-                  shape['stroke'] = Math.max(Math.round(json['finalDimensions']['width'] / 300 * 2), 2);
-
-                  var rect = {
-                    left: shape['from']['x']-imageOffset['x'],
-                    top: shape['from']['y']-imageOffset['y'],
-                    width: shape['size']['width'],
-                    height: shape['size']['height'],
-                    strokeWidth: shape['stroke'],
-                    stroke: colorValues[shape['color']],
-                    fill: 'transparent'
-                  }
-                  //Fabric調整
-                  rect['top'] = rect['top'] + rect['height'] / 2 + rect['strokeWidth'] / 2;
-                  rect['left'] = rect['left'] + rect['width'] / 2 + rect['strokeWidth'] / 2;
-
-                  canvas.add(new Fabric.Rect(rect));
+                  drawRectangle(json, canvas, shape, imageOffset);
                   break;
                 case 'circle':
                   shape = e[shapeName];
-                  shape['stroke'] = Math.max(Math.round(shape['radius'] / 4), 5);
-
-                  var circle = {
-                    left: shape['from']['x']-imageOffset['x'],
-                    top: shape['from']['y']-imageOffset['y'],
-                    radius: shape['radius'],
-                    strokeWidth: shape['stroke'],
-                    stroke: colorValues[shape['color']],
-                    fill: 'transparent'
-                  };
-                  var circleBorder = Cloner.clone(circle);
-                  circleBorder['radius'] += 1;
-                  circleBorder['stroke'] = 'white';
-                  var circleShadow = Cloner.clone(circle);
-                  circleShadow['left'] += 10;
-                  circleShadow['top'] += 10;
-                  circleShadow['stroke'] = 'rgba(0,0,0,0.5)';
-
-                  canvas.add(new Fabric.Circle(circleBorder));
-                  canvas.add(new Fabric.Circle(circleShadow));
-                  canvas.add(new Fabric.Circle(circle));
+                  drawCircle(json, canvas,shape, imageOffset);
                   break;
                 default:
                   console.error('Unsupported Shape: ' + shapeName);
@@ -314,6 +279,48 @@ function processImage(json) {
   applyBackground(canvas);
 }
 
+function drawRectangle(json, canvas, shape, imageOffset) {
+  shape['stroke'] = Math.max(Math.round(json['finalDimensions']['width'] / 300 * 2), 2);
 
+  var rect = {
+    left: shape['from']['x']-imageOffset['x'],
+    top: shape['from']['y']-imageOffset['y'],
+    width: shape['size']['width'],
+    height: shape['size']['height'],
+    strokeWidth: shape['stroke'],
+    stroke: colorValues[shape['color']],
+    fill: 'transparent'
+  }
+
+  //Fabric調整
+  rect['top'] = rect['top'] + rect['height'] / 2 + rect['strokeWidth'] / 2;
+  rect['left'] = rect['left'] + rect['width'] / 2 + rect['strokeWidth'] / 2;
+
+  canvas.add(new Fabric.Rect(rect));
+}
+
+function drawCircle(json, canvas, shape, imageOffset) {
+  shape['stroke'] = Math.max(Math.round(shape['radius'] / 4), 5);
+
+  var circle = {
+    left: shape['from']['x']-imageOffset['x'],
+    top: shape['from']['y']-imageOffset['y'],
+    radius: shape['radius'],
+    strokeWidth: shape['stroke'],
+    stroke: colorValues[shape['color']],
+    fill: 'transparent'
+  };
+  var circleBorder = Cloner.clone(circle);
+  circleBorder['radius'] += 1;
+  circleBorder['stroke'] = 'white';
+  var circleShadow = Cloner.clone(circle);
+  circleShadow['left'] += 10;
+  circleShadow['top'] += 10;
+  circleShadow['stroke'] = 'rgba(0,0,0,0.5)';
+
+  canvas.add(new Fabric.Circle(circleShadow));
+  canvas.add(new Fabric.Circle(circle));
+  canvas.add(new Fabric.Circle(circleBorder));
+}
 
 processArgs();
