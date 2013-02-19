@@ -51,7 +51,6 @@ var colorValues = {
 var canvas = Fabric.createCanvasForNode(parseInt(json['finalDimensions']['width']),parseInt(json['finalDimensions']['height']));
 
 var imagePath = json['sourceFile'];
-console.log("Setting background image to " + imagePath);
 
 var crop = json['instructions']['crop'];
 var imageOffset = crop != "undefined" ?
