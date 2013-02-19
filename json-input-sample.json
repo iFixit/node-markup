@@ -4,42 +4,180 @@
     "height": 2445
   },
   "finalDimensions": {
-    "width": "2588",
-    "height": "1941"
+    "width": 2588,
+    "height": 1941
   },
   "instructions": {
     "crop": {
       "from": {
-        "x": "330",
-        "y": "330"
+        "x": 330,
+        "y": 330
       },
       "size": {
-        "width": "2588",
-        "height": "1941"
+        "width": 2588,
+        "height": 1941
       }
     },
     "draw": [
       {
         "circle": {
           "from": {
-            "x": "1633",
-            "y": "2140"
+            "x": 522,
+            "y": 505
           },
-          "radius": "147",
+          "radius": 147,
+          "color": "red"
+        }
+      },
+      {
+        "circle": {
+          "from": {
+            "x": 841,
+            "y": 492
+          },
+          "radius": 70,
+          "color": "orange"
+        }
+      },
+      {
+        "circle": {
+          "from": {
+            "x": 973,
+            "y": 387
+          },
+          "radius": 35,
+          "color": "yellow"
+        }
+      },
+      {
+        "circle": {
+          "from": {
+            "x": 1150,
+            "y": 507
+          },
+          "radius": 107,
+          "color": "green"
+        }
+      },
+      {
+        "circle": {
+          "from": {
+            "x": 1408,
+            "y": 433
+          },
+          "radius": 51,
+          "color": "blue"
+        }
+      },
+      {
+        "circle": {
+          "from": {
+            "x": 1574,
+            "y": 503
+          },
+          "radius": 177,
+          "color": "violet"
+        }
+      },
+      {
+        "circle": {
+          "from": {
+            "x": 1921,
+            "y": 466
+          },
+          "radius": 70,
+          "color": "black"
+        }
+      },
+      {
+        "rectangle": {
+          "from": {
+            "x": 369,
+            "y": 973
+          },
+          "size": {
+            "width": 131,
+            "height": 131
+          },
           "color": "red"
         }
       },
       {
         "rectangle": {
           "from": {
-            "x": "815",
-            "y": "1187"
+            "x": 382,
+            "y": 1213
           },
           "size": {
-            "width": "520",
-            "height": "350"
+            "width": 44,
+            "height": 44
+          },
+          "color": "orange"
+        }
+      },
+      {
+        "rectangle": {
+          "from": {
+            "x": 737,
+            "y": 505
+          },
+          "size": {
+            "width": 695,
+            "height": 743
           },
           "color": "yellow"
+        }
+      },
+      {
+        "rectangle": {
+          "from": {
+            "x": 483,
+            "y": 1467
+          },
+          "size": {
+            "width": 625,
+            "height": 44
+          },
+          "color": "green"
+        }
+      },
+      {
+        "rectangle": {
+          "from": {
+            "x": 946,
+            "y": 645
+          },
+          "size": {
+            "width": 44,
+            "height": 407
+          },
+          "color": "blue"
+        }
+      },
+      {
+        "rectangle": {
+          "from": {
+            "x": 1366,
+            "y": 1161
+          },
+          "size": {
+            "width": 131,
+            "height": 131
+          },
+          "color": "violet"
+        }
+      },
+      {
+        "rectangle": {
+          "from": {
+            "x": 1602,
+            "y": 605
+          },
+          "size": {
+            "width": 131,
+            "height": 131
+          },
+          "color": "black"
         }
       }
     ]
