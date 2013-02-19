@@ -19,6 +19,7 @@
    ,"jsdom"       : "0.5.x"
    ,"xmldom"      : ">= 0.1.13"
    ,"optimist"    : "git://github.com/substack/node-optimist.git"
+   ,"gm"          : ">= 1.8.1"
   },
   "version"         : "0.0.2"
 }
