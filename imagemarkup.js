@@ -1,6 +1,40 @@
 var FS = require('fs');
 var Fabric = require('fabric').fabric;
 var Cloner = require('cloneextend');
+var argv = require('optimist').argv;
+
+function usage(err) {
+  console.log('Example Usage:');
+  console.log('node imagemarkup.js --input infile.jpg --output outfile.jpg --markup \'[markup_string]\'');
+  console.log('node imagemarkup.js --json \'[json_string]\'');
+  //TODO: "See README file for specification"
+  if (err)
+    process.exit(err);
+  else
+    process.exit(0);
+}
+
+if (argv.help || argv.h) {
+  usage();
+}
+
+var json;
+if (argv.json && argv.markup) {
+  console.error('Invalid usage.');
+  usage(-1);
+} else if (argv.json) {
+  var json = JSON.parse(argv.json);
+} else if (argv.markup) {
+  if (!argv.input || !argv.output) {
+    console.error('Invalid usage. Input or output path missing.');
+    usage(-1);
+  }
+  console.log(argv.markup);
+  process.exit(0);
+} else {
+  console.error('Invalid uage.');
+  usage(-1);
+}
 
 //Values obtained from contemporary image markup dialog, 2013-02-18
 var colorValues = {
@@ -13,7 +47,7 @@ var colorValues = {
   'black': '#000000'
 };
 
-var json = JSON.parse(process.argv[2]);
+//var json = JSON.parse(process.argv[2]);
 var canvas = Fabric.createCanvasForNode(parseInt(json['finalDimensions']['width']),parseInt(json['finalDimensions']['height']));
 
 var imagePath = json['sourceFile'];

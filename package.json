@@ -14,10 +14,11 @@
     "url"         : "git@github.com:iFixit/node-canvas.git"
   },
   "dependencies"    : {
-    "fabric"      : "git://github.com/iFixit/fabric.js.git",
-    "cloneextend" : "git://github.com/shimondoodkin/nodejs-clone-extend.git",
-    "jsdom"       : "0.5.x",
-    "xmldom"      : ">= 0.1.13"
+    "fabric"      : "git://github.com/iFixit/fabric.js.git"
+   ,"cloneextend" : "git://github.com/shimondoodkin/nodejs-clone-extend.git"
+   ,"jsdom"       : "0.5.x"
+   ,"xmldom"      : ">= 0.1.13"
+   ,"optimist"    : "git://github.com/substack/node-optimist.git"
   },
-  "version"         : "0.0.1"
+  "version"         : "0.0.2"
 }
