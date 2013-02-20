@@ -6,13 +6,13 @@ var argv = require('optimist').argv;
 
 //Values obtained from contemporary image markup dialog, 2013-02-18
 var colorValues = {
-  'red': 'rgba(199,61,35,1)',
-  'orange': 'rgba(255,155,59,1)',
-  'yellow': 'rgba(245,227,39,1)',
-  'green': 'rgba(46,223,143,1)',
-  'blue': 'rgba(56,86,234,1)',
-  'violet': 'rgba(224,101,191,1)',
-  'black': 'rgba(25,25,25,1)'
+  'red': 'rgba(199,61,35,0.92)',
+  'orange': 'rgba(255,155,59,0.92)',
+  'yellow': 'rgba(245,227,39,0.92)',
+  'green': 'rgba(46,223,143,0.92)',
+  'blue': 'rgba(56,86,234,0.92)',
+  'violet': 'rgba(224,101,191,0.92)',
+  'black': 'rgba(25,25,25,0.92)'
 };
 
 function usage(err) {
