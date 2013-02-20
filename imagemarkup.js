@@ -252,8 +252,6 @@ function processImage(json) {
                   console.error('Unsupported Shape: ' + shapeName);
               }
             }
-
-            writeCanvas(canvas);
           });
           break;
         case 'crop':
@@ -263,6 +261,8 @@ function processImage(json) {
           console.error('Unsupported Instruction: ' + instruction);
       }
     }
+
+    writeCanvas(canvas);
   }
 
   function writeCanvas(canvas) {
