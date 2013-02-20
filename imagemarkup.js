@@ -316,8 +316,8 @@ function drawCircle(json, canvas, shape, imageOffset) {
   circleBorder['strokeWidth'] = whiteStroke;
   circleBorder['stroke'] = 'white';
   var circleShadow = Cloner.clone(circle);
-  circleShadow['left'] += 10;
-  circleShadow['top'] += 10;
+  circleShadow['left'] += 7;
+  circleShadow['top'] += 7;
   circleShadow['stroke'] = 'rgba(0,0,0,0.5)';
 
   canvas.add(new Fabric.Circle(circleShadow));
