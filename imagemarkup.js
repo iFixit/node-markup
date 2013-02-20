@@ -287,6 +287,8 @@ function drawRectangle(json, canvas, shape, imageOffset) {
     top: shape['from']['y']-imageOffset['y'],
     width: shape['size']['width'],
     height: shape['size']['height'],
+    rx: 1,
+    ry: 1,
     strokeWidth: shape['stroke'],
     stroke: colorValues[shape['color']],
     fill: 'transparent'
