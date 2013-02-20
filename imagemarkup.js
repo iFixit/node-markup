@@ -301,6 +301,7 @@ function drawRectangle(json, canvas, shape, imageOffset) {
 
 function drawCircle(json, canvas, shape, imageOffset) {
   shape['stroke'] = Math.max(Math.round(shape['radius'] / 4), 5);
+  whiteStroke = 1;
 
   var circle = {
     left: shape['from']['x']-imageOffset['x'],
@@ -311,7 +312,8 @@ function drawCircle(json, canvas, shape, imageOffset) {
     fill: 'transparent'
   };
   var circleBorder = Cloner.clone(circle);
-  circleBorder['radius'] += 1;
+  circleBorder['radius'] = circle['radius'] + circle['strokeWidth'] / 2;
+  circleBorder['strokeWidth'] = whiteStroke;
   circleBorder['stroke'] = 'white';
   var circleShadow = Cloner.clone(circle);
   circleShadow['left'] += 10;
@@ -319,8 +321,8 @@ function drawCircle(json, canvas, shape, imageOffset) {
   circleShadow['stroke'] = 'rgba(0,0,0,0.5)';
 
   canvas.add(new Fabric.Circle(circleShadow));
-  canvas.add(new Fabric.Circle(circle));
   canvas.add(new Fabric.Circle(circleBorder));
+  canvas.add(new Fabric.Circle(circle));
 }
 
 processArgs();
