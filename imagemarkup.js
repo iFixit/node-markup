@@ -281,6 +281,7 @@ function processImage(json) {
 
 function drawRectangle(json, canvas, shape, imageOffset) {
   shape['stroke'] = Math.max(Math.round(json['finalDimensions']['width'] / 300 * 2), 2);
+  whiteStroke = Math.max(Math.round(shape['stroke'] / 4), 1);
 
   var rect = {
     left: shape['from']['x']-imageOffset['x'],
@@ -298,7 +299,28 @@ function drawRectangle(json, canvas, shape, imageOffset) {
   rect['top'] = rect['top'] + rect['height'] / 2 + rect['strokeWidth'] / 2;
   rect['left'] = rect['left'] + rect['width'] / 2 + rect['strokeWidth'] / 2;
 
+  var fillRect = Cloner.clone(rect);
+
+  fillRect['fill'] = fillRect['stroke'].replace(/\d\.\d\d\)/, '0.05\)');
+  fillRect['stroke'] = 'transparent';
+
+  var rectBorder = Cloner.clone(rect);
+  rectBorder['width'] += rect['strokeWidth'] / 2 + whiteStroke / 2 + 4;
+  rectBorder['height'] += rect['strokeWidth'] / 2 + whiteStroke / 2 + 4;
+  rectBorder['rx'] = 5;
+  rectBorder['ry'] = 5;
+  rectBorder['strokeWidth'] = whiteStroke;
+  rectBorder['stroke'] = 'rgba(255,255,255,0.5)';
+
+  var rectShadow = Cloner.clone(rect);
+  rectShadow['left'] += 7;
+  rectShadow['top'] += 7;
+  rectShadow['stroke'] = 'rgba(0,0,0,0.5)';
+
+  canvas.add(new Fabric.Rect(rectShadow));
+  canvas.add(new Fabric.Rect(fillRect));
   canvas.add(new Fabric.Rect(rect));
+  canvas.add(new Fabric.Rect(rectBorder));
 }
 
 function drawCircle(json, canvas, shape, imageOffset) {
@@ -316,15 +338,15 @@ function drawCircle(json, canvas, shape, imageOffset) {
   var circleBorder = Cloner.clone(circle);
   circleBorder['radius'] = circle['radius'] + circle['strokeWidth'] / 2;
   circleBorder['strokeWidth'] = whiteStroke;
-  circleBorder['stroke'] = 'white';
+  circleBorder['stroke'] = 'rgba(255,255,255,0.95';
   var circleShadow = Cloner.clone(circle);
   circleShadow['left'] += 7;
   circleShadow['top'] += 7;
   circleShadow['stroke'] = 'rgba(0,0,0,0.5)';
 
   canvas.add(new Fabric.Circle(circleShadow));
-  canvas.add(new Fabric.Circle(circleBorder));
   canvas.add(new Fabric.Circle(circle));
+  canvas.add(new Fabric.Circle(circleBorder));
 }
 
 processArgs();
