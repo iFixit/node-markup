@@ -27,9 +27,15 @@ function usage(err) {
     process.exit(0);
 }
 
+var shadows = false;
+
 function processArgs() {
   if (argv.help || argv.h) {
     usage();
+  }
+
+  if (argv.shadows) {
+    shadows = true;
   }
 
   var json;
@@ -312,12 +318,15 @@ function drawRectangle(json, canvas, shape, imageOffset) {
   rectBorder['strokeWidth'] = whiteStroke;
   rectBorder['stroke'] = 'rgba(255,255,255,0.5)';
 
-  var rectShadow = Cloner.clone(rect);
-  rectShadow['left'] += 7;
-  rectShadow['top'] += 7;
-  rectShadow['stroke'] = 'rgba(0,0,0,0.5)';
+  if (shadows) {
+    var rectShadow = Cloner.clone(rect);
+    rectShadow['left'] += 7;
+    rectShadow['top'] += 7;
+    rectShadow['stroke'] = 'rgba(0,0,0,0.5)';
 
-  canvas.add(new Fabric.Rect(rectShadow));
+    canvas.add(new Fabric.Rect(rectShadow));
+  }
+
   canvas.add(new Fabric.Rect(fillRect));
   canvas.add(new Fabric.Rect(rect));
   canvas.add(new Fabric.Rect(rectBorder));
@@ -339,12 +348,16 @@ function drawCircle(json, canvas, shape, imageOffset) {
   circleBorder['radius'] = circle['radius'] + circle['strokeWidth'] / 2;
   circleBorder['strokeWidth'] = whiteStroke;
   circleBorder['stroke'] = 'rgba(255,255,255,0.95';
-  var circleShadow = Cloner.clone(circle);
-  circleShadow['left'] += 7;
-  circleShadow['top'] += 7;
-  circleShadow['stroke'] = 'rgba(0,0,0,0.5)';
 
-  canvas.add(new Fabric.Circle(circleShadow));
+  if (shadows) {
+    var circleShadow = Cloner.clone(circle);
+    circleShadow['left'] += 7;
+    circleShadow['top'] += 7;
+    circleShadow['stroke'] = 'rgba(0,0,0,0.5)';
+
+    canvas.add(new Fabric.Circle(circleShadow));
+  }
+
   canvas.add(new Fabric.Circle(circle));
   canvas.add(new Fabric.Circle(circleBorder));
 }
