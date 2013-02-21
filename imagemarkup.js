@@ -4,15 +4,14 @@ var Fabric = require('fabric').fabric;
 var Cloner = require('cloneextend');
 var argv = require('optimist').argv;
 
-//Values obtained from contemporary image markup dialog, 2013-02-18
 var colorValues = {
-  'red': 'rgba(193,40,11,0.93)',
-  'orange': 'rgba(355,144,36,0.93)',
-  'yellow': 'rgba(243,224,14,0.93)',
-  'green': 'rgba(22,220,129,0.93)',
-  'blue': 'rgba(35,67,232,0.93)',
-  'violet': 'rgba(220,84,183,0.93)',
-  'black': 'rgba(0,0,0,0.93)'
+  'red': 'rgb(193,40,11)',
+  'orange': 'rgb(355,144,36)',
+  'yellow': 'rgb(243,224,14)',
+  'green': 'rgb(22,220,129)',
+  'blue': 'rgb(35,67,232)',
+  'violet': 'rgb(220,84,183)',
+  'black': 'rgb(0,0,0)'
 };
 
 function usage(err) {
@@ -311,7 +310,7 @@ function drawRectangle(json, canvas, shape, imageOffset) {
   rectBorder['rx'] = 5;
   rectBorder['ry'] = 5;
   rectBorder['strokeWidth'] = whiteStroke;
-  rectBorder['stroke'] = 'rgba(255,255,255,0.5)';
+  rectBorder['stroke'] = 'white';
 
   if (shadows) {
     var rectShadow = Cloner.clone(rect);
@@ -341,7 +340,7 @@ function drawCircle(json, canvas, shape, imageOffset) {
   var circleBorder = Cloner.clone(circle);
   circleBorder['radius'] = circle['radius'] + circle['strokeWidth'] / 2;
   circleBorder['strokeWidth'] = whiteStroke;
-  circleBorder['stroke'] = 'rgba(255,255,255,0.95';
+  circleBorder['stroke'] = 'white';
 
   if (shadows) {
     var circleShadow = Cloner.clone(circle);
