@@ -305,11 +305,6 @@ function drawRectangle(json, canvas, shape, imageOffset) {
   rect['top'] = rect['top'] + rect['height'] / 2 + rect['strokeWidth'] / 2;
   rect['left'] = rect['left'] + rect['width'] / 2 + rect['strokeWidth'] / 2;
 
-  var fillRect = Cloner.clone(rect);
-
-  fillRect['fill'] = fillRect['stroke'].replace(/\d\.\d\d\)/, '0.05\)');
-  fillRect['stroke'] = 'transparent';
-
   var rectBorder = Cloner.clone(rect);
   rectBorder['width'] += rect['strokeWidth'] / 2 + whiteStroke / 2 + 4;
   rectBorder['height'] += rect['strokeWidth'] / 2 + whiteStroke / 2 + 4;
@@ -327,7 +322,6 @@ function drawRectangle(json, canvas, shape, imageOffset) {
     canvas.add(new Fabric.Rect(rectShadow));
   }
 
-  canvas.add(new Fabric.Rect(fillRect));
   canvas.add(new Fabric.Rect(rect));
   canvas.add(new Fabric.Rect(rectBorder));
 }
