@@ -201,7 +201,7 @@ function processImage(json) {
   var imagePath = json['sourceFile'];
 
   var crop = json['instructions']['crop'];
-  var imageOffset = crop != "undefined" ?
+  var imageOffset = (typeof crop != "undefined") ?
    {'x':crop['from']['x'],
     'y':crop['from']['y']} :
    {'x':0,'y':0};
