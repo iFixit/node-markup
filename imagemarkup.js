@@ -321,12 +321,7 @@ function drawRectangle(json, canvas, shape, imageOffset) {
   rectInline['stroke'] = 'white';
 
   if (shadows == true) {
-    var rectShadow = Cloner.clone(rect);
-    rectShadow['left'] += 7;
-    rectShadow['top'] += 7;
-    rectShadow['stroke'] = 'rgba(0,0,0,0.5)';
-
-    canvas.add(new Fabric.Rect(rectShadow));
+    drawShadow(canvas, rect, shadowStep);
   }
 
   canvas.add(new Fabric.Rect(rect));
@@ -335,7 +330,7 @@ function drawRectangle(json, canvas, shape, imageOffset) {
 }
 
 function drawCircle(json, canvas, shape, imageOffset) {
-  shape['stroke'] = Math.max(Math.round(shape['radius'] / 4), 5);
+  shape['stroke'] = Math.max(Math.round(json['finalDimensions']['width'] / 300 * 2), 2);
   whiteStroke = 1;
 
   var circle = {
@@ -356,17 +351,85 @@ function drawCircle(json, canvas, shape, imageOffset) {
   circleInline['radius'] = circle['radius'] - circle['strokeWidth'] / 2;
 
   if (shadows == true) {
-    var circleShadow = Cloner.clone(circle);
-    circleShadow['left'] += 7;
-    circleShadow['top'] += 7;
-    circleShadow['stroke'] = 'rgba(0,0,0,0.5)';
-
-    canvas.add(new Fabric.Circle(circleShadow));
+    drawShadow(canvas, circle, shadowStep);
   }
 
   canvas.add(new Fabric.Circle(circle));
   canvas.add(new Fabric.Circle(circleBorder));
   canvas.add(new Fabric.Circle(circleInline));
+}
+
+var shadowStep = 30;
+
+/**
+ * Draw a fuzzy shadow for the shape given.
+ * Take care to draw the shadow before the shape.
+ */
+function drawShadow(canvas, shape, step) {
+  if (step < 1) {
+    step = 1;
+  }
+  var shadow = Cloner.clone(shape);
+  if (step > shadow['strokeWidth']) {
+    step = shadow['strokeWidth'];
+  }
+
+  var offsetX = 8;
+  var offsetY = offsetX;
+
+  var shadow = Cloner.clone(shape);
+  shadow['left'] += offsetX;
+  shadow['top'] += offsetY;
+  shadow['stroke'] = 'rgba(0,0,0,0.5)';
+  shadow['strokeWidth'] = shadow['strokeWidth'] / step;
+  var stepWidth = shadow['strokeWidth'];
+
+  //Adjust shadow outlines to outer edge, to work towards inside later.
+  switch (shape['shapeName']) {
+    case 'circle':
+      shadow['radius'] += shape['strokeWidth'] / 2;
+      shadow['strokeWidth'] *= 2;
+      break;
+    case 'rectangle':
+      shadow['width'] += shape['strokeWidth'];
+      shadow['height'] += shape['strokeWidth'];
+      shadow['strokeWidth'] *= 2;
+      break;
+    default:
+      console.error('実装されていない機能：' + shape['shapeName']);
+      return;
+  }
+
+  var alpha;
+  for (var i = 0; i < step; ++i) {
+    if (i < (step / 2)) {
+      alpha = (((i + 1) * 2) / (step));
+    }
+    else if (i == step / 2) {
+      //Math ain't working to my likings
+      alpha = 1;
+    }
+    else {
+      alpha = (((step - (i + 1)) * 2) / (step));
+    }
+
+    shadow['stroke'] = 'rgba(0,0,0,' + alpha + ')';
+
+    switch (shape['shapeName']) {
+      case 'circle':
+        canvas.add(new Fabric.Circle(shadow));
+        shadow['radius'] = shadow['radius'] - stepWidth * 2 * 0.8;
+        break;
+      case 'rectangle':
+        canvas.add(new Fabric.Rect(shadow));
+        shadow['width'] = shadow['width'] - stepWidth * 4 * 0.8;
+        shadow['height'] = shadow['height'] - stepWidth * 4 * 0.8;
+        break;
+      default:
+        console.error('実装されてない機能：' + shape['shapeName']);
+        return;
+    }
+  }
 }
 
 processArgs();
