@@ -291,7 +291,7 @@ function processImage(json) {
 
 function drawRectangle(json, canvas, shape, imageOffset) {
   shape['stroke'] = Math.max(Math.round(json['finalDimensions']['width'] / 300 * 2), 2);
-  whiteStroke = Math.max(Math.round(shape['stroke'] / 4), 1);
+  whiteStroke = 2;
 
   var rect = {
     shapeName: shape['shapeName'],
@@ -311,16 +311,16 @@ function drawRectangle(json, canvas, shape, imageOffset) {
   rect['left'] = rect['left'] + rect['width'] / 2 + rect['strokeWidth'] / 2;
 
   var rectBorder = Cloner.clone(rect);
-  rectBorder['width'] += rect['strokeWidth'] / 2 + whiteStroke / 2 + 4;
-  rectBorder['height'] += rect['strokeWidth'] / 2 + whiteStroke / 2 + 4;
+  rectBorder['width'] += rect['strokeWidth'] / 2 + whiteStroke / 2 + 6;
+  rectBorder['height'] += rect['strokeWidth'] / 2 + whiteStroke / 2 + 6;
   rectBorder['rx'] = 5;
   rectBorder['ry'] = 5;
   rectBorder['strokeWidth'] = whiteStroke;
   rectBorder['stroke'] = 'white';
 
   var rectInline = Cloner.clone(rect);
-  rectInline['width'] -= rect['strokeWidth'] / 2 + whiteStroke / 2 + 4;
-  rectInline['height'] -= rect['strokeWidth'] / 2 + whiteStroke / 2 + 4;
+  rectInline['width'] -= rect['strokeWidth'] / 2 + whiteStroke / 2 + 6;
+  rectInline['height'] -= rect['strokeWidth'] / 2 + whiteStroke / 2 + 6;
   rectInline['rx'] = 5;
   rectInline['ry'] = 5;
   rectInline['strokeWidth'] = whiteStroke;
@@ -337,7 +337,7 @@ function drawRectangle(json, canvas, shape, imageOffset) {
 
 function drawCircle(json, canvas, shape, imageOffset) {
   shape['stroke'] = Math.max(Math.round(json['finalDimensions']['width'] / 300 * 2), 2);
-  whiteStroke = 1;
+  whiteStroke = 2;
 
   var circle = {
     shapeName: shape['shapeName'],
