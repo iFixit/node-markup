@@ -27,6 +27,7 @@ function usage(err) {
 }
 
 var shadows;
+var shadowStep = 30;
 
 function processArgs() {
   if (argv.help || argv.h) {
@@ -34,6 +35,11 @@ function processArgs() {
   }
 
   shadows = typeof(argv.shadows) == 'undefined' ? false : argv.shadows == 'true' || argv.shadows == true;
+  if (shadows) {
+    if (argv.step) {
+      shadowStep = parseInt(argv.step);
+    }
+  }
 
   var json;
   if (argv.json && argv.markup) {
@@ -358,8 +364,6 @@ function drawCircle(json, canvas, shape, imageOffset) {
   canvas.add(new Fabric.Circle(circleBorder));
   canvas.add(new Fabric.Circle(circleInline));
 }
-
-var shadowStep = 30;
 
 /**
  * Draw a fuzzy shadow for the shape given.
