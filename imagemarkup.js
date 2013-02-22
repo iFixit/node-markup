@@ -242,13 +242,14 @@ function processImage(json) {
         case 'draw':
           json['instructions']['draw'].forEach(function (e) {
             for (shapeName in e) {
+              shape = e[shapeName];
+              shape['shapeName'] = shapeName;
+
               switch (shapeName) {
                 case 'rectangle':
-                  shape = e[shapeName];
                   drawRectangle(json, canvas, shape, imageOffset);
                   break;
                 case 'circle':
-                  shape = e[shapeName];
                   drawCircle(json, canvas,shape, imageOffset);
                   break;
                 default:
