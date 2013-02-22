@@ -387,12 +387,12 @@ function drawShadow(canvas, shape, step) {
   //Adjust shadow outlines to outer edge, to work towards inside later.
   switch (shape['shapeName']) {
     case 'circle':
-      shadow['radius'] += shape['strokeWidth'] / 2;
+      shadow['radius'] += shape['strokeWidth'] * 0.75;
       shadow['strokeWidth'] *= 2;
       break;
     case 'rectangle':
-      shadow['width'] += shape['strokeWidth'];
-      shadow['height'] += shape['strokeWidth'];
+      shadow['width'] += shape['strokeWidth'] * 1.5;
+      shadow['height'] += shape['strokeWidth'] * 1.5;
       shadow['strokeWidth'] *= 2;
       break;
     default:
