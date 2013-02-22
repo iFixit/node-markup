@@ -33,7 +33,7 @@ function processArgs() {
     usage();
   }
 
-  shadows = typeof(argv.shadows) == 'undefined' ? false : argv.shadows == 'true';
+  shadows = typeof(argv.shadows) == 'undefined' ? false : argv.shadows == 'true' || argv.shadows == true;
 
   var json;
   if (argv.json && argv.markup) {
