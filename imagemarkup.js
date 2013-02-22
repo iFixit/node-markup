@@ -26,16 +26,14 @@ function usage(err) {
     process.exit(0);
 }
 
-var shadows = false;
+var shadows;
 
 function processArgs() {
   if (argv.help || argv.h) {
     usage();
   }
 
-  if (argv.shadows) {
-    shadows = argv.shadows;
-  }
+  shadows = typeof(argv.shadows) == 'undefined' ? false : argv.shadows == 'true';
 
   var json;
   if (argv.json && argv.markup) {
