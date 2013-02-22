@@ -34,7 +34,7 @@ function processArgs() {
   }
 
   if (argv.shadows) {
-    shadows = true;
+    shadows = argv.shadows;
   }
 
   var json;
@@ -320,7 +320,7 @@ function drawRectangle(json, canvas, shape, imageOffset) {
   rectInline['strokeWidth'] = whiteStroke;
   rectInline['stroke'] = 'white';
 
-  if (shadows) {
+  if (shadows == true) {
     var rectShadow = Cloner.clone(rect);
     rectShadow['left'] += 7;
     rectShadow['top'] += 7;
@@ -354,7 +354,7 @@ function drawCircle(json, canvas, shape, imageOffset) {
   var circleInline = Cloner.clone(circleBorder);
   circleInline['radius'] = circle['radius'] - circle['strokeWidth'] / 2;
 
-  if (shadows) {
+  if (shadows == true) {
     var circleShadow = Cloner.clone(circle);
     circleShadow['left'] += 7;
     circleShadow['top'] += 7;
