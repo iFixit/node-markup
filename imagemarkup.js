@@ -288,6 +288,7 @@ function drawRectangle(json, canvas, shape, imageOffset) {
   whiteStroke = Math.max(Math.round(shape['stroke'] / 4), 1);
 
   var rect = {
+    shapeName: shape['shapeName'],
     left: shape['from']['x']-imageOffset['x'],
     top: shape['from']['y']-imageOffset['y'],
     width: shape['size']['width'],
@@ -338,6 +339,7 @@ function drawCircle(json, canvas, shape, imageOffset) {
   whiteStroke = 1;
 
   var circle = {
+    shapeName: shape['shapeName'],
     left: shape['from']['x']-imageOffset['x'],
     top: shape['from']['y']-imageOffset['y'],
     radius: shape['radius'],
