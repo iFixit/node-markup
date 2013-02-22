@@ -384,19 +384,25 @@ function drawShadow(canvas, shape, step) {
   var shadow = Cloner.clone(shape);
   shadow['left'] += offsetX;
   shadow['top'] += offsetY;
+  shadow['rx'] = 5;
+  shadow['ry'] = 5;
   shadow['stroke'] = 'rgba(0,0,0,0.5)';
   shadow['strokeWidth'] = shadow['strokeWidth'] / step;
   var stepWidth = shadow['strokeWidth'];
 
+  //Empirically-derived pixel tweaks to line up shadow sizes with their parents
+  var circleTweak = 0.6875;
+  var rectangleTweak = 1.3125;
+
   //Adjust shadow outlines to outer edge, to work towards inside later.
   switch (shape['shapeName']) {
     case 'circle':
-      shadow['radius'] += shape['strokeWidth'] * 0.75;
+      shadow['radius'] += shape['strokeWidth'] * circleTweak;
       shadow['strokeWidth'] *= 2;
       break;
     case 'rectangle':
-      shadow['width'] += shape['strokeWidth'] * 1.5;
-      shadow['height'] += shape['strokeWidth'] * 1.5;
+      shadow['width'] += shape['strokeWidth'] * rectangleTweak;
+      shadow['height'] += shape['strokeWidth'] * rectangleTweak;
       shadow['strokeWidth'] *= 2;
       break;
     default:
