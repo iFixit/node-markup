@@ -311,18 +311,19 @@ function drawRectangle(json, canvas, shape, imageOffset) {
   rect['left'] = rect['left'] + rect['width'] / 2 + rect['strokeWidth'] / 2;
 
   var rectBorder = Cloner.clone(rect);
-  rectBorder['width'] += rect['strokeWidth'] / 2 + whiteStroke / 2 + 6;
-  rectBorder['height'] += rect['strokeWidth'] / 2 + whiteStroke / 2 + 6;
-  rectBorder['rx'] = 5;
-  rectBorder['ry'] = 5;
+  rectBorder['width'] = rectBorder['width'] + rect['strokeWidth'] + whiteStroke;
+  rectBorder['height'] = rectBorder['height'] + rect['strokeWidth'] + whiteStroke;
+  rectBorder['rx'] = rect['strokeWidth'] - whiteStroke;
+  rectBorder['ry'] = rect['strokeWidth'] - whiteStroke;
+  console.log("rx = " + rectBorder['rx']);
   rectBorder['strokeWidth'] = whiteStroke;
   rectBorder['stroke'] = 'white';
 
   var rectInline = Cloner.clone(rect);
-  rectInline['width'] -= rect['strokeWidth'] / 2 + whiteStroke / 2 + 6;
-  rectInline['height'] -= rect['strokeWidth'] / 2 + whiteStroke / 2 + 6;
-  rectInline['rx'] = 5;
-  rectInline['ry'] = 5;
+  rectInline['width'] = rectInline['width'] - rect['strokeWidth'] + whiteStroke;
+  rectInline['height'] = rectInline['height'] - rect['strokeWidth'] + whiteStroke;
+  rectInline['rx'] = Math.max(shape['stroke'] - rectBorder['rx'],4);
+  rectInline['ry'] = Math.max(shape['stroke'] - rectBorder['ry'],4);
   rectInline['strokeWidth'] = whiteStroke;
   rectInline['stroke'] = 'white';
 
