@@ -179,12 +179,19 @@ function ImageMarkupBuilder(canvas) {
     rectInline['stroke'] = 'white';
 
     if (shadows == true) {
+      if (!isNode)
+        throw "Frontend shadows not implemented";
+
       drawShadow(canvas, rect, shadowStep);
     }
 
-    canvas.add(new Fabric.Rect(rect));
-    canvas.add(new Fabric.Rect(rectBorder));
-    canvas.add(new Fabric.Rect(rectInline));
+    var fabricRect = new Fabric.Rect(rect),
+        fabricBorder = new Fabric.Rect(rectBorder),
+        fabricInline = new Fabric.Rect(rectInline);
+
+    canvas.add(fabricRect);
+    canvas.add(fabricBorder);
+    canvas.add(fabricInline);
   }
 
   function drawCircle(finalWidth, canvas, shape, imageOffset) {
@@ -212,9 +219,13 @@ function ImageMarkupBuilder(canvas) {
       drawShadow(canvas, circle, shadowStep);
     }
 
-    canvas.add(new Fabric.Circle(circle));
-    canvas.add(new Fabric.Circle(circleBorder));
-    canvas.add(new Fabric.Circle(circleInline));
+    var fabricCircle = new Fabric.Circle(circle),
+        fabricBorder = new Fabric.Circle(circleBorder),
+        fabricInline = new Fabric.Circle(circleInline);
+
+    canvas.add(fabricCircle);
+    canvas.add(fabricBorder);
+    canvas.add(fabricInline);
   }
 
   /**
