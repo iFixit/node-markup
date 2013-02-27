@@ -189,9 +189,15 @@ function ImageMarkupBuilder(canvas) {
         fabricBorder = new Fabric.Rect(rectBorder),
         fabricInline = new Fabric.Rect(rectInline);
 
-    canvas.add(fabricRect);
-    canvas.add(fabricBorder);
-    canvas.add(fabricInline);
+    if (isNode) {
+      canvas.add(fabricRect);
+      canvas.add(fabricBorder);
+      canvas.add(fabricInline);
+    } else {
+      var group = new Fabric.Group([fabricRect, fabricBorder, fabricInline],
+       {left: fabricRect['left'], top: fabricRect['top']});
+      canvas.add(group);
+    }
   }
 
   function drawCircle(finalWidth, canvas, shape, imageOffset) {
@@ -223,9 +229,14 @@ function ImageMarkupBuilder(canvas) {
         fabricBorder = new Fabric.Circle(circleBorder),
         fabricInline = new Fabric.Circle(circleInline);
 
-    canvas.add(fabricCircle);
-    canvas.add(fabricBorder);
-    canvas.add(fabricInline);
+    if (isNode) {
+      canvas.add(fabricCircle);
+      canvas.add(fabricBorder);
+      canvas.add(fabricInline);
+    } else {
+      var group = new Fabric.Group([fabricCircle, fabricBorder, fabricInline],
+       {left: fabricCircle['left'], top: fabricCircle['top']});
+    }
   }
 
   /**
