@@ -102,10 +102,12 @@ function ImageMarkupBuilder(canvas) {
 
               switch (shapeName) {
                 case 'rectangle':
-                  drawRectangle(json, canvas, shape, imageOffset);
+                  drawRectangle(json['finalDimensions']['width'],
+                   canvas, shape, imageOffset);
                   break;
                 case 'circle':
-                  drawCircle(json, canvas,shape, imageOffset);
+                  drawCircle(json['finalDimensions']['width'], canvas,
+                   shape, imageOffset);
                   break;
                 default:
                   console.error('Unsupported Shape: ' + shapeName);
@@ -139,8 +141,8 @@ function ImageMarkupBuilder(canvas) {
     });
   }
 
-  function drawRectangle(json, canvas, shape, imageOffset) {
-    shape['stroke'] = Math.max(Math.round(json['finalDimensions']['width'] / 300 * 2), 2);
+  function drawRectangle(finalWidth, canvas, shape, imageOffset) {
+    shape['stroke'] = Math.max(Math.round(finalWidth / 300 * 2), 2);
     whiteStroke = 2;
 
     var rect = {
@@ -185,8 +187,8 @@ function ImageMarkupBuilder(canvas) {
     canvas.add(new Fabric.Rect(rectInline));
   }
 
-  function drawCircle(json, canvas, shape, imageOffset) {
-    shape['stroke'] = Math.max(Math.round(json['finalDimensions']['width'] / 300 * 2), 2);
+  function drawCircle(finalWidth, canvas, shape, imageOffset) {
+    shape['stroke'] = Math.max(Math.round(finalWidth / 300 * 2), 2);
     whiteStroke = 2;
 
     var circle = {
