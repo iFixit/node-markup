@@ -65,28 +65,37 @@ function ImageMarkupBuilder(canvas) {
   }
 
   function applyBackground(json, canvas, callback) {
-    FS.readFile(json['sourceFile'], function (err, blob) {
-      if (err) throw err;
+    if (!json['sourceFile']) {
+      if (!json['finalDimensions']) {
+        throw Exception("Need source file or final dimensions to create canvas");
+      }
 
-      var dimensions = json['dimensions'];
-      var finalDimensions = json['finalDimensions'];
-      img = {'width': dimensions['width'], 'height': dimensions['height'], 'src':blob};
+      //Apply markup to blank canvas
+      applyMarkup(json, canvas, callback);
+    } else {
+      FS.readFile(json['sourceFile'], function (err, blob) {
+        if (err) throw err;
 
-      Fabric.Image.fromObject(img, function(fimg) {
-        top = img.height/2 - imageOffset['y'];
-        if (top % 1 != 0) {
-          top -= 0.5;
-        }
-        left = img.width / 2 - imageOffset['x'];
-        if (left % 1 != 0) {
-          left -= 0.5;
-        }
+        var dimensions = json['dimensions'];
+        var finalDimensions = json['finalDimensions'];
+        img = {'width': dimensions['width'], 'height': dimensions['height'], 'src':blob};
 
-        canvas.add(fimg.set('top', top).set('left', left));
+        Fabric.Image.fromObject(img, function(fimg) {
+          top = img.height/2 - imageOffset['y'];
+          if (top % 1 != 0) {
+            top -= 0.5;
+          }
+          left = img.width / 2 - imageOffset['x'];
+          if (left % 1 != 0) {
+            left -= 0.5;
+          }
 
-        applyMarkup(json, canvas, callback);
+          canvas.add(fimg.set('top', top).set('left', left));
+
+          applyMarkup(json, canvas, callback);
+        });
       });
-    });
+    }
   }
 
   function applyMarkup(json, canvas, callback) {
