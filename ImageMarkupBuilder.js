@@ -123,7 +123,11 @@ function ImageMarkupBuilder(canvas) {
       }
     }
 
-    writeCanvas(json, canvas, callback);
+    if (isNode) {
+      writeCanvas(json, canvas, callback);
+    } else {
+      callback(canvas);
+    }
   }
 
   function writeCanvas(json, canvas, callback) {
