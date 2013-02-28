@@ -99,8 +99,6 @@ function ImageMarkupBuilder(canvas) {
   }
 
   function applyMarkup(json, canvas, callback) {
-    var size = json['dimensions'];
-
     for (instruction in json['instructions']) {
       switch (instruction) {
         case 'draw':
