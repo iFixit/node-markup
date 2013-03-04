@@ -9,7 +9,6 @@ function ImageMarkupBuilder(canvas) {
     var FS = require('fs');
     var Fabric = require('fabric').fabric;
   } else {
-    var FS = fs;
     var Fabric = fabric;
   }
 
@@ -73,28 +72,32 @@ function ImageMarkupBuilder(canvas) {
       //Apply markup to blank canvas
       applyMarkup(json, canvas, callback);
     } else {
-      FS.readFile(json['sourceFile'], function (err, blob) {
-        if (err) throw err;
+      if (isNode) {
+         FS.readFile(json['sourceFile'], function (err, blob) {
+           if (err) throw err;
 
-        var dimensions = json['dimensions'];
-        var finalDimensions = json['finalDimensions'];
-        img = {'width': dimensions['width'], 'height': dimensions['height'], 'src':blob};
+           var dimensions = json['dimensions'];
+           var finalDimensions = json['finalDimensions'];
+           img = {'width': dimensions['width'], 'height': dimensions['height'], 'src':blob};
 
-        Fabric.Image.fromObject(img, function(fimg) {
-          top = img.height/2 - imageOffset['y'];
-          if (top % 1 != 0) {
-            top -= 0.5;
-          }
-          left = img.width / 2 - imageOffset['x'];
-          if (left % 1 != 0) {
-            left -= 0.5;
-          }
+           Fabric.Image.fromObject(img, function(fimg) {
+             top = img.height/2 - imageOffset['y'];
+             if (top % 1 != 0) {
+               top -= 0.5;
+             }
+             left = img.width / 2 - imageOffset['x'];
+             if (left % 1 != 0) {
+               left -= 0.5;
+             }
 
-          canvas.add(fimg.set('top', top).set('left', left));
+             canvas.add(fimg.set('top', top).set('left', left));
 
-          applyMarkup(json, canvas, callback);
-        });
-      });
+             applyMarkup(json, canvas, callback);
+           });
+         });
+      } else {
+         throw Exception('Source files not supported on frontend');
+      }
     }
   }
 
@@ -189,10 +192,7 @@ function ImageMarkupBuilder(canvas) {
     rectInline['strokeWidth'] = whiteStroke;
     rectInline['stroke'] = 'white';
 
-    if (shadows == true) {
-      if (!isNode)
-        throw "Frontend shadows not implemented";
-
+    if (isNode && shadows == true) {
       drawShadow(canvas, rect, shadowStep);
     }
 
@@ -232,7 +232,7 @@ function ImageMarkupBuilder(canvas) {
     var circleInline = clone(circleBorder);
     circleInline['radius'] = circle['radius'] - circle['strokeWidth'] / 2;
 
-    if (shadows == true) {
+    if (isNode && shadows == true) {
       drawShadow(canvas, circle, shadowStep);
     }
 
