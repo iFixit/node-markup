@@ -23,6 +23,9 @@ function ImageMarkupBuilder(canvas) {
   };
 
   var imageOffset;
+  var resizeRatio = 1;
+
+  var markupObjects = new Array();
 
   function clone(obj) {
     var newobj = {};
@@ -174,7 +177,11 @@ function ImageMarkupBuilder(canvas) {
 
     //Fabric調整
     rect['top'] = rect['top'] + rect['height'] / 2 + rect['strokeWidth'] / 2;
+    rect['top'] *= resizeRatio;
     rect['left'] = rect['left'] + rect['width'] / 2 + rect['strokeWidth'] / 2;
+    rect['left'] *= resizeRatio;
+    rect['width'] *= resizeRatio;
+    rect['height'] *= resizeRatio;
 
     var rectBorder = clone(rect);
     rectBorder['width'] = rectBorder['width'] + rect['strokeWidth'] + whiteStroke;
@@ -200,15 +207,14 @@ function ImageMarkupBuilder(canvas) {
         fabricBorder = new Fabric.Rect(rectBorder),
         fabricInline = new Fabric.Rect(rectInline);
 
-    if (isNode) {
-      canvas.add(fabricRect);
-      canvas.add(fabricBorder);
-      canvas.add(fabricInline);
-    } else {
-      var group = new Fabric.Group([fabricRect, fabricBorder, fabricInline],
-       {left: fabricRect['left'], top: fabricRect['top']});
-      canvas.add(group);
-    }
+    fabricRect.lockUniScaling = fabricBorder.lockUniScaling = 
+     fabricInline.lockUniScaling = true;
+
+    var group = new Fabric.Group([fabricRect, fabricBorder, fabricInline],
+     {left: rect['left'], top: rect['top']});
+
+    group.shapeName = 'Rectangle';
+    canvas.add(group);
   }
 
   function drawCircle(finalWidth, canvas, shape, imageOffset) {
@@ -224,6 +230,10 @@ function ImageMarkupBuilder(canvas) {
       stroke: colorValues[shape['color']],
       fill: 'transparent'
     };
+    circle.left *= resizeRatio;
+    circle.top *= resizeRatio;
+    circle.radius *= resizeRatio;
+
     var circleBorder = clone(circle);
     circleBorder['radius'] = circle['radius'] + circle['strokeWidth'] / 2;
     circleBorder['strokeWidth'] = whiteStroke;
@@ -240,14 +250,16 @@ function ImageMarkupBuilder(canvas) {
         fabricBorder = new Fabric.Circle(circleBorder),
         fabricInline = new Fabric.Circle(circleInline);
 
-    if (isNode) {
-      canvas.add(fabricCircle);
-      canvas.add(fabricBorder);
-      canvas.add(fabricInline);
-    } else {
-      var group = new Fabric.Group([fabricCircle, fabricBorder, fabricInline],
-       {left: fabricCircle['left'], top: fabricCircle['top']});
-    }
+    fabricCircle.lockRotation = fabricBorder.lockRotation =
+     fabricInline.lockRotation = true;
+    fabricCircle.lockUniScaling = fabricBorder.lockUniScaling =
+     fabricInline.lockUniScaling = true;
+
+    var group = new Fabric.Group([fabricCircle, fabricBorder, fabricInline],
+     {left: fabricCircle['left'], top: fabricCircle['top']});
+
+    group.shapeName = 'Circle';
+    canvas.add(group);
   }
 
   /**
@@ -341,6 +353,12 @@ function ImageMarkupBuilder(canvas) {
        {'x':crop['from']['x'],
         'y':crop['from']['y']} :
        {'x':0,'y':0};
+
+      if (json['previewInstructions']) {
+         imageOffset.x = json.previewInstructions.left;
+         imageOffset.y = json.previewInstructions.top;
+         resizeRatio = 1 / json.previewInstructions.ratio;
+      }
 
       applyBackground(json, canvas, callback);
     }
