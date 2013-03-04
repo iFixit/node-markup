@@ -227,7 +227,7 @@ function ImageMarkupBuilder(canvas) {
 
       group.shapeName = 'Rectangle';
 
-      markupObjects[] = group;
+      markupObjects.push(group);
       canvas.add(group);
    }
 
@@ -274,7 +274,7 @@ function ImageMarkupBuilder(canvas) {
 
       group.shapeName = 'Circle';
 
-      markupObjects[] = group;
+      markupObjects.push(group);
       canvas.add(group);
    }
 
