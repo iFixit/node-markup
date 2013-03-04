@@ -214,6 +214,8 @@ function ImageMarkupBuilder(canvas) {
      {left: rect['left'], top: rect['top']});
 
     group.shapeName = 'Rectangle';
+
+    markupObjects[] = group;
     canvas.add(group);
   }
 
@@ -259,6 +261,8 @@ function ImageMarkupBuilder(canvas) {
      {left: fabricCircle['left'], top: fabricCircle['top']});
 
     group.shapeName = 'Circle';
+
+    markupObjects[] = group;
     canvas.add(group);
   }
 
@@ -361,6 +365,10 @@ function ImageMarkupBuilder(canvas) {
       }
 
       applyBackground(json, canvas, callback);
+    },
+
+    getMarkupObjects: function getMarkupObjects(callback) {
+       return markupObjects;
     }
   };
 }
