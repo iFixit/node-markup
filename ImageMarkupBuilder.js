@@ -27,6 +27,8 @@ function ImageMarkupBuilder(canvas) {
 
    var markupObjects = new Array();
 
+   var crop = null;
+
    function clone(obj) {
       var newobj = {};
       for (property in obj) {
@@ -135,7 +137,7 @@ function ImageMarkupBuilder(canvas) {
             });
             break;
             case 'crop':
-               //もう処理していたから無視する
+               //This should already be taken care of in the canvas size
                break;
             default:
                console.error('Unsupported Instruction: ' + instruction);
@@ -191,6 +193,8 @@ function ImageMarkupBuilder(canvas) {
       rect['width'] *= resizeRatio;
       rect['height'] *= resizeRatio;
 
+      rect.shapeFunction = "shape";
+
       var rectBorder = clone(rect);
       rectBorder['width'] = rectBorder['width'] + rect['strokeWidth']
        + whiteStroke;
@@ -200,6 +204,8 @@ function ImageMarkupBuilder(canvas) {
       rectBorder['ry'] = rect['strokeWidth'] - whiteStroke;
       rectBorder['strokeWidth'] = whiteStroke;
       rectBorder['stroke'] = 'white';
+
+      rectBorder.shapeFunction = "border";
 
       var rectInline = clone(rect);
       rectInline['width'] = rectInline['width'] - rect['strokeWidth']
@@ -211,6 +217,8 @@ function ImageMarkupBuilder(canvas) {
       rectInline['strokeWidth'] = whiteStroke;
       rectInline['stroke'] = 'white';
 
+      rectInline.shapeFunction = "inline";
+
       if (isNode && shadows == true) {
          drawShadow(canvas, rect, shadowStep);
       }
@@ -219,13 +227,13 @@ function ImageMarkupBuilder(canvas) {
       fabricBorder = new Fabric.Rect(rectBorder),
       fabricInline = new Fabric.Rect(rectInline);
 
-      fabricRect.lockUniScaling = fabricBorder.lockUniScaling = 
-         fabricInline.lockUniScaling = true;
-
       var group = new Fabric.Group([fabricRect, fabricBorder, fabricInline],
        {left: rect['left'], top: rect['top']});
 
-      group.shapeName = 'Rectangle';
+      group.shapeName = 'rectangle';
+
+      group.lockRotation = true;
+      group.lockUniScaling = true;
 
       markupObjects.push(group);
       canvas.add(group);
@@ -247,14 +255,17 @@ function ImageMarkupBuilder(canvas) {
       circle.left *= resizeRatio;
       circle.top *= resizeRatio;
       circle.radius *= resizeRatio;
+      circle.shapeFunction = 'shape';
 
       var circleBorder = clone(circle);
       circleBorder['radius'] = circle['radius'] + circle['strokeWidth'] / 2;
       circleBorder['strokeWidth'] = whiteStroke;
       circleBorder['stroke'] = 'white';
+      circleBorder.shapeFunction = 'border';
 
       var circleInline = clone(circleBorder);
       circleInline['radius'] = circle['radius'] - circle['strokeWidth'] / 2;
+      circleInline.shapeFunction = 'inline';
 
       if (isNode && shadows == true) {
          drawShadow(canvas, circle, shadowStep);
@@ -264,15 +275,13 @@ function ImageMarkupBuilder(canvas) {
       fabricBorder = new Fabric.Circle(circleBorder),
       fabricInline = new Fabric.Circle(circleInline);
 
-      fabricCircle.lockRotation = fabricBorder.lockRotation =
-         fabricInline.lockRotation = true;
-      fabricCircle.lockUniScaling = fabricBorder.lockUniScaling =
-         fabricInline.lockUniScaling = true;
-
       var group = new Fabric.Group([fabricCircle, fabricBorder, fabricInline],
        {left: fabricCircle['left'], top: fabricCircle['top']});
 
-      group.shapeName = 'Circle';
+      group.shapeName = 'circle';
+
+      group.lockRotation = true;
+      group.lockUniScaling = true;
 
       markupObjects.push(group);
       canvas.add(group);
@@ -365,23 +374,89 @@ function ImageMarkupBuilder(canvas) {
 
          var imagePath = json['sourceFile'];
 
-         var crop = json['instructions']['crop'];
+         crop = json['instructions']['crop'];
          imageOffset = (typeof crop != "undefined") ?
-            {'x':crop['from']['x'],
-               'y':crop['from']['y']} :
-                  {'x':0,'y':0};
+            {
+               'x': crop['from']['x'],
+               'y': crop['from']['y']
+            } : {'x': 0,'y': 0};
 
-               if (json['previewInstructions']) {
-                  imageOffset.x = json.previewInstructions.left;
-                  imageOffset.y = json.previewInstructions.top;
-                  resizeRatio = 1 / json.previewInstructions.ratio;
-               }
+            if (json['previewInstructions']) {
+               imageOffset.x = json.previewInstructions.left;
+               imageOffset.y = json.previewInstructions.top;
+               resizeRatio = 1 / json.previewInstructions.ratio;
+            }
 
-               applyBackground(json, canvas, callback);
+            applyBackground(json, canvas, callback);
       },
 
       getMarkupObjects: function getMarkupObjects(callback) {
          return markupObjects;
+      },
+
+      getMarkupString: function getMarkupString() {
+         /**
+          * Translate RGB value to applicable color string. Unknown
+          * RGB values will will become black and a console.error message
+          * will be written.
+          */
+         function translateRGBtoColorString(rgb) {
+            for (colorString in colorValues) {
+               if (rgb == colorValues[colorString]) {
+                  return colorString;
+               }
+            }
+            console.error("No mapping from RGB to Color String Found: " + rgb);
+            return 'black';
+         }
+
+         var markupString = ";"
+
+         if (typeof crop != "undefined") {
+            markupString += "crop," + crop.from.x + "x" +
+             crop.from.y + "," + crop.size.width + "x" +
+             crop.size.height + ";";
+         }
+
+         for (var i = 0; i < markupObjects.length; ++i) {
+            var group = markupObjects[i];
+
+            switch (group.shapeName) {
+               case 'circle':
+                  var circle = group.objects[0]; //main shape
+                  var outline = group.objects[1];
+                  var from = {
+                     'x': Math.round((group.left - (outline.width - circle.width) / 2)
+                      / resizeRatio),
+                     'y': Math.round((group.top - (outline.height - circle.height) / 2)
+                      / resizeRatio)
+                  };
+                  var radius = Math.round((circle.width / 2) / resizeRatio);
+                  var color = translateRGBtoColorString(circle.stroke);
+
+                  markupString += "circle," + from.x + "x" + from.y + ","
+                   + radius + "," + color + ";";
+                  break;
+               case 'rectangle':
+                  var rectangle = group.objects[0]; //main shape
+                  var from = {
+                     'x': Math.round((group.left - rectangle.width / 2)
+                      / resizeRatio),
+                     'y': Math.round((group.top - rectangle.height / 2)
+                      / resizeRatio)
+                  };
+                  var size = {
+                     'width': Math.round(rectangle.width / resizeRatio),
+                     'height': Math.round(rectangle.height / resizeRatio)
+                  };
+
+                  markupString += "rectangle," + from.x + "x" + from.y + ","
+                   + size.width + "x" + size.height + ";";
+                  break;
+            }
+         }
+
+         return markupString;
       }
    };
 }
