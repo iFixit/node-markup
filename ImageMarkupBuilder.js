@@ -233,7 +233,6 @@ function ImageMarkupBuilder(canvas) {
       group.shapeName = 'rectangle';
 
       group.lockRotation = true;
-      group.lockUniScaling = true;
 
       markupObjects.push(group);
       canvas.add(group);
