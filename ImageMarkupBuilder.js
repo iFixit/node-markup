@@ -419,6 +419,60 @@ function ImageMarkupBuilder(canvas) {
    }
 
    return {
+      addCircle: function addCircle(data) {
+         if (!data.x || !data.y) {
+            data.x = canvas.width / resizeRatio / 2;
+            data.y = canvas.height / resizeRatio / 2;
+         }
+         if (!data.radius) {
+            data.radius = 16 / resizeRatio;
+         }
+         if (!data.color) {
+            data.color = "red";
+         }
+
+         var circle = {
+            from: {
+               x: data.x,
+               y: data.y
+            },
+            radius: data.radius,
+            color: data.color,
+            shapeName: "circle"
+         };
+
+         drawCircle(finalWidth, canvas, circle, imageOffset);
+      },
+
+      addRectangle: function addRectangle(data) {
+         if (!data.x || !data.y) {
+            data.x = canvas.width / resizeRatio / 2;
+            data.y = canvas.height / resizeRatio / 2;
+         }
+         if (!data.width || !data.height) {
+            data.width = 24 / resizeRatio;
+            data.height = 24 / resizeRatio;
+         }
+         if (!data.color) {
+            data.color = "red";
+         }
+
+         var rect = {
+            from: {
+               x: data.x,
+               y: data.y
+            },
+            size: {
+               width: data.width,
+               height: data.height
+            },
+            color: data.color,
+            shapeName: "rectangle"
+         };
+
+         drawRectangle(finalWidth, canvas, rect, imageOffset);
+      },
+
       processJSON: function processJSON(json, callback) {
          //Make sure not to render every addition on server end
          canvas.renderOnAddition = !isNode;
