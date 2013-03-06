@@ -167,7 +167,7 @@ function ImageMarkupBuilder(canvas) {
    }
 
    function drawRectangle(finalWidth, canvas, shape, imageOffset) {
-      shape['stroke'] = Math.max(Math.round(finalWidth / 300 * 2), 2);
+      shape['stroke'] = Math.max(Math.round(finalWidth / 300 * 2), 4);
       whiteStroke = 2;
 
       var rect = {
@@ -240,7 +240,7 @@ function ImageMarkupBuilder(canvas) {
    }
 
    function drawCircle(finalWidth, canvas, shape, imageOffset) {
-      shape['stroke'] = Math.max(Math.round(finalWidth / 300 * 2), 2);
+      shape['stroke'] = Math.max(Math.round(finalWidth / 300 * 2), 4);
       whiteStroke = 2;
 
       var circle = {
@@ -426,10 +426,8 @@ function ImageMarkupBuilder(canvas) {
                   var circle = group.objects[0]; //main shape
                   var outline = group.objects[1];
                   var from = {
-                     'x': Math.round((group.left - (outline.width - circle.width) / 2)
-                      / resizeRatio),
-                     'y': Math.round((group.top - (outline.height - circle.height) / 2)
-                      / resizeRatio)
+                     'x': Math.round(group.left / resizeRatio),
+                     'y': Math.round(group.top / resizeRatio)
                   };
                   var radius = Math.round((circle.width / 2) / resizeRatio);
                   var color = translateRGBtoColorString(circle.stroke);
@@ -449,10 +447,13 @@ function ImageMarkupBuilder(canvas) {
                      'width': Math.round(rectangle.width / resizeRatio),
                      'height': Math.round(rectangle.height / resizeRatio)
                   };
+                  var color = translateRGBtoColorString(rectangle.stroke);
 
                   markupString += "rectangle," + from.x + "x" + from.y + ","
-                   + size.width + "x" + size.height + ";";
+                   + size.width + "x" + size.height + "," + color +  ";";
                   break;
+               default:
+                  console.error("Unexpected group name: " + group.shapeName);
             }
          }
 
