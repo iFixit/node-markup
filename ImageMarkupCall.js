@@ -177,7 +177,6 @@ function processJSON(json) {
 }
 
 function proceed(canvas) {
-   console.log("Finished writing");
 }
 
 /**
