@@ -99,8 +99,6 @@ function ImageMarkupBuilder(canvas) {
 
             e.target.scaleX = 1;
             e.target.scaleY = 1;
-
-            console.log(shape.radius);
          }
       });
 
