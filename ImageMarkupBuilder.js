@@ -24,9 +24,11 @@ function ImageMarkupBuilder(canvas) {
 
    var imageOffset;
    var resizeRatio = 1;
+   var finalWidth = 0;
 
    var markupObjects = new Array();
 
+   var whiteStroke = 2;
    var crop = null;
 
    function clone(obj) {
@@ -70,6 +72,38 @@ function ImageMarkupBuilder(canvas) {
    }
 
    function applyBackground(json, canvas, callback) {
+      //Listen for shape resizes and reset strokeWidth accordingly
+      canvas.on({
+         'object:scaling': function (e) {
+            var target = e.target;
+            var shape = e.target.objects[0];
+            var border = e.target.objects[1];
+            var inline = e.target.objects[2];
+
+            switch (shape.shapeName) {
+               case 'rectangle':
+                  shape.width *= e.target.scaleX;
+                  shape.height *= e.target.scaleY;
+                  e.target.width = border.width;
+                  e.target.height = border.height;
+                  break;
+               case 'circle':
+                  shape.radius *= e.target.scaleX;
+                  e.target.width = border.radius * 2;
+                  e.target.height = border.radius * 2;
+                  break;
+            }
+
+            resizeBorder(shape, border, whiteStroke);
+            resizeInline(shape, inline, whiteStroke);
+
+            e.target.scaleX = 1;
+            e.target.scaleY = 1;
+
+            console.log(shape.radius);
+         }
+      });
+
       if (!json['sourceFile']) {
          if (!json['finalDimensions']) {
             var msg = "Need source file or final dimensions to create canvas";
@@ -79,6 +113,7 @@ function ImageMarkupBuilder(canvas) {
          //Apply markup to blank canvas
          applyMarkup(json, canvas, callback);
       } else {
+         finalWidth = json['finalDimensions']['width'];
          if (isNode) {
             FS.readFile(json['sourceFile'], function (err, blob) {
                if (err) throw err;
@@ -123,11 +158,11 @@ function ImageMarkupBuilder(canvas) {
 
                   switch (shapeName) {
                      case 'rectangle':
-                        drawRectangle(json['finalDimensions']['width'],
+                        drawRectangle(finalWidth,
                          canvas, shape, imageOffset);
                         break;
                      case 'circle':
-                        drawCircle(json['finalDimensions']['width'], canvas,
+                        drawCircle(finalWidth, canvas,
                          shape, imageOffset);
                         break;
                      default:
@@ -166,9 +201,37 @@ function ImageMarkupBuilder(canvas) {
       });
    }
 
+   function getStrokeWidth(finalWidth) {
+      return Math.max(Math.round(finalWidth / 300 * 2), 4);
+   }
+
+   function resizeBorder(shape, shapeBorder, whiteStroke) {
+      switch (shapeBorder.shapeName) {
+         case 'rectangle':
+            shapeBorder.width = shape.width + shape.strokeWidth +
+             whiteStroke;
+            shapeBorder.height = shape.height + shape.strokeWidth +
+             whiteStroke;
+            break;
+         case 'circle':
+            shapeBorder.radius = shape.radius + shape.strokeWidth / 2;
+      }
+   }
+
+   function resizeInline(shape, shapeInline, whiteStroke) {
+      switch (shapeInline.shapeName) {
+         case 'rectangle':
+            shapeInline.width = shape.width - shape.strokeWidth + whiteStroke;
+            shapeInline.height = shape.height - shape.strokeWidth + whiteStroke;
+            break;
+         case 'circle':
+            shapeInline.radius = shape.radius - shape.strokeWidth / 2;
+            break;
+      }
+   }
+
    function drawRectangle(finalWidth, canvas, shape, imageOffset) {
-      shape['stroke'] = Math.max(Math.round(finalWidth / 300 * 2), 4);
-      whiteStroke = 2;
+      shape['stroke'] = getStrokeWidth(finalWidth);
 
       var rect = {
          shapeName: shape['shapeName'],
@@ -196,10 +259,7 @@ function ImageMarkupBuilder(canvas) {
       rect.shapeFunction = "shape";
 
       var rectBorder = clone(rect);
-      rectBorder['width'] = rectBorder['width'] + rect['strokeWidth']
-       + whiteStroke;
-      rectBorder['height'] = rectBorder['height'] + rect['strokeWidth']
-       + whiteStroke;
+      resizeBorder(rect, rectBorder, whiteStroke);
       rectBorder['rx'] = rect['strokeWidth'] - whiteStroke;
       rectBorder['ry'] = rect['strokeWidth'] - whiteStroke;
       rectBorder['strokeWidth'] = whiteStroke;
@@ -208,10 +268,7 @@ function ImageMarkupBuilder(canvas) {
       rectBorder.shapeFunction = "border";
 
       var rectInline = clone(rect);
-      rectInline['width'] = rectInline['width'] - rect['strokeWidth']
-       + whiteStroke;
-      rectInline['height'] = rectInline['height'] - rect['strokeWidth']
-       + whiteStroke;
+      resizeInline(rect, rectInline, whiteStroke);
       rectInline['rx'] = Math.max(shape['stroke'] - rectBorder['rx'],4);
       rectInline['ry'] = Math.max(shape['stroke'] - rectBorder['ry'],4);
       rectInline['strokeWidth'] = whiteStroke;
@@ -239,8 +296,7 @@ function ImageMarkupBuilder(canvas) {
    }
 
    function drawCircle(finalWidth, canvas, shape, imageOffset) {
-      shape['stroke'] = Math.max(Math.round(finalWidth / 300 * 2), 4);
-      whiteStroke = 2;
+      shape['stroke'] = getStrokeWidth(finalWidth);
 
       var circle = {
          shapeName: shape['shapeName'],
@@ -257,13 +313,13 @@ function ImageMarkupBuilder(canvas) {
       circle.shapeFunction = 'shape';
 
       var circleBorder = clone(circle);
-      circleBorder['radius'] = circle['radius'] + circle['strokeWidth'] / 2;
+      resizeBorder(circle, circleBorder, whiteStroke);
       circleBorder['strokeWidth'] = whiteStroke;
       circleBorder['stroke'] = 'white';
       circleBorder.shapeFunction = 'border';
 
       var circleInline = clone(circleBorder);
-      circleInline['radius'] = circle['radius'] - circle['strokeWidth'] / 2;
+      resizeInline(circle, circleInline, whiteStroke);
       circleInline.shapeFunction = 'inline';
 
       if (isNode && shadows == true) {
@@ -428,7 +484,7 @@ function ImageMarkupBuilder(canvas) {
                      'x': Math.round(group.left / resizeRatio),
                      'y': Math.round(group.top / resizeRatio)
                   };
-                  var radius = Math.round((circle.width / 2) / resizeRatio);
+                  var radius = Math.round((circle.radius) / resizeRatio);
                   var color = translateRGBtoColorString(circle.stroke);
 
                   markupString += "circle," + from.x + "x" + from.y + ","
