@@ -25,7 +25,10 @@ function ImageMarkupBuilder(canvas) {
    var imageOffset;
    var resizeRatio = 1;
    var finalWidth = 0;
-   var minimumSize = 16;
+   var minimumSize = {
+      circle: 16,
+      rectangle: 24
+   };
 
    var markupObjects = new Array();
 
@@ -88,12 +91,13 @@ function ImageMarkupBuilder(canvas) {
                         width: shape.width * e.target.scaleX,
                         height: shape.height * e.target.scaleY
                      };
-                     if (newSize.width <= minimumSize || newSize.height <= minimumSize) {
-                        if (newSize.width <= minimumSize) {
-                           newSize.width = minimumSize;
+                     if (newSize.width <= minimumSize.rectangle ||
+                      newSize.height <= minimumSize.rectangle) {
+                        if (newSize.width <= minimumSize.rectangle) {
+                           newSize.width = minimumSize.rectangle;
                         }
-                        if (newSize.height <= minimumSize) {
-                           newSize.height = minimumSize;
+                        if (newSize.height <= minimumSize.rectangle) {
+                           newSize.height = minimumSize.rectangle;
                         }
                      }
 
@@ -105,8 +109,8 @@ function ImageMarkupBuilder(canvas) {
                   case 'circle':
                      var newRadius = shape.radius * e.target.scaleX;
 
-                     if (newRadius <= minimumSize) {
-                        newRadius = minimumSize;
+                     if (newRadius <= minimumSize.circle) {
+                        newRadius = minimumSize.circle;
                      }
 
                      shape.radius = newRadius;
