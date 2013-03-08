@@ -452,6 +452,16 @@ function ImageMarkupBuilder(canvas) {
       }
    }
 
+   function locate(shape) {
+      for (var i = 0; i < markupObjects.length; ++i) {
+         if (markupObjects[i] === shape) {
+            return i;
+         }
+      }
+
+      return null;
+   }
+
    return {
       addCircle: function addCircle(data) {
          if (!data.x || !data.y) {
@@ -505,6 +515,14 @@ function ImageMarkupBuilder(canvas) {
          };
 
          drawRectangle(finalWidth, canvas, rect, imageOffset);
+      },
+
+      removeShape: function removeShape(shape) {
+         var index = locate(shape);
+         if (index != null) {
+            canvas.remove(shape);
+            markupObjects.splice(index,1);
+         }
       },
 
       processJSON: function processJSON(json, callback) {
