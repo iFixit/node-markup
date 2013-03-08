@@ -25,6 +25,7 @@ function ImageMarkupBuilder(canvas) {
    var imageOffset;
    var resizeRatio = 1;
    var finalWidth = 0;
+   var minimumSize = 16;
 
    var markupObjects = new Array();
 
@@ -72,35 +73,57 @@ function ImageMarkupBuilder(canvas) {
    }
 
    function applyBackground(json, canvas, callback) {
-      //Listen for shape resizes and reset strokeWidth accordingly
-      canvas.on({
-         'object:scaling': function (e) {
-            var target = e.target;
-            var shape = e.target.objects[0];
-            var border = e.target.objects[1];
-            var inline = e.target.objects[2];
+      if (!isNode) {
+         //Listen for shape resizes and reset strokeWidth accordingly
+         canvas.on({
+            'object:scaling': function (e) {
+               var target = e.target;
+               var shape = e.target.objects[0];
+               var border = e.target.objects[1];
+               var inline = e.target.objects[2];
 
-            switch (shape.shapeName) {
-               case 'rectangle':
-                  shape.width *= e.target.scaleX;
-                  shape.height *= e.target.scaleY;
-                  e.target.width = border.width;
-                  e.target.height = border.height;
-                  break;
-               case 'circle':
-                  shape.radius *= e.target.scaleX;
-                  e.target.width = border.radius * 2;
-                  e.target.height = border.radius * 2;
-                  break;
+               switch (shape.shapeName) {
+                  case 'rectangle':
+                     var newSize = {
+                        width: shape.width * e.target.scaleX,
+                        height: shape.height * e.target.scaleY
+                     };
+                     if (newSize.width <= minimumSize || newSize.height <= minimumSize) {
+                        if (newSize.width <= minimumSize) {
+                           newSize.width = minimumSize;
+                        }
+                        if (newSize.height <= minimumSize) {
+                           newSize.height = minimumSize;
+                        }
+                     }
+
+                     shape.width = newSize.width;
+                     shape.height = newSize.height;
+                     e.target.width = border.width;
+                     e.target.height = border.height;
+                     break;
+                  case 'circle':
+                     var newRadius = shape.radius * e.target.scaleX;
+
+                     if (newRadius <= minimumSize) {
+                        newRadius = minimumSize;
+                     }
+
+                     shape.radius = newRadius;
+                     e.target.width = border.radius * 2;
+                     e.target.height = border.radius * 2;
+
+                     break;
+               }
+
+               resizeBorder(shape, border, whiteStroke);
+               resizeInline(shape, inline, whiteStroke);
+
+               e.target.scaleX = 1;
+               e.target.scaleY = 1;
             }
-
-            resizeBorder(shape, border, whiteStroke);
-            resizeInline(shape, inline, whiteStroke);
-
-            e.target.scaleX = 1;
-            e.target.scaleY = 1;
-         }
-      });
+         });
+      }
 
       if (!json['sourceFile']) {
          if (!json['finalDimensions']) {
@@ -425,7 +448,7 @@ function ImageMarkupBuilder(canvas) {
             data.y = canvas.height / resizeRatio / 2;
          }
          if (!data.radius) {
-            data.radius = 16 / resizeRatio;
+            data.radius = minimumSize / resizeRatio;
          }
          if (!data.color) {
             data.color = "red";
@@ -450,8 +473,8 @@ function ImageMarkupBuilder(canvas) {
             data.y = canvas.height / resizeRatio / 2;
          }
          if (!data.width || !data.height) {
-            data.width = 24 / resizeRatio;
-            data.height = 24 / resizeRatio;
+            data.width = minimumSize / resizeRatio;
+            data.height = minimumSize / resizeRatio;
          }
          if (!data.color) {
             data.color = "red";
