@@ -454,7 +454,7 @@ function ImageMarkupBuilder(canvas) {
             data.y = canvas.height / resizeRatio / 2;
          }
          if (!data.radius) {
-            data.radius = minimumSize / resizeRatio;
+            data.radius = minimumSize.circle / resizeRatio;
          }
          if (!data.color) {
             data.color = "red";
@@ -479,8 +479,8 @@ function ImageMarkupBuilder(canvas) {
             data.y = canvas.height / resizeRatio / 2;
          }
          if (!data.width || !data.height) {
-            data.width = minimumSize / resizeRatio;
-            data.height = minimumSize / resizeRatio;
+            data.width = minimumSize.rectangle / resizeRatio;
+            data.height = minimumSize.rectangle / resizeRatio;
          }
          if (!data.color) {
             data.color = "red";
