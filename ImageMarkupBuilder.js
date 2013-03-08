@@ -32,7 +32,7 @@ function ImageMarkupBuilder(canvas) {
 
    var markupObjects = new Array();
 
-   var whiteStroke = 2;
+   var whiteStroke = isNode ? 2 : 1;
    var crop = null;
 
    function clone(obj) {
