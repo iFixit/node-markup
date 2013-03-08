@@ -319,6 +319,7 @@ function ImageMarkupBuilder(canvas) {
 
       group.lockRotation = true;
       group.transparentCorners = false;
+      group.hasRotatingPoint = false;
 
       markupObjects.push(group);
       canvas.add(group);
@@ -367,6 +368,7 @@ function ImageMarkupBuilder(canvas) {
       group.lockRotation = true;
       group.lockUniScaling = true;
       group.transparentCorners = false;
+      group.hasRotatingPoint = false;
 
       markupObjects.push(group);
       canvas.add(group);
