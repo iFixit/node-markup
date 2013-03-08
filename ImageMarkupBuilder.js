@@ -129,6 +129,9 @@ function ImageMarkupBuilder(canvas) {
          });
       }
 
+      //Disable drag selection on canvas
+      canvas.selection = false;
+
       if (!json['sourceFile']) {
          if (!json['finalDimensions']) {
             var msg = "Need source file or final dimensions to create canvas";
