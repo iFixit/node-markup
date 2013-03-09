@@ -127,6 +127,22 @@ function ImageMarkupBuilder(canvas) {
                e.target.scaleY = 1;
             }
          });
+
+         //Listen for shapes falling off the edge and delete
+         canvas.on({
+            'object:modified': function (e) {
+               var shape = e.target;
+               var w = shape.width / 2;
+               var h = shape.height / 2;
+
+               if (shape.left + w < 0 ||
+                shape.left - w > canvas.width ||
+                shape.top + h < 0 ||
+                shape.top - h > canvas.height) {
+                  remove(shape);
+               }
+            }.bind(this)
+         });
       }
 
       //Disable drag selection on canvas
@@ -462,6 +478,14 @@ function ImageMarkupBuilder(canvas) {
       return null;
    }
 
+   function remove(shape) {
+      var index = locate(shape);
+      if (index != null) {
+         canvas.remove(shape);
+         markupObjects.splice(index,1);
+      }
+   }
+
    return {
       addCircle: function addCircle(data) {
          if (!data.x || !data.y) {
@@ -518,11 +542,7 @@ function ImageMarkupBuilder(canvas) {
       },
 
       removeShape: function removeShape(shape) {
-         var index = locate(shape);
-         if (index != null) {
-            canvas.remove(shape);
-            markupObjects.splice(index,1);
-         }
+         remove(shape);
       },
 
       processJSON: function processJSON(json, callback) {
