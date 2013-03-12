@@ -279,8 +279,8 @@ function ImageMarkupBuilder(canvas) {
 
       var rect = {
          shapeName: shape['shapeName'],
-         left: shape['from']['x']-imageOffset['x'],
-         top: shape['from']['y']-imageOffset['y'],
+         left: shape['from']['x'],
+         top: shape['from']['y'],
          width: shape['size']['width'],
          height: shape['size']['height'],
          rx: 1,
@@ -346,8 +346,8 @@ function ImageMarkupBuilder(canvas) {
 
       var circle = {
          shapeName: shape['shapeName'],
-         left: shape['from']['x']-imageOffset['x'],
-         top: shape['from']['y']-imageOffset['y'],
+         left: shape['from']['x'],
+         top: shape['from']['y'],
          radius: shape['radius'],
          strokeWidth: shape['stroke'],
          stroke: colorValues[shape['color']],
