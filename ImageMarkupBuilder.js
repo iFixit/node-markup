@@ -554,19 +554,19 @@ function ImageMarkupBuilder(canvas) {
          var imagePath = json['sourceFile'];
 
          crop = json['instructions']['crop'];
-         imageOffset = (typeof crop != "undefined") ?
-            {
-               'x': crop['from']['x'],
-               'y': crop['from']['y']
-            } : {'x': 0,'y': 0};
+         imageOffset = (typeof crop != "undefined") ? {
+            'x': crop['from']['x'],
+            'y': crop['from']['y']
+         } : {
+            'x': 0,
+            'y': 0
+         };
 
-            if (json['previewInstructions']) {
-               imageOffset.x = json.previewInstructions.left;
-               imageOffset.y = json.previewInstructions.top;
-               resizeRatio = 1 / json.previewInstructions.ratio;
-            }
+         if (json['previewInstructions']) {
+            resizeRatio = 1 / json.previewInstructions.ratio;
+         }
 
-            applyBackground(json, canvas, callback);
+         applyBackground(json, canvas, callback);
       },
 
       getMarkupObjects: function getMarkupObjects(callback) {
