@@ -597,13 +597,17 @@ function ImageMarkupBuilder(canvas) {
              crop.size.height + ";";
          }
 
+         var outlineIndex = 0;
+         var inlineIndex = 1;
+         var shapeIndex = 2;
+
          for (var i = 0; i < markupObjects.length; ++i) {
             var group = markupObjects[i];
 
             switch (group.shapeName) {
                case 'circle':
-                  var circle = group.objects[0]; //main shape
-                  var outline = group.objects[1];
+                  var circle = group.objects[shapeIndex]; //main shape
+                  var outline = group.objects[outlineIndex];
                   var from = {
                      'x': Math.round(group.left / resizeRatio),
                      'y': Math.round(group.top / resizeRatio)
@@ -615,7 +619,7 @@ function ImageMarkupBuilder(canvas) {
                    + radius + "," + color + ";";
                   break;
                case 'rectangle':
-                  var rectangle = group.objects[0]; //main shape
+                  var rectangle = group.objects[shapeIndex]; //main shape
                   var from = {
                      'x': Math.round((group.left - rectangle.width / 2)
                       / resizeRatio),
