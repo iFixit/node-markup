@@ -328,7 +328,7 @@ function ImageMarkupBuilder(canvas) {
       fabricBorder = new Fabric.Rect(rectBorder),
       fabricInline = new Fabric.Rect(rectInline);
 
-      var group = new Fabric.Group([fabricRect, fabricBorder, fabricInline],
+      var group = new Fabric.Group([fabricBorder, fabricInline, fabricRect],
        {left: rect['left'], top: rect['top']});
 
       group.shapeName = 'rectangle';
@@ -376,7 +376,7 @@ function ImageMarkupBuilder(canvas) {
       fabricBorder = new Fabric.Circle(circleBorder),
       fabricInline = new Fabric.Circle(circleInline);
 
-      var group = new Fabric.Group([fabricCircle, fabricBorder, fabricInline],
+      var group = new Fabric.Group([fabricBorder, fabricInline, fabricCircle],
        {left: fabricCircle['left'], top: fabricCircle['top']});
 
       group.shapeName = 'circle';
