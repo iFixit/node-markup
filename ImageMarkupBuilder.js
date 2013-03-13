@@ -379,6 +379,11 @@ function ImageMarkupBuilder(canvas) {
 
       markupObjects.push(group);
       canvas.add(group);
+
+      if (!isNode) {
+         // Set this as the active object
+         canvas.setActiveObject(group);
+      }
    }
 
    function drawCircle(finalWidth, canvas, shape, imageOffset) {
@@ -428,6 +433,11 @@ function ImageMarkupBuilder(canvas) {
 
       markupObjects.push(group);
       canvas.add(group);
+
+      if (!isNode) {
+         // Set this as the active object
+         canvas.setActiveObject(group);
+      }
    }
 
    /**
