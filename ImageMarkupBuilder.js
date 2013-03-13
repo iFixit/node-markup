@@ -94,16 +94,12 @@ function ImageMarkupBuilder(canvas) {
             'object:scaling': function (e) {
                //If no initial position is logged, log it
                if (!initialPosition.fresh) {
-                  console.log('Setting init position');
-                  console.log(initialPosition);
                   initialPosition = {
                      left: e.target.left,
                      top: e.target.top,
                      fresh: true
                   };
                }
-
-               console.log(initialPosition.left + ' -- ' + e.target.left);
 
                var target = e.target;
                var shape = e.target.objects[shapeIndex];
@@ -184,7 +180,6 @@ function ImageMarkupBuilder(canvas) {
          //Clear initial position on mouse up
          canvas.on({
             'mouse:up': function (e) {
-               console.log('mouseup');
                initialPosition.fresh = false;
             }.bind(this)
          });
