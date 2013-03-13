@@ -27,6 +27,9 @@ function ImageMarkupBuilder(canvas) {
    var inlineIndex = 1;
    var shapeIndex = 2;
 
+   // Holder for initial position of currently selected shape
+   var initialPosition = {fresh: false, left: NaN, top: NaN};
+
    var imageOffset;
    var resizeRatio = 1;
    var finalWidth = 0;
@@ -89,15 +92,23 @@ function ImageMarkupBuilder(canvas) {
          //Listen for shape resizes and reset strokeWidth accordingly
          canvas.on({
             'object:scaling': function (e) {
+               //If no initial position is logged, log it
+               if (!initialPosition.fresh) {
+                  console.log('Setting init position');
+                  console.log(initialPosition);
+                  initialPosition = {
+                     left: e.target.left,
+                     top: e.target.top,
+                     fresh: true
+                  };
+               }
+
+               console.log(initialPosition.left + ' -- ' + e.target.left);
+
                var target = e.target;
                var shape = e.target.objects[shapeIndex];
                var border = e.target.objects[borderIndex];
                var inline = e.target.objects[inlineIndex];
-
-               var initialPosition = {
-                  left: target.left,
-                  top: target.top
-               };
 
                switch (shape.shapeName) {
                   case 'rectangle':
@@ -148,7 +159,10 @@ function ImageMarkupBuilder(canvas) {
 
                e.target.scaleX = 1;
                e.target.scaleY = 1;
-            }
+
+               e.target.left = initialPosition.left;
+               e.target.top = initialPosition.top;
+            }.bind(this)
          });
 
          //Listen for shapes falling off the edge and delete
@@ -164,6 +178,14 @@ function ImageMarkupBuilder(canvas) {
                 shape.top - h > canvas.height) {
                   remove(shape);
                }
+            }.bind(this)
+         });
+
+         //Clear initial position on mouse up
+         canvas.on({
+            'mouse:up': function (e) {
+               console.log('mouseup');
+               initialPosition.fresh = false;
             }.bind(this)
          });
       }
