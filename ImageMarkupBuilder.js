@@ -22,12 +22,21 @@ function ImageMarkupBuilder(canvas) {
       'black': 'rgb(0,0,0)'
    };
 
+   // Expected group indexes
+   var borderIndex = 0;
+   var inlineIndex = 1;
+   var shapeIndex = 2;
+
    var imageOffset;
    var resizeRatio = 1;
    var finalWidth = 0;
    var minimumSize = {
       circle: 16,
       rectangle: 24
+   };
+   var maximumSize = {
+      circle: 64,
+      rectangle: 128
    };
 
    var markupObjects = new Array();
@@ -81,9 +90,14 @@ function ImageMarkupBuilder(canvas) {
          canvas.on({
             'object:scaling': function (e) {
                var target = e.target;
-               var shape = e.target.objects[0];
-               var border = e.target.objects[1];
-               var inline = e.target.objects[2];
+               var shape = e.target.objects[shapeIndex];
+               var border = e.target.objects[borderIndex];
+               var inline = e.target.objects[inlineIndex];
+
+               var initialPosition = {
+                  left: target.left,
+                  top: target.top
+               };
 
                switch (shape.shapeName) {
                   case 'rectangle':
@@ -92,12 +106,19 @@ function ImageMarkupBuilder(canvas) {
                         height: shape.height * e.target.scaleY
                      };
                      if (newSize.width <= minimumSize.rectangle ||
-                      newSize.height <= minimumSize.rectangle) {
+                      newSize.height <= minimumSize.rectangle ||
+                      newSize.width >= maximumSize.rectangle ||
+                      newSize.height >= maximumSize.rectangle) {
                         if (newSize.width <= minimumSize.rectangle) {
                            newSize.width = minimumSize.rectangle;
+                        } else if (newSize.width >= maximumSize.rectangle) {
+                           newSize.width = maximumSize.rectangle;
                         }
+
                         if (newSize.height <= minimumSize.rectangle) {
                            newSize.height = minimumSize.rectangle;
+                        } else if (newSize.height >= maximumSize.rectangle) {
+                           newSize.height = maximumSize.rectangle;
                         }
                      }
 
@@ -111,6 +132,8 @@ function ImageMarkupBuilder(canvas) {
 
                      if (newRadius <= minimumSize.circle) {
                         newRadius = minimumSize.circle;
+                     } else if (newRadius >= maximumSize.circle) {
+                        newRadius = maximumSize.circle;
                      }
 
                      shape.radius = newRadius;
@@ -597,17 +620,13 @@ function ImageMarkupBuilder(canvas) {
              crop.size.height + ";";
          }
 
-         var outlineIndex = 0;
-         var inlineIndex = 1;
-         var shapeIndex = 2;
-
          for (var i = 0; i < markupObjects.length; ++i) {
             var group = markupObjects[i];
 
             switch (group.shapeName) {
                case 'circle':
                   var circle = group.objects[shapeIndex]; //main shape
-                  var outline = group.objects[outlineIndex];
+                  var outline = group.objects[borderIndex];
                   var from = {
                      'x': Math.round(group.left / resizeRatio),
                      'y': Math.round(group.top / resizeRatio)
