@@ -656,8 +656,8 @@ function ImageMarkupBuilder(canvas) {
                   var circle = group.objects[shapeIndex]; //main shape
                   var outline = group.objects[borderIndex];
                   var from = {
-                     'x': Math.round(group.left / resizeRatio),
-                     'y': Math.round(group.top / resizeRatio)
+                     'x': Math.round(group.left / resizeRatio) + imageOffset.x,
+                     'y': Math.round(group.top / resizeRatio) + imageOffset.y
                   };
                   var radius = Math.round((circle.radius) / resizeRatio);
                   var color = translateRGBtoColorString(circle.stroke);
@@ -669,9 +669,9 @@ function ImageMarkupBuilder(canvas) {
                   var rectangle = group.objects[shapeIndex]; //main shape
                   var from = {
                      'x': Math.round((group.left - rectangle.width / 2)
-                      / resizeRatio),
+                      / resizeRatio) + imageOffset.x,
                      'y': Math.round((group.top - rectangle.height / 2)
-                      / resizeRatio)
+                      / resizeRatio) + imageOffset.y
                   };
                   var size = {
                      'width': Math.round(rectangle.width / resizeRatio),
