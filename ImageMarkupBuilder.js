@@ -598,6 +598,7 @@ function ImageMarkupBuilder(canvas) {
       processJSON: function processJSON(json, callback) {
          //Make sure not to render every addition on server end
          canvas.renderOnAddition = !isNode;
+         canvas.uniScaleTransform = true;
 
          cleanJSON(json);
 
