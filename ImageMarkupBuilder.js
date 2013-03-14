@@ -617,6 +617,9 @@ function ImageMarkupBuilder(canvas) {
             resizeRatio = 1 / json.previewInstructions.ratio;
          }
 
+         maximumSize.rectangle = 51 / resizeRatio * 2;
+         maximumSize.circle = 51 / resizeRatio / 2;
+
          applyBackground(json, canvas, callback);
       },
 
