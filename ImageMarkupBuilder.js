@@ -198,7 +198,7 @@ function ImageMarkupBuilder(canvas) {
          applyMarkup(json, canvas, callback);
       } else {
          finalWidth = json['finalDimensions']['width'];
-         if (finalWidth <= 1600) {
+         if (finalWidth <= 1800) {
             whiteStroke = 1;
          }
          if (isNode) {
@@ -290,9 +290,6 @@ function ImageMarkupBuilder(canvas) {
 
    function getStrokeWidth(finalWidth) {
       var width = Math.max(Math.round(finalWidth / 300 * 2), 4);
-      if (finalWidth > 3000) {
-         width /= 2;
-      }
       return width;
    }
 
