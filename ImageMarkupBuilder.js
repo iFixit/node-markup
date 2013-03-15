@@ -198,6 +198,9 @@ function ImageMarkupBuilder(canvas) {
          applyMarkup(json, canvas, callback);
       } else {
          finalWidth = json['finalDimensions']['width'];
+         if (finalWidth <= 1600) {
+            whiteStroke = 1;
+         }
          if (isNode) {
             FS.readFile(json['sourceFile'], function (err, blob) {
                if (err) throw err;
@@ -286,7 +289,11 @@ function ImageMarkupBuilder(canvas) {
    }
 
    function getStrokeWidth(finalWidth) {
-      return Math.max(Math.round(finalWidth / 300 * 2), 4);
+      var width = Math.max(Math.round(finalWidth / 300 * 2), 4);
+      if (finalWidth > 3000) {
+         width /= 2;
+      }
+      return width;
    }
 
    function resizeBorder(shape, shapeBorder, whiteStroke) {
