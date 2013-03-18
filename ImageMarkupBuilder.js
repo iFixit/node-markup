@@ -45,6 +45,7 @@ function ImageMarkupBuilder(canvas) {
    var markupObjects = new Array();
 
    var whiteStroke = isNode ? 2 : 1;
+   var strokeWidth = null;
    var crop = null;
 
    function clone(obj) {
@@ -261,6 +262,9 @@ function ImageMarkupBuilder(canvas) {
             case 'crop':
                //This should already be taken care of in the canvas size
                break;
+            case 'strokeWidth':
+               strokeWidth = json.instructions[instruction];
+               break;
             default:
                console.error('Unsupported Instruction: ' + instruction);
          }
@@ -289,6 +293,10 @@ function ImageMarkupBuilder(canvas) {
    }
 
    function getStrokeWidth(finalWidth) {
+      if (strokeWidth != null) {
+         return strokeWidth;
+      }
+
       var width = Math.max(Math.round(finalWidth / 300 * 2), 4);
       return width;
    }

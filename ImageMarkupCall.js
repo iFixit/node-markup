@@ -214,14 +214,20 @@ function cleanJSON(json, context) {
    if (!context)
       context = "root";
 
+   var integerProperties = [
+      'x'
+     ,'y'
+     ,'width'
+     ,'height'
+     ,'radius'
+     ,'strokeWidth'
+   ];
+
    for (property in json) {
 
       if (typeof(json[property]) == 'object') {
          cleanJSON(json[property], context + '.' + property);
-      }
-      else if (property == 'x' || property == 'y' ||
-            property == 'width' || property == 'height' ||
-            property == 'radius') {
+      } else if (integerProperties.indexOf(property) != -1) {
          if (typeof(json[property]) == 'string') {
             json[property] = parseInt(json[property]);
             if (isNaN(json[property])) {
