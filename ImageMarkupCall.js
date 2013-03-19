@@ -14,6 +14,8 @@ var colorValues = {
    'black': 'rgb(0,0,0)'
 };
 
+var stroke = null;
+
 function usage(err) {
    var filename = __filename.replace(/^.*[\\\/]/, '');
    console.log('Example Usage:');
@@ -44,16 +46,25 @@ function processArgs() {
    }
 
    var json;
-   if (argv.json && argv.markup) {
-      console.error('Invalid usage.');
-      usage(-1);
-   } else if (argv.json) {
+   if (argv.json) {
+      if (argv.markup) {
+         console.error('Invalid usage: Processing JSON and Markup at once.');
+         usage(-1);
+      } else if (argv.stroke) {
+         console.log('Invalid usage: \'stroke\' with JSON in command line.');
+         usage(-1);
+      }
+
       var json = JSON.parse(argv.json);
       processJSON(json);
    } else if (argv.markup) {
       if (!argv.input || !argv.output) {
          console.error('Invalid usage. Input or output path missing.');
          usage(-1);
+      }
+
+      if (argv.stroke) {
+         stroke = parseInt(argv.stroke);
       }
 
       convertMarkupToJSON(processJSON, argv.markup, argv.input, argv.output);
@@ -162,6 +173,10 @@ function convertMarkupToJSON(callback, markup, infile, outfile) {
 
       json['sourceFile'] = infile;
       json['destinationFile'] = outfile;
+
+      if (stroke != null) {
+         json.instructions.strokeWidth = stroke;
+      }
 
       callback(json);
    });

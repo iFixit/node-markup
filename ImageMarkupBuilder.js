@@ -236,6 +236,12 @@ function ImageMarkupBuilder(canvas) {
    }
 
    function applyMarkup(json, canvas, callback) {
+      // strokeWidth needs to be caught now, since if it's lower in the JSON
+      // it will not get picked up until it's too late.
+      if (json.instructions.strokeWidth) {
+         strokeWidth = json.instructions.strokeWidth;
+      }
+
       for (instruction in json['instructions']) {
          switch (instruction) {
             case 'draw':
@@ -259,11 +265,10 @@ function ImageMarkupBuilder(canvas) {
                }
             });
             break;
+
+            //These should already be taken care of
             case 'crop':
-               //This should already be taken care of in the canvas size
-               break;
             case 'strokeWidth':
-               strokeWidth = json.instructions[instruction];
                break;
             default:
                console.error('Unsupported Instruction: ' + instruction);
@@ -294,10 +299,11 @@ function ImageMarkupBuilder(canvas) {
 
    function getStrokeWidth(finalWidth) {
       if (strokeWidth != null) {
-         return strokeWidth;
+         var width = strokeWidth;
+      } else {
+         var width = Math.max(Math.round(finalWidth / 300 * 2), 4);
       }
 
-      var width = Math.max(Math.round(finalWidth / 300 * 2), 4);
       return width;
    }
 
