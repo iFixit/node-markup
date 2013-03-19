@@ -664,9 +664,13 @@ function ImageMarkupBuilder(canvas) {
          var markupString = ";"
 
          if (typeof crop != "undefined") {
-            markupString += "crop," + crop.from.x + "x" +
-             crop.from.y + "," + crop.size.width + "x" +
-             crop.size.height + ";";
+            // Cut out cases where crop is used to offset non-4:3
+            // images
+            if (crop.from.x >= 0 && crop.from.y >= 0) {
+               markupString += "crop," + crop.from.x + "x" +
+                crop.from.y + "," + crop.size.width + "x" +
+                crop.size.height + ";";
+            }
          }
 
          for (var i = 0; i < markupObjects.length; ++i) {
