@@ -623,7 +623,8 @@ function ImageMarkupBuilder(canvas) {
          var imagePath = json['sourceFile'];
 
          crop = json['instructions']['crop'];
-         imageOffset = (typeof crop != "undefined") ? {
+         imageOffset = (typeof crop != "undefined" &&
+          crop.from.x >= 0 && crop.from.y >= 0) ? {
             'x': crop['from']['x'],
             'y': crop['from']['y']
          } : {
