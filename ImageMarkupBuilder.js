@@ -559,6 +559,8 @@ function ImageMarkupBuilder(canvas) {
          if (!data.x || !data.y) {
             data.x = canvas.width / resizeRatio / 2;
             data.y = canvas.height / resizeRatio / 2;
+            data.x += crop.from.x;
+            data.y += crop.from.y;
          }
          if (!data.radius) {
             data.radius = minimumSize.circle / resizeRatio;
@@ -581,13 +583,17 @@ function ImageMarkupBuilder(canvas) {
       },
 
       addRectangle: function addRectangle(data) {
-         if (!data.x || !data.y) {
-            data.x = canvas.width / resizeRatio / 2;
-            data.y = canvas.height / resizeRatio / 2;
-         }
          if (!data.width || !data.height) {
             data.width = minimumSize.rectangle / resizeRatio;
             data.height = minimumSize.rectangle / resizeRatio;
+         }
+         if (!data.x || !data.y) {
+            data.x = canvas.width / resizeRatio / 2;
+            data.y = canvas.height / resizeRatio / 2;
+            data.x -= data.width / 2;
+            data.y -= data.height / 2;
+            data.x += crop.from.x;
+            data.y += crop.from.y;
          }
          if (!data.color) {
             data.color = "red";
