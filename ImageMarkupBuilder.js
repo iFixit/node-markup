@@ -628,6 +628,15 @@ function ImageMarkupBuilder(canvas) {
          remove(shape);
       },
 
+      removeShapes: function removeShapes() {
+         for (var i = 0; i < markupObjects.length; ++i) {
+            var shape = markupObjects[i];
+            canvas.remove(shape);
+         }
+
+         markupObjects = [];
+      },
+
       processJSON: function processJSON(json, callback) {
          //Make sure not to render every addition on server end
          canvas.renderOnAddition = !isNode;
