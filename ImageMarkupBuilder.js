@@ -41,6 +41,14 @@ function ImageMarkupBuilder(canvas) {
       circle: 64,
       rectangle: 128
    };
+   var maximumSizeRatio = {
+      circle: 0.3, // Max size of radius
+      rectangle: 0.8 // Max size of side
+   };
+   var initialSize = {
+      circle: 24,
+      rectangle: 24
+   };
 
    var markupObjects = new Array();
 
@@ -563,7 +571,7 @@ function ImageMarkupBuilder(canvas) {
             data.y += crop.from.y;
          }
          if (!data.radius) {
-            data.radius = minimumSize.circle / resizeRatio;
+            data.radius = initialSize.circle / resizeRatio;
          }
          if (!data.color) {
             data.color = "red";
@@ -578,14 +586,15 @@ function ImageMarkupBuilder(canvas) {
             color: data.color,
             shapeName: "circle"
          };
+         console.log(circle);
 
          drawCircle(finalWidth, canvas, circle, imageOffset);
       },
 
       addRectangle: function addRectangle(data) {
          if (!data.width || !data.height) {
-            data.width = minimumSize.rectangle / resizeRatio;
-            data.height = minimumSize.rectangle / resizeRatio;
+            data.width = initialSize.rectangle / resizeRatio;
+            data.height = initialSize.rectangle / resizeRatio;
          }
          if (!data.x || !data.y) {
             data.x = canvas.width / resizeRatio / 2;
@@ -642,8 +651,15 @@ function ImageMarkupBuilder(canvas) {
             resizeRatio = 1 / json.previewInstructions.ratio;
          }
 
-         maximumSize.rectangle = 51 / resizeRatio * 2;
-         maximumSize.circle = 51 / resizeRatio / 2;
+         maximumSize.rectangle =
+          json.finalDimensions.height < json.finalDimensions.width ?
+          json.finalDimensions.height * maximumSizeRatio.rectangle :
+          json.finalDimensions.width * maximumSizeRatio.rectangle;
+
+         maximumSize.circle =
+          json.finalDimensions.height < json.finalDimensions.width ?
+          json.finalDimensions.height * maximumSizeRatio.circle :
+          json.finalDimensions.width * maximumSizeRatio.circle;
 
          applyBackground(json, canvas, callback);
       },
