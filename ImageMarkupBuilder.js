@@ -34,8 +34,8 @@ function ImageMarkupBuilder(canvas) {
    var resizeRatio = 1;
    var finalWidth = 0;
    var minimumSize = {
-      circle: 16,
-      rectangle: 24
+      circle: 8,
+      rectangle: 16
    };
    var maximumSize = {
       circle: 64,
