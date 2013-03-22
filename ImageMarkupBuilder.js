@@ -46,7 +46,7 @@ function ImageMarkupBuilder(canvas) {
       rectangle: 0.8 // Max size of side
    };
    var initialSize = {
-      circle: 24,
+      circle: 12,
       rectangle: 24
    };
 
