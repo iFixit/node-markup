@@ -567,8 +567,8 @@ function ImageMarkupBuilder(canvas) {
          if (!data.x || !data.y) {
             data.x = canvas.width / resizeRatio / 2;
             data.y = canvas.height / resizeRatio / 2;
-            data.x += crop.from.x;
-            data.y += crop.from.y;
+            data.x += imageOffset.x;
+            data.y += imageOffset.y;
          }
          if (!data.radius) {
             data.radius = initialSize.circle / resizeRatio;
@@ -586,7 +586,6 @@ function ImageMarkupBuilder(canvas) {
             color: data.color,
             shapeName: "circle"
          };
-         console.log(circle);
 
          drawCircle(finalWidth, canvas, circle, imageOffset);
       },
@@ -601,8 +600,8 @@ function ImageMarkupBuilder(canvas) {
             data.y = canvas.height / resizeRatio / 2;
             data.x -= data.width / 2;
             data.y -= data.height / 2;
-            data.x += crop.from.x;
-            data.y += crop.from.y;
+            data.x += imageOffset.x;
+            data.y += imageOffset.y;
          }
          if (!data.color) {
             data.color = "red";
