@@ -623,6 +623,17 @@ function ImageMarkupBuilder(canvas) {
          drawRectangle(finalWidth, canvas, rect, imageOffset);
       },
 
+      setColor: function setColor(shape, colorName) {
+         shape.objects[shapeIndex].stroke = colorValues[colorName];
+
+         if (!isNode)
+            canvas.renderAll();
+      },
+
+      getShapes: function getShapes() {
+         return canvas._objects;
+      },
+
       removeShape: function removeShape(shape) {
          remove(shape);
       },
