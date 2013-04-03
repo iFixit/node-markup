@@ -569,7 +569,11 @@ function ImageMarkupBuilder(canvas) {
             data.y = canvas.height / resizeRatio / 2;
             data.x += imageOffset.x;
             data.y += imageOffset.y;
+         } else {
+            data.x /= resizeRatio;
+            data.y /= resizeRatio;
          }
+
          if (!data.radius) {
             data.radius = initialSize.circle / resizeRatio;
          }
@@ -602,7 +606,13 @@ function ImageMarkupBuilder(canvas) {
             data.y -= data.height / 2;
             data.x += imageOffset.x;
             data.y += imageOffset.y;
+         } else {
+            data.x = data.x / resizeRatio;
+            data.y = data.y / resizeRatio;
+            data.x -= data.width / 2;
+            data.y -= data.height / 2;
          }
+
          if (!data.color) {
             data.color = "red";
          }
