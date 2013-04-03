@@ -572,6 +572,8 @@ function ImageMarkupBuilder(canvas) {
          } else {
             data.x /= resizeRatio;
             data.y /= resizeRatio;
+            data.x += imageOffset.x;
+            data.y += imageOffset.y;
          }
 
          if (!data.radius) {
@@ -611,6 +613,8 @@ function ImageMarkupBuilder(canvas) {
             data.y = data.y / resizeRatio;
             data.x -= data.width / 2;
             data.y -= data.height / 2;
+            data.x += imageOffset.x;
+            data.y += imageOffset.y;
          }
 
          if (!data.color) {
