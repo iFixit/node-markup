@@ -56,6 +56,10 @@ function ImageMarkupBuilder(canvas) {
    var strokeWidth = null;
    var crop = null;
 
+   /**
+    * Simple clone function for use in deep-copying objects containing
+    * objects, arrays, and values. Does not support copying of functions.
+    */
    function clone(obj) {
       var newobj = {};
       for (property in obj) {
@@ -243,6 +247,11 @@ function ImageMarkupBuilder(canvas) {
       }
    }
 
+   /**
+    * Applies the given markup instructions to the fabric canvas. If this is
+    * server-side, call writeCanvas() to write the results to a file. If
+    * client-side, call the client-provided callback directly.
+    */
    function applyMarkup(json, canvas, callback) {
       // strokeWidth needs to be caught now, since if it's lower in the JSON
       // it will not get picked up until it's too late.
@@ -290,6 +299,9 @@ function ImageMarkupBuilder(canvas) {
       }
    }
 
+   /**
+    * Writes the processed canvas to a file.
+    */
    function writeCanvas(json, canvas, callback) {
       canvas.renderAll();
       var outstream = FS.createWriteStream(json['destinationFile']),
@@ -305,6 +317,9 @@ function ImageMarkupBuilder(canvas) {
       });
    }
 
+   /**
+    * Returns a strokeWidth calculated based on the dimensions of the canvas.
+    */
    function getStrokeWidth(finalWidth) {
       if (strokeWidth != null) {
          var width = strokeWidth;
@@ -315,6 +330,10 @@ function ImageMarkupBuilder(canvas) {
       return width;
    }
 
+   /**
+    * Resizes the border (outline) of the shape group to reflect correctly
+    * the size of the shape.
+    */
    function resizeBorder(shape, shapeBorder, whiteStroke) {
       switch (shapeBorder.shapeName) {
          case 'rectangle':
@@ -328,6 +347,10 @@ function ImageMarkupBuilder(canvas) {
       }
    }
 
+   /**
+    * Resizes the inline of the shape group to reflect correctly the size of
+    * the shape.
+    */
    function resizeInline(shape, shapeInline, whiteStroke) {
       switch (shapeInline.shapeName) {
          case 'rectangle':
@@ -410,6 +433,8 @@ function ImageMarkupBuilder(canvas) {
          // Set this as the active object
          canvas.setActiveObject(group);
       }
+
+      return group;
    }
 
    function drawCircle(finalWidth, canvas, shape, imageOffset) {
@@ -464,6 +489,8 @@ function ImageMarkupBuilder(canvas) {
          // Set this as the active object
          canvas.setActiveObject(group);
       }
+
+      return group;
    }
 
    /**
@@ -563,6 +590,13 @@ function ImageMarkupBuilder(canvas) {
    }
 
    return {
+      /**
+       * Adds and tracks a given data object following the ShapeData schema
+       * to the fabric canvas. This ignores the "type" attribute of the object
+       * and just adds a circle. To be deprecated by addShape().
+       *
+       * @return a reference to the tracked shape.
+       */
       addCircle: function addCircle(data) {
          if (!data.x || !data.y) {
             data.x = canvas.width / resizeRatio / 2;
@@ -593,9 +627,16 @@ function ImageMarkupBuilder(canvas) {
             shapeName: "circle"
          };
 
-         drawCircle(finalWidth, canvas, circle, imageOffset);
+         return drawCircle(finalWidth, canvas, circle, imageOffset);
       },
 
+      /**
+       * Adds and tracks a given data object following the ShapeData schema
+       * to the fabric canvas. This ignores the "type" attribute of the object
+       * and just adds a rectangle. To be deprecated by addShape().
+       *
+       * @return a reference to the tracked shape.
+       */
       addRectangle: function addRectangle(data) {
          if (!data.width || !data.height) {
             data.width = initialSize.rectangle / resizeRatio;
@@ -634,9 +675,12 @@ function ImageMarkupBuilder(canvas) {
             shapeName: "rectangle"
          };
 
-         drawRectangle(finalWidth, canvas, rect, imageOffset);
+         return drawRectangle(finalWidth, canvas, rect, imageOffset);
       },
 
+      /**
+       * Sets the color of a tracked shape.
+       */
       setColor: function setColor(shape, colorName) {
          shape.objects[shapeIndex].stroke = colorValues[colorName];
 
@@ -644,14 +688,24 @@ function ImageMarkupBuilder(canvas) {
             canvas.renderAll();
       },
 
+      /**
+       * Returns an array of all objects in the fabric canvas, whether
+       * tracked by the Builder or not.
+       */
       getShapes: function getShapes() {
          return canvas._objects;
       },
 
+      /**
+       * Removes a specific tracked shape from the fabric canvas.
+       */
       removeShape: function removeShape(shape) {
          remove(shape);
       },
 
+      /**
+       * Removes all tracked shapes from the fabric canvas.
+       */
       removeShapes: function removeShapes() {
          for (var i = 0; i < markupObjects.length; ++i) {
             var shape = markupObjects[i];
@@ -661,6 +715,10 @@ function ImageMarkupBuilder(canvas) {
          markupObjects = [];
       },
 
+      /**
+       * Takes a Builder-schema JSON object and performs the operations
+       * listed therein, then calls the callback function.
+       */
       processJSON: function processJSON(json, callback) {
          //Make sure not to render every addition on server end
          canvas.renderOnAddition = !isNode;
@@ -701,6 +759,10 @@ function ImageMarkupBuilder(canvas) {
          return markupObjects;
       },
 
+      /**
+       * Returns a markup string which can be used with ImageMarkupCall
+       * to produce the same markup results as represented in this builder.
+       */
       getMarkupString: function getMarkupString() {
          /**
           * Translate RGB value to applicable color string. Unknown
