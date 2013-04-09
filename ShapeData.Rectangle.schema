@@ -1,0 +1,31 @@
+{
+   "description" : "Shape data for manually adding a circle",
+   "type" : "object",
+   "properties" : {
+      "x" : {
+         "title" : "Center-left coordinate of shape",
+         "type" : "integer",
+         "optional" : true
+      },
+      "y" : {
+         "title" : "Center-top coordinate of shape",
+         "type" : "integer",
+         "optional" : true
+      },
+      "width" : {
+         "title" : "Width of shape",
+         "type" : "integer",
+         "optional" : true
+      },
+      "height" : {
+         "title" : "Height of shape",
+         "type" : "integer",
+         "optional" : true
+      },
+      "color" : {
+         "title" : "Color of shape",
+         "type" : "integer",
+         "optional" : true
+      }
+   }
+}
