@@ -4,7 +4,7 @@ var isNode = typeof module != 'undefined' && module.exports;
 /**
  * Expects a Fabric.js Canvas
  */
-function ImageMarkupBuilder(canvas) {
+function ImageMarkupBuilder(fabricCanvas) {
    if (isNode) {
       var FS = require('fs');
       var Fabric = require('fabric').fabric;
@@ -100,10 +100,10 @@ function ImageMarkupBuilder(canvas) {
       }
    }
 
-   function applyBackground(json, canvas, callback) {
+   function applyBackground(json, callback) {
       if (!isNode) {
          //Listen for shape resizes and reset strokeWidth accordingly
-         canvas.on({
+         fabricCanvas.on({
             'object:scaling': function (e) {
                //If no initial position is logged, log it
                if (!initialPosition.fresh) {
@@ -175,23 +175,23 @@ function ImageMarkupBuilder(canvas) {
          });
 
          //Listen for shapes falling off the edge and delete
-         canvas.on({
+         fabricCanvas.on({
             'object:modified': function (e) {
                var shape = e.target;
                var w = shape.width / 2;
                var h = shape.height / 2;
 
                if (shape.left + w < 0 ||
-                shape.left - w > canvas.width ||
+                shape.left - w > fabricCanvas.width ||
                 shape.top + h < 0 ||
-                shape.top - h > canvas.height) {
+                shape.top - h > fabricCanvas.height) {
                   remove(shape);
                }
             }.bind(this)
          });
 
          //Clear initial position on mouse up
-         canvas.on({
+         fabricCanvas.on({
             'mouse:up': function (e) {
                initialPosition.fresh = false;
             }.bind(this)
@@ -199,7 +199,7 @@ function ImageMarkupBuilder(canvas) {
       }
 
       //Disable drag selection on canvas
-      canvas.selection = false;
+      fabricCanvas.selection = false;
 
       if (!json['sourceFile']) {
          if (!json['finalDimensions']) {
@@ -208,7 +208,7 @@ function ImageMarkupBuilder(canvas) {
          }
 
          //Apply markup to blank canvas
-         applyMarkup(json, canvas, callback);
+         applyMarkup(json, callback);
       } else {
          finalWidth = json['finalDimensions']['width'];
          if (finalWidth <= 1800) {
@@ -236,9 +236,9 @@ function ImageMarkupBuilder(canvas) {
                      left -= 0.5;
                   }
 
-                  canvas.add(fimg.set('top', top).set('left', left));
+                  fabricCanvas.add(fimg.set('top', top).set('left', left));
 
-                  applyMarkup(json, canvas, callback);
+                  applyMarkup(json, callback);
                });
             });
          } else {
@@ -252,7 +252,7 @@ function ImageMarkupBuilder(canvas) {
     * server-side, call writeCanvas() to write the results to a file. If
     * client-side, call the client-provided callback directly.
     */
-   function applyMarkup(json, canvas, callback) {
+   function applyMarkup(json, callback) {
       // strokeWidth needs to be caught now, since if it's lower in the JSON
       // it will not get picked up until it's too late.
       if (json.instructions.strokeWidth) {
@@ -270,10 +270,10 @@ function ImageMarkupBuilder(canvas) {
                   switch (shapeName) {
                      case 'rectangle':
                         drawRectangle(finalWidth,
-                         canvas, shape, imageOffset);
+                         shape, imageOffset);
                         break;
                      case 'circle':
-                        drawCircle(finalWidth, canvas,
+                        drawCircle(finalWidth,
                          shape, imageOffset);
                         break;
                      default:
@@ -293,19 +293,19 @@ function ImageMarkupBuilder(canvas) {
       }
 
       if (isNode) {
-         writeCanvas(json, canvas, callback);
+         writeCanvas(json, callback);
       } else {
-         callback(canvas);
+         callback(fabricCanvas);
       }
    }
 
    /**
     * Writes the processed canvas to a file.
     */
-   function writeCanvas(json, canvas, callback) {
-      canvas.renderAll();
+   function writeCanvas(json, callback) {
+      fabricCanvas.renderAll();
       var outstream = FS.createWriteStream(json['destinationFile']),
-      stream = canvas.createJPEGStream({
+      stream = fabricCanvas.createJPEGStream({
          quality: 93
       });
 
@@ -313,7 +313,7 @@ function ImageMarkupBuilder(canvas) {
          outstream.write(chunk);
       });
       stream.on('end', function () {
-         callback(canvas);
+         callback(fabricCanvas);
       });
    }
 
@@ -363,7 +363,7 @@ function ImageMarkupBuilder(canvas) {
       }
    }
 
-   function drawRectangle(finalWidth, canvas, shape, imageOffset) {
+   function drawRectangle(finalWidth, shape, imageOffset) {
       shape['stroke'] = getStrokeWidth(finalWidth);
 
       var rect = {
@@ -410,7 +410,7 @@ function ImageMarkupBuilder(canvas) {
       rectInline.shapeFunction = "inline";
 
       if (isNode && shadows == true) {
-         drawShadow(canvas, rect, shadowStep);
+         drawShadow(rect, shadowStep);
       }
 
       var fabricRect = new Fabric.Rect(rect),
@@ -427,17 +427,17 @@ function ImageMarkupBuilder(canvas) {
       group.hasRotatingPoint = false;
 
       markupObjects.push(group);
-      canvas.add(group);
+      fabricCanvas.add(group);
 
       if (!isNode) {
          // Set this as the active object
-         canvas.setActiveObject(group);
+         fabricCanvas.setActiveObject(group);
       }
 
       return group;
    }
 
-   function drawCircle(finalWidth, canvas, shape, imageOffset) {
+   function drawCircle(finalWidth, shape, imageOffset) {
       shape['stroke'] = getStrokeWidth(finalWidth);
 
       var circle = {
@@ -465,7 +465,7 @@ function ImageMarkupBuilder(canvas) {
       circleInline.shapeFunction = 'inline';
 
       if (isNode && shadows == true) {
-         drawShadow(canvas, circle, shadowStep);
+         drawShadow(circle, shadowStep);
       }
 
       var fabricCircle = new Fabric.Circle(circle),
@@ -483,11 +483,11 @@ function ImageMarkupBuilder(canvas) {
       group.hasRotatingPoint = false;
 
       markupObjects.push(group);
-      canvas.add(group);
+      fabricCanvas.add(group);
 
       if (!isNode) {
          // Set this as the active object
-         canvas.setActiveObject(group);
+         fabricCanvas.setActiveObject(group);
       }
 
       return group;
@@ -497,7 +497,7 @@ function ImageMarkupBuilder(canvas) {
     * Draw a fuzzy shadow for the shape given.
     * Take care to draw the shadow before the shape.
     */
-   function drawShadow(canvas, shape, step) {
+   function drawShadow(shape, step) {
       if (step < 1) {
          step = 1;
       }
@@ -556,11 +556,11 @@ function ImageMarkupBuilder(canvas) {
 
          switch (shape['shapeName']) {
             case 'circle':
-               canvas.add(new Fabric.Circle(shadow));
+               fabricCanvas.add(new Fabric.Circle(shadow));
                shadow['radius'] = shadow['radius'] - stepWidth * 2 * 0.8;
                break;
             case 'rectangle':
-               canvas.add(new Fabric.Rect(shadow));
+               fabricCanvas.add(new Fabric.Rect(shadow));
                shadow['width'] = shadow['width'] - stepWidth * 4 * 0.8;
                shadow['height'] = shadow['height'] - stepWidth * 4 * 0.8;
                break;
@@ -584,7 +584,7 @@ function ImageMarkupBuilder(canvas) {
    function remove(shape) {
       var index = locate(shape);
       if (index != null) {
-         canvas.remove(shape);
+         fabricCanvas.remove(shape);
          markupObjects.splice(index,1);
       }
    }
@@ -599,8 +599,8 @@ function ImageMarkupBuilder(canvas) {
        */
       addCircle: function addCircle(data) {
          if (!data.x || !data.y) {
-            data.x = canvas.width / resizeRatio / 2;
-            data.y = canvas.height / resizeRatio / 2;
+            data.x = fabricCanvas.width / resizeRatio / 2;
+            data.y = fabricCanvas.height / resizeRatio / 2;
             data.x += imageOffset.x;
             data.y += imageOffset.y;
          } else {
@@ -627,7 +627,7 @@ function ImageMarkupBuilder(canvas) {
             shapeName: "circle"
          };
 
-         return drawCircle(finalWidth, canvas, circle, imageOffset);
+         return drawCircle(finalWidth, circle, imageOffset);
       },
 
       /**
@@ -643,8 +643,8 @@ function ImageMarkupBuilder(canvas) {
             data.height = initialSize.rectangle / resizeRatio;
          }
          if (!data.x || !data.y) {
-            data.x = canvas.width / resizeRatio / 2;
-            data.y = canvas.height / resizeRatio / 2;
+            data.x = fabricCanvas.width / resizeRatio / 2;
+            data.y = fabricCanvas.height / resizeRatio / 2;
             data.x -= data.width / 2;
             data.y -= data.height / 2;
             data.x += imageOffset.x;
@@ -675,7 +675,7 @@ function ImageMarkupBuilder(canvas) {
             shapeName: "rectangle"
          };
 
-         return drawRectangle(finalWidth, canvas, rect, imageOffset);
+         return drawRectangle(finalWidth, rect, imageOffset);
       },
 
       /**
@@ -685,7 +685,7 @@ function ImageMarkupBuilder(canvas) {
          shape.objects[shapeIndex].stroke = colorValues[colorName];
 
          if (!isNode)
-            canvas.renderAll();
+            fabricCanvas.renderAll();
       },
 
       /**
@@ -693,7 +693,7 @@ function ImageMarkupBuilder(canvas) {
        * tracked by the Builder or not.
        */
       getShapes: function getShapes() {
-         return canvas._objects;
+         return fabricCanvas._objects;
       },
 
       /**
@@ -709,7 +709,7 @@ function ImageMarkupBuilder(canvas) {
       removeShapes: function removeShapes() {
          for (var i = 0; i < markupObjects.length; ++i) {
             var shape = markupObjects[i];
-            canvas.remove(shape);
+            fabricCanvas.remove(shape);
          }
 
          markupObjects = [];
@@ -721,8 +721,8 @@ function ImageMarkupBuilder(canvas) {
        */
       processJSON: function processJSON(json, callback) {
          //Make sure not to render every addition on server end
-         canvas.renderOnAddition = !isNode;
-         canvas.uniScaleTransform = true;
+         fabricCanvas.renderOnAddition = !isNode;
+         fabricCanvas.uniScaleTransform = true;
 
          cleanJSON(json);
 
@@ -752,7 +752,7 @@ function ImageMarkupBuilder(canvas) {
           json.finalDimensions.height * maximumSizeRatio.circle :
           json.finalDimensions.width * maximumSizeRatio.circle;
 
-         applyBackground(json, canvas, callback);
+         applyBackground(json, callback);
       },
 
       getMarkupObjects: function getMarkupObjects(callback) {
