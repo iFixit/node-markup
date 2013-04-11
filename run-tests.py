@@ -69,6 +69,7 @@ def compareOutputs(basename, oracleFilename, destinationFilename):
          raise RuntimeError(errMsg);
       else:
          print basename + ': test comparison passed.';
+         os.remove(destinationFilename);
    except RuntimeError, runtimeErr:
       errMsg = basename + ': Comparison string processing failed\n' \
          + str(runtimeErr);
