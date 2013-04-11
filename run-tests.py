@@ -65,7 +65,7 @@ def compareOutputs(basename, oracleFilename, destinationFilename):
       absoluteError = float(processComparison(out));
 
       if absoluteError != 0.0:
-         errMsg = basename + ': Image difference error = ' + absoluteError;
+         errMsg = basename + ': Image difference error = ' + str(absoluteError);
          raise RuntimeError(errMsg);
       else:
          print basename + ': test comparison passed.';
