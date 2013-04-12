@@ -59,6 +59,8 @@ def compareOutputs(basename, oracleFilename, destinationFilename):
    retCode = proc.returncode;
    if retCode != 0:
       errMsg = "Compare invocation failed with exit code: " + str(retCode);
+      errMsg += "\nTo reproduce run:\n";
+      errMsg += ' '.join(cmd);
       raise RuntimeError(errMsg);
 
    try:
@@ -71,7 +73,7 @@ def compareOutputs(basename, oracleFilename, destinationFilename):
          print basename + ': test comparison passed.';
          os.remove(destinationFilename);
    except RuntimeError, runtimeErr:
-      errMsg = basename + ': Comparison string processing failed\n' \
+      errMsg = 'Comparison string processing failed\n' \
          + str(runtimeErr);
 
       raise RuntimeError(errMsg);
