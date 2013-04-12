@@ -760,7 +760,7 @@ function ImageMarkupBuilder(fabricCanvas) {
          applyBackground(callback);
       },
 
-      getMarkupObjects: function getMarkupObjects(callback) {
+      getMarkupObjects: function getMarkupObjects() {
          return markupObjects;
       },
 
