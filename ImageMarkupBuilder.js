@@ -22,6 +22,9 @@ function ImageMarkupBuilder(fabricCanvas) {
       'black': 'rgb(0,0,0)'
    };
 
+   // Reference to the json object from processJSON
+   var innerJSON;
+
    // Expected group indexes
    var borderIndex = 0;
    var inlineIndex = 1;
@@ -100,7 +103,7 @@ function ImageMarkupBuilder(fabricCanvas) {
       }
    }
 
-   function applyBackground(json, callback) {
+   function applyBackground(callback) {
       if (!isNode) {
          //Listen for shape resizes and reset strokeWidth accordingly
          fabricCanvas.on({
@@ -201,44 +204,44 @@ function ImageMarkupBuilder(fabricCanvas) {
       //Disable drag selection on canvas
       fabricCanvas.selection = false;
 
-      if (!json['sourceFile']) {
-         if (!json['finalDimensions']) {
+      if (!innerJSON.sourceFile) {
+         if (!innerJSON.finalDimensions) {
             var msg = "Need source file or final dimensions to create canvas";
             throw Exception(msg);
          }
 
          //Apply markup to blank canvas
-         applyMarkup(json, callback);
+         applyMarkup(callback);
       } else {
-         finalWidth = json['finalDimensions']['width'];
+         finalWidth = innerJSON.finalDimensions.width;
          if (finalWidth <= 1800) {
             whiteStroke = 1;
          }
          if (isNode) {
-            FS.readFile(json['sourceFile'], function (err, blob) {
+            FS.readFile(innerJSON.sourceFile, function (err, blob) {
                if (err) throw err;
 
-               var dimensions = json['dimensions'];
-               var finalDimensions = json['finalDimensions'];
+               var dimensions = innerJSON.dimensions;
+               var finalDimensions = innerJSON.finalDimensions;
                img = {
-                  'width': dimensions['width'],
-                  'height': dimensions['height'],
-                  'src':blob
+                  'width': dimensions.width,
+                  'height': dimensions.height,
+                  'src': blob
                };
 
                Fabric.Image.fromObject(img, function(fimg) {
-                  top = img.height/2 - imageOffset['y'];
+                  top = img.height/2 - imageOffset.y;
                   if (top % 1 != 0) {
                      top -= 0.5;
                   }
-                  left = img.width / 2 - imageOffset['x'];
+                  left = img.width / 2 - imageOffset.x;
                   if (left % 1 != 0) {
                      left -= 0.5;
                   }
 
                   fabricCanvas.add(fimg.set('top', top).set('left', left));
 
-                  applyMarkup(json, callback);
+                  applyMarkup(callback);
                });
             });
          } else {
@@ -252,20 +255,20 @@ function ImageMarkupBuilder(fabricCanvas) {
     * server-side, call writeCanvas() to write the results to a file. If
     * client-side, call the client-provided callback directly.
     */
-   function applyMarkup(json, callback) {
+   function applyMarkup(callback) {
       // strokeWidth needs to be caught now, since if it's lower in the JSON
       // it will not get picked up until it's too late.
-      if (json.instructions.strokeWidth) {
-         strokeWidth = json.instructions.strokeWidth;
+      if (innerJSON.instructions.strokeWidth) {
+         strokeWidth = innerJSON.instructions.strokeWidth;
       }
 
-      for (instruction in json['instructions']) {
+      for (instruction in innerJSON.instructions) {
          switch (instruction) {
             case 'draw':
-               json['instructions']['draw'].forEach(function (e) {
+               innerJSON.instructions.draw.forEach(function (e) {
                for (shapeName in e) {
                   shape = e[shapeName];
-                  shape['shapeName'] = shapeName;
+                  shape.shapeName = shapeName;
 
                   switch (shapeName) {
                      case 'rectangle':
@@ -293,7 +296,7 @@ function ImageMarkupBuilder(fabricCanvas) {
       }
 
       if (isNode) {
-         writeCanvas(json, callback);
+         writeCanvas(callback);
       } else {
          callback(fabricCanvas);
       }
@@ -302,9 +305,9 @@ function ImageMarkupBuilder(fabricCanvas) {
    /**
     * Writes the processed canvas to a file.
     */
-   function writeCanvas(json, callback) {
+   function writeCanvas(callback) {
       fabricCanvas.renderAll();
-      var outstream = FS.createWriteStream(json['destinationFile']),
+      var outstream = FS.createWriteStream(innerJSON.destinationFile),
       stream = fabricCanvas.createJPEGStream({
          quality: 93
       });
@@ -364,48 +367,48 @@ function ImageMarkupBuilder(fabricCanvas) {
    }
 
    function drawRectangle(finalWidth, shape, imageOffset) {
-      shape['stroke'] = getStrokeWidth(finalWidth);
+      shape.stroke = getStrokeWidth(finalWidth);
 
       var rect = {
-         shapeName: shape['shapeName'],
-         left: shape['from']['x'] - imageOffset.x,
-         top: shape['from']['y'] - imageOffset.y,
-         width: shape['size']['width'],
-         height: shape['size']['height'],
+         shapeName: shape.shapeName,
+         left: shape.from.x - imageOffset.x,
+         top: shape.from.y - imageOffset.y,
+         width: shape.size.width,
+         height: shape.size.height,
          rx: 1,
          ry: 1,
-         strokeWidth: shape['stroke'],
-         stroke: colorValues[shape['color']],
+         strokeWidth: shape.stroke,
+         stroke: colorValues[shape.color],
          fill: 'transparent'
       }
 
       //Fabric調整
-      rect['top'] = rect['top'] + rect['height'] / 2
-       + rect['strokeWidth'] / 2;
-      rect['top'] *= resizeRatio;
-      rect['left'] = rect['left'] + rect['width'] / 2
-       + rect['strokeWidth'] / 2;
-      rect['left'] *= resizeRatio;
-      rect['width'] *= resizeRatio;
-      rect['height'] *= resizeRatio;
+      rect.top = rect.top + rect.height / 2
+       + rect.strokeWidth / 2;
+      rect.top *= resizeRatio;
+      rect.left = rect.left + rect.width / 2
+       + rect.strokeWidth / 2;
+      rect.left *= resizeRatio;
+      rect.width *= resizeRatio;
+      rect.height *= resizeRatio;
 
       rect.shapeFunction = "shape";
 
       var rectBorder = clone(rect);
       resizeBorder(rect, rectBorder, whiteStroke);
-      rectBorder['rx'] = rect['strokeWidth'] - whiteStroke;
-      rectBorder['ry'] = rect['strokeWidth'] - whiteStroke;
-      rectBorder['strokeWidth'] = whiteStroke;
-      rectBorder['stroke'] = 'white';
+      rectBorder.rx = rect.strokeWidth - whiteStroke;
+      rectBorder.ry = rect.strokeWidth - whiteStroke;
+      rectBorder.strokeWidth = whiteStroke;
+      rectBorder.stroke = 'white';
 
       rectBorder.shapeFunction = "border";
 
       var rectInline = clone(rect);
       resizeInline(rect, rectInline, whiteStroke);
-      rectInline['rx'] = Math.max(shape['stroke'] - rectBorder['rx'],4);
-      rectInline['ry'] = Math.max(shape['stroke'] - rectBorder['ry'],4);
-      rectInline['strokeWidth'] = whiteStroke;
-      rectInline['stroke'] = 'white';
+      rectInline.rx = Math.max(shape.stroke - rectBorder.rx, 4);
+      rectInline.ry = Math.max(shape.stroke - rectBorder.ry, 4);
+      rectInline.strokeWidth = whiteStroke;
+      rectInline.stroke = 'white';
 
       rectInline.shapeFunction = "inline";
 
@@ -418,7 +421,7 @@ function ImageMarkupBuilder(fabricCanvas) {
       fabricInline = new Fabric.Rect(rectInline);
 
       var group = new Fabric.Group([fabricBorder, fabricInline, fabricRect],
-       {left: rect['left'], top: rect['top']});
+       {left: rect.left, top: rect.top});
 
       group.shapeName = 'rectangle';
 
@@ -438,15 +441,15 @@ function ImageMarkupBuilder(fabricCanvas) {
    }
 
    function drawCircle(finalWidth, shape, imageOffset) {
-      shape['stroke'] = getStrokeWidth(finalWidth);
+      shape.stroke = getStrokeWidth(finalWidth);
 
       var circle = {
-         shapeName: shape['shapeName'],
-         left: shape['from']['x'] - imageOffset.x,
-         top: shape['from']['y'] - imageOffset.y,
-         radius: shape['radius'],
-         strokeWidth: shape['stroke'],
-         stroke: colorValues[shape['color']],
+         shapeName: shape.shapeName,
+         left: shape.from.x - imageOffset.x,
+         top: shape.from.y - imageOffset.y,
+         radius: shape.radius,
+         strokeWidth: shape.stroke,
+         stroke: colorValues[shape.color],
          fill: 'transparent'
       };
       circle.left *= resizeRatio;
@@ -456,8 +459,8 @@ function ImageMarkupBuilder(fabricCanvas) {
 
       var circleBorder = clone(circle);
       resizeBorder(circle, circleBorder, whiteStroke);
-      circleBorder['strokeWidth'] = whiteStroke;
-      circleBorder['stroke'] = 'white';
+      circleBorder.strokeWidth = whiteStroke;
+      circleBorder.stroke = 'white';
       circleBorder.shapeFunction = 'border';
 
       var circleInline = clone(circleBorder);
@@ -473,7 +476,7 @@ function ImageMarkupBuilder(fabricCanvas) {
       fabricInline = new Fabric.Circle(circleInline);
 
       var group = new Fabric.Group([fabricBorder, fabricInline, fabricCircle],
-       {left: fabricCircle['left'], top: fabricCircle['top']});
+       {left: fabricCircle.left, top: fabricCircle.top});
 
       group.shapeName = 'circle';
 
@@ -502,21 +505,21 @@ function ImageMarkupBuilder(fabricCanvas) {
          step = 1;
       }
       var shadow = Cloner.clone(shape);
-      if (step > shadow['strokeWidth']) {
-         step = shadow['strokeWidth'];
+      if (step > shadow.strokeWidth) {
+         step = shadow.strokeWidth;
       }
 
       var offsetX = 8;
       var offsetY = offsetX;
 
       var shadow = Cloner.clone(shape);
-      shadow['left'] += offsetX;
-      shadow['top'] += offsetY;
-      shadow['rx'] = 5;
-      shadow['ry'] = 5;
-      shadow['stroke'] = 'rgba(0,0,0,0.5)';
-      shadow['strokeWidth'] = shadow['strokeWidth'] / step;
-      var stepWidth = shadow['strokeWidth'];
+      shadow.left += offsetX;
+      shadow.top += offsetY;
+      shadow.rx = 5;
+      shadow.ry = 5;
+      shadow.stroke = 'rgba(0,0,0,0.5)';
+      shadow.strokeWidth = shadow.strokeWidth / step;
+      var stepWidth = shadow.strokeWidth;
 
       //Empirically-derived pixel tweaks to line up shadow sizes with their
       //parents. TODO: Base these numbers on something real.
@@ -524,18 +527,18 @@ function ImageMarkupBuilder(fabricCanvas) {
       var rectangleTweak = 1.3125;
 
       //Adjust shadow outlines to outer edge, to work towards inside later.
-      switch (shape['shapeName']) {
+      switch (shape.shapeName) {
          case 'circle':
-            shadow['radius'] += shape['strokeWidth'] * circleTweak;
-            shadow['strokeWidth'] *= 2;
+            shadow.radius += shape.strokeWidth * circleTweak;
+            shadow.strokeWidth *= 2;
             break;
          case 'rectangle':
-            shadow['width'] += shape['strokeWidth'] * rectangleTweak;
-            shadow['height'] += shape['strokeWidth'] * rectangleTweak;
-            shadow['strokeWidth'] *= 2;
+            shadow.width += shape.strokeWidth * rectangleTweak;
+            shadow.height += shape.strokeWidth * rectangleTweak;
+            shadow.strokeWidth *= 2;
             break;
          default:
-            console.error('実装されていない機能：' + shape['shapeName']);
+            console.error('実装されていない機能：' + shape.shapeName);
             return;
       }
 
@@ -552,20 +555,20 @@ function ImageMarkupBuilder(fabricCanvas) {
             alpha = (((step - (i + 1)) * 2) / (step));
          }
 
-         shadow['stroke'] = 'rgba(0,0,0,' + alpha + ')';
+         shadow.stroke = 'rgba(0,0,0,' + alpha + ')';
 
-         switch (shape['shapeName']) {
+         switch (shape.shapeName) {
             case 'circle':
                fabricCanvas.add(new Fabric.Circle(shadow));
-               shadow['radius'] = shadow['radius'] - stepWidth * 2 * 0.8;
+               shadow.radius = shadow.radius - stepWidth * 2 * 0.8;
                break;
             case 'rectangle':
                fabricCanvas.add(new Fabric.Rect(shadow));
-               shadow['width'] = shadow['width'] - stepWidth * 4 * 0.8;
-               shadow['height'] = shadow['height'] - stepWidth * 4 * 0.8;
+               shadow.width = shadow.width - stepWidth * 4 * 0.8;
+               shadow.height = shadow.height - stepWidth * 4 * 0.8;
                break;
             default:
-               console.error('実装されてない機能：' + shape['shapeName']);
+               console.error('実装されてない機能：' + shape.shapeName);
                return;
          }
       }
@@ -726,33 +729,35 @@ function ImageMarkupBuilder(fabricCanvas) {
 
          cleanJSON(json);
 
-         var imagePath = json['sourceFile'];
+         innerJSON = json;
 
-         crop = json['instructions']['crop'];
+         var imagePath = innerJSON.sourceFile;
+
+         crop = innerJSON.instructions.crop;
          imageOffset = (typeof crop != "undefined" &&
           crop.from.x >= 0 && crop.from.y >= 0) ? {
-            'x': crop['from']['x'],
-            'y': crop['from']['y']
+            'x': crop.from.x,
+            'y': crop.from.y
          } : {
             'x': 0,
             'y': 0
          };
 
-         if (json['previewInstructions']) {
-            resizeRatio = 1 / json.previewInstructions.ratio;
+         if (innerJSON.previewInstructions) {
+            resizeRatio = 1 / innerJSON.previewInstructions.ratio;
          }
 
          maximumSize.rectangle =
-          json.finalDimensions.height < json.finalDimensions.width ?
-          json.finalDimensions.height * maximumSizeRatio.rectangle :
-          json.finalDimensions.width * maximumSizeRatio.rectangle;
+          innerJSON.finalDimensions.height < innerJSON.finalDimensions.width ?
+          innerJSON.finalDimensions.height * maximumSizeRatio.rectangle :
+          innerJSON.finalDimensions.width * maximumSizeRatio.rectangle;
 
          maximumSize.circle =
-          json.finalDimensions.height < json.finalDimensions.width ?
-          json.finalDimensions.height * maximumSizeRatio.circle :
-          json.finalDimensions.width * maximumSizeRatio.circle;
+          innerJSON.finalDimensions.height < innerJSON.finalDimensions.width ?
+          innerJSON.finalDimensions.height * maximumSizeRatio.circle :
+          innerJSON.finalDimensions.width * maximumSizeRatio.circle;
 
-         applyBackground(json, callback);
+         applyBackground(callback);
       },
 
       getMarkupObjects: function getMarkupObjects(callback) {
