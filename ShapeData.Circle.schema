@@ -2,6 +2,10 @@
    "description" : "Shape data for manually adding a circle",
    "type" : "object",
    "properties" : {
+      "type" : {
+         "title" : "String type of shape; in this case, 'circle'",
+         "type" : "string"
+      },
       "x" : {
          "title" : "Center-left coordinate of shape",
          "type" : "integer",
