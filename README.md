@@ -27,6 +27,9 @@ images on both sides.
 very different way from the backend, so the frontend will be more or less
 trial-and-error for the user (you) until I've finished documenting it.
 
+* Do not include sourceFile or destinationFile in the frontend JSON. You can
+add a source image manually to the Fabric.js canvas, or leave it blank.
+
 Long story short:
 
 1. Include Fabric.js and ImageMarkupBuilder.js in the HTML
