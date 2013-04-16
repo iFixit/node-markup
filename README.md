@@ -2,7 +2,11 @@
 
 ## About ##
 
-Node Markup is a helper library for [kangax's Fabric.js](https://github.com/kangax/fabric.js/) to make it easier to crop images and add markup such as circles and rectangles. Node Markup has frontend (web site) and backend (Node.js) support for rendering identical images on both sides.
+Node Markup is a helper library for
+[kangax's Fabric.js](https://github.com/kangax/fabric.js/) to make it easier to
+crop images and add markup such as circles and rectangles. Node Markup has
+frontend (web site) and backend (Node.js) support for rendering identical
+images on both sides.
 
 ## Installation ##
 
@@ -19,7 +23,9 @@ Node Markup is a helper library for [kangax's Fabric.js](https://github.com/kang
 
 ### Frontend ###
 
-***TODO:*** The JSON schema is mostly undocumented, and the frontend works in a very different way from the backend, so the frontend will be more or less trial-and-error for the user (you) until I've finished documenting it.
+***TODO:*** The JSON schema is mostly undocumented, and the frontend works in a
+very different way from the backend, so the frontend will be more or less
+trial-and-error for the user (you) until I've finished documenting it.
 
 Long story short:
 
