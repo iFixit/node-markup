@@ -1,0 +1,73 @@
+{
+   "description":"Shape data for interactively adding shapes to canvas",
+   "type":"object",
+   "properties":{
+      "type":[
+         {
+            "type":"object",
+            "properties":{
+               "type":{
+                  "title":"Name of shape: circle",
+                  "type":"string",
+                  "required":true
+               },
+               "x":{
+                  "title":"Center-left coordinate of circle",
+                  "type":"number",
+                  "required":false
+               },
+               "y":{
+                  "title":"Center-top coordinate of circle",
+                  "type":"number",
+                  "required":false
+               },
+               "radius":{
+                  "title":"Radius of circle",
+                  "type":"number",
+                  "required":false
+               },
+               "color":{
+                  "title":"Color of shape",
+                  "type":"string",
+                  "required":false
+               }
+            }
+         },
+         {
+            "type":"object",
+            "properties":{
+               "type":{
+                  "title":"Name of shape: rectangle",
+                  "type":"string",
+                  "required":true
+               },
+               "x":{
+                  "title":"Center-left coordinate of rectangle",
+                  "type":"number",
+                  "required":false
+               },
+               "y":{
+                  "title":"Center-top coordinate of rectangle",
+                  "type":"number",
+                  "required":false
+               },
+               "width":{
+                  "title":"Width of rectangle",
+                  "type":"number",
+                  "required":false
+               },
+               "height":{
+                  "title":"Height of rectangle",
+                  "type":"number",
+                  "required":false
+               },
+               "color":{
+                  "title":"Color of shape",
+                  "type":"string",
+                  "required":false
+               }
+            }
+         }
+      ]
+   }
+}
