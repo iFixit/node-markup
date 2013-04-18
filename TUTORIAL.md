@@ -43,7 +43,7 @@ The Builder JSON schema is made up of the following top elements:
 
       * `color`: A color name (e.g. 'red')
 
-      * `from`: An (`x`, `y`) tuple of the top-left center of the circle
+      * `from`: An (`x`, `y`) tuple of the center of the circle
 
       * `radius`: The pixel radius of the circle
 
