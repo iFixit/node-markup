@@ -639,7 +639,17 @@ function ImageMarkupBuilder(fabricCanvas) {
       }
    }
 
-   function correctShapeData(data) {
+   /**
+    * Performs ShapeData.type-agnostic attribute checks to ensure that the
+    * necessary attributes are set in the given ShapeData object. Specifically,
+    * the following operations are performed:
+    *
+    * - If data.x or data.y are not present, both are set to the center of
+    *   the canvas. If both are present, they are scaled to the preview size
+    *   of the canvas (if given).
+    * - if data.color is not present, it is set to "red".
+    */
+   function normalizeShapeData(data) {
       if (!data.x || !data.y) {
          data.x = fabricCanvas.width / resizeRatio / 2;
          data.y = fabricCanvas.height / resizeRatio / 2;
@@ -667,7 +677,7 @@ function ImageMarkupBuilder(fabricCanvas) {
          if (!data.type)
             throw 'ShapeData.type is not defined.';
 
-         correctShapeData(data);
+         normalizeShapeData(data);
          return addShapeDelegate[data.type](data);
       },
 
