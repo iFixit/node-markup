@@ -60,6 +60,53 @@ function ImageMarkupBuilder(fabricCanvas) {
    var crop = null;
 
    /**
+    * Array of delegate functions to draw a proper shape.
+    */
+   var addShapeDelegate = [];
+   addShapeDelegate['circle'] = function (data) {
+      if (!data.radius) {
+         data.radius = initialSize.circle / resizeRatio;
+      }
+
+      var circle = {
+         from: {
+            x: data.x,
+            y: data.y
+         },
+         radius: data.radius,
+         color: data.color,
+         shapeName: data.type
+      };
+
+      return drawCircle(finalWidth, circle, imageOffset);
+   };
+
+   addShapeDelegate['rectangle'] = function (data) {
+      if (!data.width || !data.height) {
+         data.width = initialSize.rectangle / resizeRatio;
+         data.height = initialSize.rectangle / resizeRatio;
+      }
+
+      data.x -= data.width / 2;
+      data.y -= data.height / 2;
+
+      var rect = {
+         from: {
+            x: data.x,
+            y: data.y
+         },
+         size: {
+            width: data.width,
+            height: data.height
+         },
+         color: data.color,
+         shapeName: "rectangle"
+      };
+
+      return drawRectangle(finalWidth, rect, imageOffset);
+   }
+
+   /**
     * Simple clone function for use in deep-copying objects containing
     * objects, arrays, and values. Does not support copying of functions.
     */
@@ -592,7 +639,48 @@ function ImageMarkupBuilder(fabricCanvas) {
       }
    }
 
+   /**
+    * Performs ShapeData.type-agnostic attribute checks to ensure that the
+    * necessary attributes are set in the given ShapeData object. Specifically,
+    * the following operations are performed:
+    *
+    * - If data.x or data.y are not present, both are set to the center of
+    *   the canvas. If both are present, they are scaled to the preview size
+    *   of the canvas (if given).
+    * - if data.color is not present, it is set to "red".
+    */
+   function normalizeShapeData(data) {
+      if (!data.x || !data.y) {
+         data.x = fabricCanvas.width / resizeRatio / 2;
+         data.y = fabricCanvas.height / resizeRatio / 2;
+         data.x += imageOffset.x;
+         data.y += imageOffset.y;
+      } else {
+         data.x /= resizeRatio;
+         data.y /= resizeRatio;
+         data.x += imageOffset.x;
+         data.y += imageOffset.y;
+      }
+
+      if (!data.color) {
+         data.color = "red";
+      }
+   }
+
    return {
+      /**
+       * Adds and tracks a given data object following the ShapeData schema
+       * to the fabric canvas. The act of drawing is delegated to the proper
+       * draw method based on its "type" attribute.
+       */
+      addShape: function addShape(data) {
+         if (!data.type)
+            throw 'ShapeData.type is not defined.';
+
+         normalizeShapeData(data);
+         return addShapeDelegate[data.type](data);
+      },
+
       /**
        * Adds and tracks a given data object following the ShapeData schema
        * to the fabric canvas. This ignores the "type" attribute of the object
@@ -601,36 +689,11 @@ function ImageMarkupBuilder(fabricCanvas) {
        * @return a reference to the tracked shape.
        */
       addCircle: function addCircle(data) {
-         if (!data.x || !data.y) {
-            data.x = fabricCanvas.width / resizeRatio / 2;
-            data.y = fabricCanvas.height / resizeRatio / 2;
-            data.x += imageOffset.x;
-            data.y += imageOffset.y;
-         } else {
-            data.x /= resizeRatio;
-            data.y /= resizeRatio;
-            data.x += imageOffset.x;
-            data.y += imageOffset.y;
-         }
+         console.warn(
+          "Deprecated function: addCircle(). Use addShape() instead.");
 
-         if (!data.radius) {
-            data.radius = initialSize.circle / resizeRatio;
-         }
-         if (!data.color) {
-            data.color = "red";
-         }
-
-         var circle = {
-            from: {
-               x: data.x,
-               y: data.y
-            },
-            radius: data.radius,
-            color: data.color,
-            shapeName: "circle"
-         };
-
-         return drawCircle(finalWidth, circle, imageOffset);
+         if (data.type !== 'circle') data.type = 'circle';
+         return this.addShape(data);
       },
 
       /**
@@ -641,44 +704,11 @@ function ImageMarkupBuilder(fabricCanvas) {
        * @return a reference to the tracked shape.
        */
       addRectangle: function addRectangle(data) {
-         if (!data.width || !data.height) {
-            data.width = initialSize.rectangle / resizeRatio;
-            data.height = initialSize.rectangle / resizeRatio;
-         }
-         if (!data.x || !data.y) {
-            data.x = fabricCanvas.width / resizeRatio / 2;
-            data.y = fabricCanvas.height / resizeRatio / 2;
-            data.x -= data.width / 2;
-            data.y -= data.height / 2;
-            data.x += imageOffset.x;
-            data.y += imageOffset.y;
-         } else {
-            data.x = data.x / resizeRatio;
-            data.y = data.y / resizeRatio;
-            data.x -= data.width / 2;
-            data.y -= data.height / 2;
-            data.x += imageOffset.x;
-            data.y += imageOffset.y;
-         }
+         console.warn(
+          "Deprecated function: addRectangle(). Use addShape() instead.");
 
-         if (!data.color) {
-            data.color = "red";
-         }
-
-         var rect = {
-            from: {
-               x: data.x,
-               y: data.y
-            },
-            size: {
-               width: data.width,
-               height: data.height
-            },
-            color: data.color,
-            shapeName: "rectangle"
-         };
-
-         return drawRectangle(finalWidth, rect, imageOffset);
+         if (data.type !== 'rectangle') data.type = 'rectangle';
+         return this.addShape(data);
       },
 
       /**
