@@ -1,0 +1,13 @@
+{
+  "name"            : "simple-json-validator",
+  "version" : "1.0.0",
+  "contributors"    : [
+    {
+      "name"      : "Cedric Wienold",
+      "email"     : "cedric@ifixit.com"
+    }
+  ],
+  "dependencies"    : {
+    "json-schema" : "0.2.x"
+  }
+}
