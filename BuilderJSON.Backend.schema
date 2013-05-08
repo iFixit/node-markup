@@ -1,0 +1,169 @@
+{
+   "type":"object",
+   "required":true,
+   "properties":{
+      "sourceFile": {
+         "type":"string",
+         "required":true
+      },
+      "destinationFile": {
+         "type":"string",
+         "required":true
+      },
+      "dimensions": {
+         "type":"object",
+         "required":true,
+         "properties":{
+            "height": {
+               "type":"number",
+               "required":true
+            },
+            "width": {
+               "type":"number",
+               "required":true
+            }
+         }
+      },
+      "finalDimensions": {
+         "type":"object",
+         "required":true,
+         "properties":{
+            "height": {
+               "type":"number",
+               "required":true
+            },
+            "width": {
+               "type":"number",
+               "required":true
+            }
+         }
+      },
+      "instructions": {
+         "type":"object",
+         "required":true,
+         "properties":{
+            "crop": {
+               "type":"object",
+               "required":false,
+               "properties":{
+                  "from": {
+                     "type":"object",
+                     "required":true,
+                     "properties":{
+                        "x": {
+                           "type":"number",
+                           "required":true
+                        },
+                        "y": {
+                           "type":"number",
+                           "required":true
+                        }
+                     }
+                  },
+                  "size": {
+                     "type":"object",
+                     "required":true,
+                     "properties":{
+                        "height": {
+                           "type":"number",
+                           "required":true
+                        },
+                        "width": {
+                           "type":"number",
+                           "required":true
+                        }
+                     }
+                  }
+               }
+            },
+            "draw": {
+               "type":"array",
+               "required":true,
+               "items":
+               {
+                  "type": [
+                     {
+                        "type": "object",
+                        "required":false,
+                        "properties":{
+                           "circle": {
+                              "type":"object",
+                              "required":true,
+                              "properties":{
+                                 "color": {
+                                    "type":"string",
+                                    "required":true
+                                 },
+                                 "from": {
+                                    "type":"object",
+                                    "required":true,
+                                    "properties":{
+                                       "x": {
+                                          "type":"number",
+                                          "required":true
+                                       },
+                                       "y": {
+                                          "type":"number",
+                                          "required":true
+                                       }
+                                    }
+                                 },
+                                 "radius": {
+                                    "type":"number",
+                                    "required":true
+                                 }
+                              }
+                           }
+                        }
+                     },
+                     {
+                        "type": "object",
+                        "required":false,
+                        "properties":{
+                           "rectangle": {
+                              "type":"object",
+                              "required":true,
+                              "properties":{
+                                 "color": {
+                                    "type":"string",
+                                    "required":true
+                                 },
+                                 "from": {
+                                    "type":"object",
+                                    "required":true,
+                                    "properties":{
+                                       "x": {
+                                          "type":"number",
+                                          "required":true
+                                       },
+                                       "y": {
+                                          "type":"number",
+                                          "required":true
+                                       }
+                                    }
+                                 },
+                                 "size": {
+                                    "type":"object",
+                                    "required":true,
+                                    "properties":{
+                                       "width": {
+                                          "type":"number",
+                                          "required":true
+                                       },
+                                       "height":{
+                                          "type":"number",
+                                          "required":true
+                                       }
+                                    }
+                                 }
+                              }
+                           }
+                        }
+                     }
+                  ]
+               }
+            }
+         }
+      }
+   }
+}
