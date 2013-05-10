@@ -17,4 +17,4 @@ cd $DIR
 # install modules to locations other than this folder, you may comment this
 # line out
 export NODE_PATH=/usr/local/share/node-markup/node_modules:/usr/local/lib/node_modules
-/mnt/ebs/bin/node $DIR/ImageMarkupCall.js $@
+/usr/local/bin/node $DIR/ImageMarkupCall.js $@
