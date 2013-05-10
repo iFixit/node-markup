@@ -4,12 +4,6 @@
 #          Sample Run Script          #
 #######################################
 
-# Kill environment for clean running
-unset $(/usr/bin/env | egrep '^(\w+)=(.*)$' | \
-   egrep -vw 'PWD|USER|LANG' | /usr/bin/cut -d= -f1);
-
-PATH=/usr/bin
-
 DIR=$(cd `dirname "${BASH_SOURCE[0]}"` && pwd)
 cd $DIR
 
@@ -17,4 +11,4 @@ cd $DIR
 # install modules to locations other than this folder, you may comment this
 # line out
 export NODE_PATH=/usr/local/share/node-markup/node_modules:/usr/local/lib/node_modules
-/usr/local/bin/node $DIR/ImageMarkupCall.js $@
+node $DIR/ImageMarkupCall.js $@
