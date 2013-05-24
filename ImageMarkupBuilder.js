@@ -45,8 +45,8 @@ function ImageMarkupBuilder(fabricCanvas) {
       rectangle: 128
    };
    var maximumSizeRatio = {
-      circle: 0.3, // Max size of radius
-      rectangle: 0.8 // Max size of side
+      circle: 0.45, // Max size of radius
+      rectangle: 1.3 // Max size of side
    };
    var initialSize = {
       circle: 12,
