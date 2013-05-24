@@ -565,13 +565,13 @@ function ImageMarkupBuilder(canvas) {
    return {
       addCircle: function addCircle(data) {
          if (!data.x || !data.y) {
-            data.x = canvas.width / 2;
-            data.y = canvas.height / 2;
+            data.x = canvas.width / resizeRatio / 2;
+            data.y = canvas.height / resizeRatio / 2;
             data.x += imageOffset.x;
             data.y += imageOffset.y;
          }
          if (!data.radius) {
-            data.radius = initialSize.circle;
+            data.radius = initialSize.circle / resizeRatio;
          }
          if (!data.color) {
             data.color = "red";
@@ -579,10 +579,10 @@ function ImageMarkupBuilder(canvas) {
 
          var circle = {
             from: {
-               x: data.x / resizeRatio,
-               y: data.y / resizeRatio
+               x: data.x,
+               y: data.y
             },
-            radius: data.radius / resizeRatio,
+            radius: data.radius,
             color: data.color,
             shapeName: "circle"
          };
@@ -592,12 +592,12 @@ function ImageMarkupBuilder(canvas) {
 
       addRectangle: function addRectangle(data) {
          if (!data.width || !data.height) {
-            data.width = initialSize.rectangle;
-            data.height = initialSize.rectangle;
+            data.width = initialSize.rectangle / resizeRatio;
+            data.height = initialSize.rectangle / resizeRatio;
          }
          if (!data.x || !data.y) {
-            data.x = canvas.width / 2;
-            data.y = canvas.height / 2;
+            data.x = canvas.width / resizeRatio / 2;
+            data.y = canvas.height / resizeRatio / 2;
             data.x -= data.width / 2;
             data.y -= data.height / 2;
             data.x += imageOffset.x;
@@ -609,12 +609,12 @@ function ImageMarkupBuilder(canvas) {
 
          var rect = {
             from: {
-               x: data.x / resizeRatio,
-               y: data.y / resizeRatio
+               x: data.x,
+               y: data.y
             },
             size: {
-               width: data.width / resizeRatio,
-               height: data.height / resizeRatio
+               width: data.width,
+               height: data.height
             },
             color: data.color,
             shapeName: "rectangle"
@@ -667,7 +667,7 @@ function ImageMarkupBuilder(canvas) {
          };
 
          if (json['previewInstructions']) {
-            resizeRatio = json.previewInstructions.width / crop.size.width;
+            resizeRatio = 1 / json.previewInstructions.ratio;
          }
 
          maximumSize.rectangle =
