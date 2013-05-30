@@ -13,13 +13,16 @@ function ImageMarkupBuilder(canvas) {
    }
 
    var colorValues = {
-      'red': 'rgb(193,40,11)',
-      'orange': 'rgb(355,144,36)',
-      'yellow': 'rgb(243,224,14)',
-      'green': 'rgb(22,220,129)',
-      'blue': 'rgb(35,67,232)',
-      'violet': 'rgb(220,84,183)',
-      'black': 'rgb(0,0,0)'
+      'red':       "#C1280B",
+      'orange':    "#FF9024",
+      'yellow':    "#F3E00E",
+      'green':     "#16DC81",
+      'lightBlue': "#1BB1E9",
+      'blue':      "#2343E8",
+      'darkBlue':  "#2343E8",
+      'violet':    "#DC54B7",
+      'pink':      "#DC54B7",
+      'black':     "#000000"
    };
 
    // Expected group indexes
