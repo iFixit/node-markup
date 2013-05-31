@@ -728,6 +728,15 @@ function ImageMarkupBuilder(fabricCanvas) {
       },
 
       /**
+       * Returns a reference to the currently selected shape.
+       *
+       * @return a reference to the currently selected shape.
+       */
+      getActiveShape: function getActiveShape() {
+         return canvas.getActiveObject();
+      },
+
+      /**
        * Removes a specific tracked shape from the fabric canvas.
        */
       removeShape: function removeShape(shape) {
