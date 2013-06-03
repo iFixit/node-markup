@@ -13,16 +13,16 @@ function ImageMarkupBuilder(canvas) {
    }
 
    var colorValues = {
-      'red':       "<?= $this->getConst('markerColorRed') ?>",
-      'orange':    "<?= $this->getConst('markerColorOrange') ?>",
-      'yellow':    "<?= $this->getConst('markerColorYellow') ?>",
-      'green':     "<?= $this->getConst('markerColorGreen') ?>",
-      'lightBlue': "<?= $this->getConst('markerColorLightBlue') ?>",
-      'blue':      "<?= $this->getConst('markerColorDarkBlue') ?>",
-      'darkBlue':  "<?= $this->getConst('markerColorDarkBlue') ?>",
-      'violet':    "<?= $this->getConst('markerColorPink') ?>",
-      'pink':      "<?= $this->getConst('markerColorPink') ?>",
-      'black':     "<?= $this->getConst('markerColorBlack') ?>"
+      'red':       "#C1280B",
+      'orange':    "#FF9024",
+      'yellow':    "#F3E00E",
+      'green':     "#16DC81",
+      'lightBlue': "#1BB1E9",
+      'blue':      "#2343E8",
+      'darkBlue':  "#2343E8",
+      'violet':    "#DC54B7",
+      'pink':      "#DC54B7",
+      'black':     "#000000"
    };
 
    // Expected group indexes
