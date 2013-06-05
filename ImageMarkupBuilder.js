@@ -643,7 +643,7 @@ function ImageMarkupBuilder(canvas) {
        * @return a reference to the currently selected shape.
        */
       getActiveShape: function getActiveShape() {
-         return canvas.getActiveShape();
+         return canvas.getActiveObject();
       },
 
       /**
