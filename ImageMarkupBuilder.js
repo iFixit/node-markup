@@ -786,7 +786,7 @@ function ImageMarkupBuilder(fabricCanvas) {
          };
 
          if (innerJSON.previewInstructions) {
-            resizeRatio = 1 / innerJSON.previewInstructions.ratio;
+            resizeRatio = json.previewInstructions.width / crop.size.width;
          }
 
          maximumSize.rectangle =
