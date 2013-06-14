@@ -734,11 +734,15 @@ function ImageMarkupBuilder(canvas) {
                   break;
                case 'rectangle':
                   var rectangle = group.objects[shapeIndex]; //main shape
+                  var outline = group.objects[borderIndex];
+
                   var from = {
                      'x': Math.round((group.left - rectangle.width / 2)
-                      / resizeRatio) + imageOffset.x,
+                      / resizeRatio) - (outline.width - rectangle.width) / 2
+                      + imageOffset.x,
                      'y': Math.round((group.top - rectangle.height / 2)
-                      / resizeRatio) + imageOffset.y
+                      / resizeRatio) - (outline.height - rectangle.height) / 2
+                      + imageOffset.y
                   };
                   var size = {
                      'width': Math.round(rectangle.width / resizeRatio),
