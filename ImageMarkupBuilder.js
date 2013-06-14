@@ -741,7 +741,7 @@ function ImageMarkupBuilder(canvas) {
                       / resizeRatio) - (outline.width - rectangle.width) / 2
                       + imageOffset.x,
                      'y': Math.round((group.top - rectangle.height / 2)
-                      / resizeRatio) - (outline.width - rectangle.width) / 2
+                      / resizeRatio) - (outline.height - rectangle.height) / 2
                       + imageOffset.y
                   };
                   var size = {
