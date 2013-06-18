@@ -45,8 +45,8 @@ function ImageMarkupBuilder(fabricCanvas) {
       rectangle: 128
    };
    var maximumSizeRatio = {
-      circle: 0.45, // Max size of radius
-      rectangle: 1.3 // Max size of side
+      circle: 0.3, // Max size of radius
+      rectangle: 0.8 // Max size of side
    };
    var initialSize = {
       circle: 12,
@@ -430,14 +430,12 @@ function ImageMarkupBuilder(fabricCanvas) {
       }
 
       //Fabric調整
-      rect.top = rect.top + rect.height / 2
-       + rect.strokeWidth / 2;
-      rect.top *= resizeRatio;
-      rect.left = rect.left + rect.width / 2
-       + rect.strokeWidth / 2;
-      rect.left *= resizeRatio;
-      rect.width *= resizeRatio;
-      rect.height *= resizeRatio;
+      rect['top'] = rect['top'] + rect['height'] / 2;
+      rect['top'] *= resizeRatio;
+      rect['left'] = rect['left'] + rect['width'] / 2;
+      rect['left'] *= resizeRatio;
+      rect['width'] *= resizeRatio;
+      rect['height'] *= resizeRatio;
 
       rect.shapeFunction = "shape";
 
