@@ -567,25 +567,37 @@ function ImageMarkupBuilder(canvas) {
          mouseDownEvent = event.e;
       },'mouse:move': function(event) {
          if (!enabled) return;
-         if (!dragging
-          && mouseDownEvent
-          && distance(mouseDownEvent, event.e) > 10) {
-            startDragging();
+         if (!dragging) {
+            if (mouseDownEvent && distance(mouseDownEvent, event.e) > 10) {
+               startDragging(mouseDownEvent);
+               console.log(mouseDownEvent);
+            }
+         } else {
+            var size = Math.max(Math.abs(x(event.e) - x(mouseDownEvent)),
+                                Math.abs(y(event.e) - y(mouseDownEvent)),
+                                40);
+
+            currentShape.scaleToWidth(size*2);
          }
       }, 'mouse:up': function() {
          if (dragging)
             stopDragging();
       }});
 
-      function startDragging() {
+      function startDragging(e) {
          dragging = true;
          console.log('start dragging');
+         currentShape = publicInterface.addCircle({
+            x: x(e),
+            y: y(e)
+         });
       }
 
       function stopDragging() {
          dragging = false;
          mouseDownEvent = null;
          console.log('stop dragging');
+         currentShape = null;
       }
 
       function distance(e1, e2) {
@@ -647,7 +659,7 @@ function ImageMarkupBuilder(canvas) {
       }
    }
 
-   return {
+   var publicInterface = {
       addCircle: function addCircle(data) {
          if (!data.x || !data.y) {
             data.x = canvas.width / 2;
@@ -854,6 +866,7 @@ function ImageMarkupBuilder(canvas) {
          return markupString;
       }
    };
+   return publicInterface;
 }
 
 if (isNode)
