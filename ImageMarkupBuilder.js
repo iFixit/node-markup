@@ -195,6 +195,9 @@ function ImageMarkupBuilder(canvas) {
                initialPosition.fresh = false;
             }.bind(this)
          });
+
+         // Setup drag-to-draw for this canvas
+         setupMarkerCreation(canvas);
       }
 
       //Disable drag selection on canvas
@@ -546,6 +549,85 @@ function ImageMarkupBuilder(canvas) {
          }
       }
    }
+
+   /*************
+    * Marker Creation Interface code
+    */
+   function setupMarkerCreation(canvas) {
+      var enabled = true,
+          dragging = false,
+          mouseDownEvent,
+          color,
+          currentShape,
+          shapeMode = Enum(['circle', 'rectangle']);
+
+      canvas.on({
+      'mouse:down': function(event) {
+         if (!enabled) return;
+         mouseDownEvent = event.e;
+      },'mouse:move': function(event) {
+         if (!enabled) return;
+         if (!dragging
+          && mouseDownEvent
+          && distance(mouseDownEvent, event.e) > 10) {
+            startDragging();
+         }
+      }, 'mouse:up': function() {
+         if (dragging)
+            stopDragging();
+      }});
+
+      function startDragging() {
+         dragging = true;
+         console.log('start dragging');
+      }
+
+      function stopDragging() {
+         dragging = false;
+         mouseDownEvent = null;
+         console.log('stop dragging');
+      }
+
+      function distance(e1, e2) {
+         return Math.abs(x(e1)- x(e2)) + Math.abs(y(e1) - y(e2));
+      }
+
+      function x(e) {
+         return e.offsetX == undefined ? e.layerX : e.offsetX;
+      }
+      function y(e) {
+         return e.offsetY == undefined ? e.layerY : e.offsetY;
+      }
+   }
+
+   /**
+    * Create an uber-simple enum with the given set of values (strings or
+    * numbers)
+    *
+    * The returned object has one method per possible value that sets the enum
+    * to that specific value.
+    *
+    * It also sports a get() that returns the current value.
+    */
+   function Enum(values) {
+      var value = null;
+      var publicInterface = {
+         get: function() {
+            return value;
+         }
+      };
+      values.forEach(function(valueName) {
+         publicInterface[valueName] = function() {
+            value = valueName;
+         };
+      });
+      return publicInterface;
+   }
+
+   /*
+    * END - Marker Creation Interface code
+    *************/
+
 
    function locate(shape) {
       for (var i = 0; i < markupObjects.length; ++i) {
