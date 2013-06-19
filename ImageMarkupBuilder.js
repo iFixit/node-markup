@@ -607,7 +607,7 @@ function ImageMarkupBuilder(fabricCanvas) {
             shadow.strokeWidth *= 2;
             break;
          default:
-            console.error('実装されていない機能：' + shape.shapeName);
+            console.error('Shape not implemented: ' + shape.shapeName);
             return;
       }
 
@@ -637,7 +637,7 @@ function ImageMarkupBuilder(fabricCanvas) {
                shadow.height = shadow.height - stepWidth * 4 * 0.8;
                break;
             default:
-               console.error('実装されてない機能：' + shape.shapeName);
+               console.error('Shape not implemented: ' + shape.shapeName);
                return;
          }
       }
@@ -675,14 +675,13 @@ function ImageMarkupBuilder(fabricCanvas) {
       if (!data.x || !data.y) {
          data.x = fabricCanvas.width / resizeRatio / 2;
          data.y = fabricCanvas.height / resizeRatio / 2;
-         data.x += imageOffset.x;
-         data.y += imageOffset.y;
       } else {
          data.x /= resizeRatio;
          data.y /= resizeRatio;
-         data.x += imageOffset.x;
-         data.y += imageOffset.y;
       }
+
+      data.x += imageOffset.x;
+      data.y += imageOffset.y;
 
       if (!data.color) {
          data.color = "red";
