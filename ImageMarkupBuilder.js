@@ -167,63 +167,44 @@ function ImageMarkupBuilder(fabricCanvas) {
                   };
                }
 
-               var target = e.target;
-               var shape = e.target.objects[shapeIndex];
-               var border = e.target.objects[borderIndex];
-               var inline = e.target.objects[inlineIndex];
+               var shape = e.target;
 
                switch (shape.shapeName) {
                   case 'rectangle':
                      var newSize = {
-                        width: shape.width * e.target.scaleX,
-                        height: shape.height * e.target.scaleY
+                        width: shape.getWidth(),
+                        height: shape.getHeight()
                      };
-                     if (newSize.width <= minimumSize.rectangle ||
-                      newSize.height <= minimumSize.rectangle ||
-                      newSize.width >= maximumSize.rectangle ||
-                      newSize.height >= maximumSize.rectangle) {
-                        if (newSize.width <= minimumSize.rectangle) {
-                           newSize.width = minimumSize.rectangle;
-                        } else if (newSize.width >= maximumSize.rectangle) {
-                           newSize.width = maximumSize.rectangle;
-                        }
+                     if (newSize.width <= minimumSize.rectangle) {
+                        newSize.width = minimumSize.rectangle;
+                     } else if (newSize.width >= maximumSize.rectangle) {
+                        newSize.width = maximumSize.rectangle;
+                     }
 
-                        if (newSize.height <= minimumSize.rectangle) {
-                           newSize.height = minimumSize.rectangle;
-                        } else if (newSize.height >= maximumSize.rectangle) {
-                           newSize.height = maximumSize.rectangle;
-                        }
+                     if (newSize.height <= minimumSize.rectangle) {
+                        newSize.height = minimumSize.rectangle;
+                     } else if (newSize.height >= maximumSize.rectangle) {
+                        newSize.height = maximumSize.rectangle;
                      }
 
                      shape.width = newSize.width;
                      shape.height = newSize.height;
-                     e.target.width = border.width;
-                     e.target.height = border.height;
+                     shape.scaleX = 1;
+                     shape.scaleY = 1;
                      break;
                   case 'circle':
-                     var newRadius = shape.radius * e.target.scaleX;
+                     var newRadius = shape.getRadiusX();
 
                      if (newRadius <= minimumSize.circle) {
-                        newRadius = minimumSize.circle;
+                        shape.scaleX = shape.scaleY = minimumSize.circle / shape.radius;
                      } else if (newRadius >= maximumSize.circle) {
-                        newRadius = maximumSize.circle;
+                        shape.scaleX = shape.scaleY = maximumSize.circle / shape.radius;
                      }
 
-                     shape.radius = newRadius;
-                     e.target.width = border.radius * 2;
-                     e.target.height = border.radius * 2;
 
                      break;
                }
 
-               resizeBorder(shape, border, whiteStroke);
-               resizeInline(shape, inline, whiteStroke);
-
-               e.target.scaleX = 1;
-               e.target.scaleY = 1;
-
-               e.target.left = initialPosition.left;
-               e.target.top = initialPosition.top;
             }.bind(this)
          });
 
@@ -272,7 +253,6 @@ function ImageMarkupBuilder(fabricCanvas) {
                if (err) throw err;
 
                var dimensions = innerJSON.dimensions;
-               var finalDimensions = innerJSON.finalDimensions;
                img = {
                   'width': dimensions.width,
                   'height': dimensions.height,
@@ -383,39 +363,6 @@ function ImageMarkupBuilder(fabricCanvas) {
       return width;
    }
 
-   /**
-    * Resizes the border (outline) of the shape group to reflect correctly
-    * the size of the shape.
-    */
-   function resizeBorder(shape, shapeBorder, whiteStroke) {
-      switch (shapeBorder.shapeName) {
-         case 'rectangle':
-            shapeBorder.width = shape.width + shape.strokeWidth +
-             whiteStroke;
-            shapeBorder.height = shape.height + shape.strokeWidth +
-             whiteStroke;
-            break;
-         case 'circle':
-            shapeBorder.radius = shape.radius + shape.strokeWidth / 2;
-      }
-   }
-
-   /**
-    * Resizes the inline of the shape group to reflect correctly the size of
-    * the shape.
-    */
-   function resizeInline(shape, shapeInline, whiteStroke) {
-      switch (shapeInline.shapeName) {
-         case 'rectangle':
-            shapeInline.width = shape.width - shape.strokeWidth + whiteStroke;
-            shapeInline.height = shape.height - shape.strokeWidth + whiteStroke;
-            break;
-         case 'circle':
-            shapeInline.radius = shape.radius - shape.strokeWidth / 2;
-            break;
-      }
-   }
-
    function drawRectangle(finalWidth, shape, imageOffset) {
       shape.stroke = getStrokeWidth(finalWidth);
 
@@ -427,65 +374,36 @@ function ImageMarkupBuilder(fabricCanvas) {
          height: shape.size.height,
          rx: 1,
          ry: 1,
-         strokeWidth: shape.stroke,
+         borderWidth: shape.stroke,
          stroke: colorValues[shape.color],
          fill: 'transparent'
       }
 
       //Fabric調整
-      rect.top = rect.top + rect.height / 2
       rect.top *= resizeRatio;
-      rect.left = rect.left + rect.width / 2
       rect.left *= resizeRatio;
       rect.width *= resizeRatio;
       rect.height *= resizeRatio;
-
-      rect.shapeFunction = "shape";
-
-      var rectBorder = clone(rect);
-      resizeBorder(rect, rectBorder, whiteStroke);
-      rectBorder.rx = rect.strokeWidth - whiteStroke;
-      rectBorder.ry = rect.strokeWidth - whiteStroke;
-      rectBorder.strokeWidth = whiteStroke;
-      rectBorder.stroke = 'white';
-
-      rectBorder.shapeFunction = "border";
-
-      var rectInline = clone(rect);
-      resizeInline(rect, rectInline, whiteStroke);
-      rectInline.rx = Math.max(shape.stroke - rectBorder.rx, 4);
-      rectInline.ry = Math.max(shape.stroke - rectBorder.ry, 4);
-      rectInline.strokeWidth = whiteStroke;
-      rectInline.stroke = 'white';
-
-      rectInline.shapeFunction = "inline";
 
       if (isNode && shadows == true) {
          drawShadow(rect, shadowStep);
       }
 
-      var fabricRect = new Fabric.Rect(rect),
-      fabricBorder = new Fabric.Rect(rectBorder),
-      fabricInline = new Fabric.Rect(rectInline);
+      var fabricRect = new ShapeRect(rect);
 
-      var group = new Fabric.Group([fabricBorder, fabricInline, fabricRect],
-       {left: rect.left, top: rect.top});
+      fabricRect.lockRotation = true;
+      fabricRect.transparentCorners = false;
+      fabricRect.hasRotatingPoint = false;
 
-      group.shapeName = 'rectangle';
-
-      group.lockRotation = true;
-      group.transparentCorners = false;
-      group.hasRotatingPoint = false;
-
-      markupObjects.push(group);
-      fabricCanvas.add(group);
+      markupObjects.push(fabricRect);
+      fabricCanvas.add(fabricRect);
 
       if (!isNode) {
          // Set this as the active object
-         fabricCanvas.setActiveObject(group);
+         fabricCanvas.setActiveObject(fabricRect);
       }
 
-      return group;
+      return fabricRect;
    }
 
    function drawCircle(finalWidth, shape, imageOffset) {
@@ -496,52 +414,35 @@ function ImageMarkupBuilder(fabricCanvas) {
          left: shape.from.x - imageOffset.x,
          top: shape.from.y - imageOffset.y,
          radius: shape.radius,
-         strokeWidth: shape.stroke,
+         borderWidth: shape.stroke,
          stroke: colorValues[shape.color],
          fill: 'transparent'
       };
       circle.left *= resizeRatio;
       circle.top *= resizeRatio;
       circle.radius *= resizeRatio;
-      circle.shapeFunction = 'shape';
-
-      var circleBorder = clone(circle);
-      resizeBorder(circle, circleBorder, whiteStroke);
-      circleBorder.strokeWidth = whiteStroke;
-      circleBorder.stroke = 'white';
-      circleBorder.shapeFunction = 'border';
-
-      var circleInline = clone(circleBorder);
-      resizeInline(circle, circleInline, whiteStroke);
-      circleInline.shapeFunction = 'inline';
 
       if (isNode && shadows == true) {
          drawShadow(circle, shadowStep);
       }
 
-      var fabricCircle = new Fabric.Circle(circle),
-      fabricBorder = new Fabric.Circle(circleBorder),
-      fabricInline = new Fabric.Circle(circleInline);
+      circle.lockRotation = true;
+      circle.lockUniScaling = true;
+      circle.transparentCorners = false;
+      circle.hasRotatingPoint = false;
+      var fabricCircle = new ShapeCircle(circle);
 
-      var group = new Fabric.Group([fabricBorder, fabricInline, fabricCircle],
-       {left: fabricCircle.left, top: fabricCircle.top});
+      fabricCircle.set('lockUniScaling', true);
 
-      group.shapeName = 'circle';
-
-      group.lockRotation = true;
-      group.lockUniScaling = true;
-      group.transparentCorners = false;
-      group.hasRotatingPoint = false;
-
-      markupObjects.push(group);
-      fabricCanvas.add(group);
+      markupObjects.push(fabricCircle);
+      fabricCanvas.add(fabricCircle);
 
       if (!isNode) {
          // Set this as the active object
-         fabricCanvas.setActiveObject(group);
+         fabricCanvas.setActiveObject(fabricCircle);
       }
 
-      return group;
+      return fabricCircle;
    }
 
    /**
@@ -668,6 +569,82 @@ function ImageMarkupBuilder(fabricCanvas) {
       }
    }
 
+   var ShapeCircle = Fabric.util.createClass(Fabric.Circle, {
+      type: 'circle',
+      strokeWidth: 0,
+      borderWidth: 4,
+      padding: 5,
+      centerTransform: true,
+  
+      outlineWidth: 1,
+      outlineStyle: '#FFF',
+  
+      _stroke: function(ctx) {
+         var myScale = this.scaleX;
+         function scaleU(x) { return x / myScale; }
+         ctx.lineWidth = scaleU(this.borderWidth + this.outlineWidth);
+         ctx.strokeStyle = this.outlineStyle;
+         ctx.stroke();
+   
+         ctx.lineWidth = scaleU(this.borderWidth - this.outlineWidth);
+         ctx.strokeStyle = this.stroke;
+         ctx.stroke();
+      }
+  });
+
+   var ShapeRect = Fabric.util.createClass(Fabric.Rect, {
+      type: 'rectangle',
+      strokeWidth: 0,
+      borderWidth: 4,
+      originX: 'left',
+      originY: 'top',
+  
+      outlineWidth: 1,
+      outlineStyle: '#FFF',
+  
+      /**
+       * Provide a custom stroke function that draws a fat white line THEN a
+       * narrower colored line on top.
+       */
+      _stroke: function(ctx) {
+         var myScale = this.scaleX;
+         function scale(x) { return (x / myScale); }
+         ctx.lineWidth = scale(this.borderWidth + this.outlineWidth);
+         ctx.strokeStyle = this.outlineStyle;
+         ctx.stroke();
+
+         ctx.lineWidth = scale(this.borderWidth - this.outlineWidth);
+         ctx.strokeStyle = this.stroke;
+         ctx.stroke();
+      },
+
+      /**
+       * Wrap the underlying render function to do two things.
+       *
+       * 1. Apply the scaling to the width and height and set scale to 1 so
+       *    that stroke width is independent of scale
+       * 2. If the edges of any borders land on between-a-pixel, round them to
+       *    the nearest one. This was quite tricky, so don't go messing with it
+       *    willy nilly and let's talk about it - Danny.
+       */
+      render: function(ctx) {
+         this.width = this.width * this.scaleX;
+         this.height = this.height * this.scaleY;
+
+         if ((this.left + this.borderWidth / 2) % 1 == 0) {
+            this.left -= 0.5;
+            this.width += 1;
+         }
+         if ((this.top + this.borderWidth / 2) % 1 == 0) {
+            this.top -= 0.5;
+            this.height += 1;
+         }
+         this.scaleX = this.scaleY = 1;
+
+         this.callSuper('render', ctx);
+      }
+   });
+
    return {
       /**
        * Adds and tracks a given data object following the ShapeData schema
@@ -784,18 +761,15 @@ function ImageMarkupBuilder(fabricCanvas) {
          };
 
          if (innerJSON.previewInstructions) {
-            resizeRatio = 1 / innerJSON.previewInstructions.ratio;
+            resizeRatio = json.previewInstructions.width / crop.size.width;
          }
 
-         maximumSize.rectangle =
-          innerJSON.finalDimensions.height < innerJSON.finalDimensions.width ?
-          innerJSON.finalDimensions.height * maximumSizeRatio.rectangle :
-          innerJSON.finalDimensions.width * maximumSizeRatio.rectangle;
+         var finalSize = innerJSON.finalDimensions;
+         maximumSize.rectangle = Math.min(finalSize.height, finalSize.width)
+                                 * maximumSizeRatio.rectangle;
 
-         maximumSize.circle =
-          innerJSON.finalDimensions.height < innerJSON.finalDimensions.width ?
-          innerJSON.finalDimensions.height * maximumSizeRatio.circle :
-          innerJSON.finalDimensions.width * maximumSizeRatio.circle;
+         maximumSize.circle = Math.min(finalSize.height, finalSize.width)
+                              * maximumSizeRatio.circle;
 
          applyBackground(callback);
       },
@@ -837,41 +811,38 @@ function ImageMarkupBuilder(fabricCanvas) {
          }
 
          for (var i = 0; i < markupObjects.length; ++i) {
-            var group = markupObjects[i];
+            var object = markupObjects[i];
 
-            switch (group.shapeName) {
+            switch (object.shapeName) {
                case 'circle':
-                  var circle = group.objects[shapeIndex]; //main shape
-                  var outline = group.objects[borderIndex];
                   var from = {
-                     'x': Math.round(group.left / resizeRatio) + imageOffset.x,
-                     'y': Math.round(group.top / resizeRatio) + imageOffset.y
+                     'x': Math.round(object.left / resizeRatio) + imageOffset.x,
+                     'y': Math.round(object.top / resizeRatio) + imageOffset.y
                   };
-                  var radius = Math.round((circle.radius) / resizeRatio);
-                  var color = translateRGBtoColorString(circle.stroke);
+                  var radius = Math.round((object.radius) / resizeRatio);
+                  var color = translateRGBtoColorString(object.stroke);
 
                   markupString += "circle," + from.x + "x" + from.y + ","
                    + radius + "," + color + ";";
                   break;
                case 'rectangle':
-                  var rectangle = group.objects[shapeIndex]; //main shape
                   var from = {
-                     'x': Math.round((group.left - rectangle.width / 2)
+                     'x': Math.round((object.left - object.width / 2)
                       / resizeRatio) + imageOffset.x,
-                     'y': Math.round((group.top - rectangle.height / 2)
+                     'y': Math.round((object.top - object.height / 2)
                       / resizeRatio) + imageOffset.y
                   };
                   var size = {
-                     'width': Math.round(rectangle.width / resizeRatio),
-                     'height': Math.round(rectangle.height / resizeRatio)
+                     'width': Math.round(object.width / resizeRatio),
+                     'height': Math.round(object.height / resizeRatio)
                   };
-                  var color = translateRGBtoColorString(rectangle.stroke);
+                  var color = translateRGBtoColorString(object.stroke);
 
                   markupString += "rectangle," + from.x + "x" + from.y + ","
                    + size.width + "x" + size.height + "," + color +  ";";
                   break;
                default:
-                  console.error("Unexpected group name: " + group.shapeName);
+                  console.error("Unexpected object name: " + object.shapeName);
             }
          }
 
