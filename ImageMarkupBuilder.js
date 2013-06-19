@@ -583,7 +583,7 @@ function ImageMarkupBuilder(fabricCanvas) {
             shadow.strokeWidth *= 2;
             break;
          default:
-            console.error('実装されていない機能：' + shape.shapeName);
+            console.error('Shape not implemented: ' + shape.shapeName);
             return;
       }
 
@@ -613,7 +613,7 @@ function ImageMarkupBuilder(fabricCanvas) {
                shadow.height = shadow.height - stepWidth * 4 * 0.8;
                break;
             default:
-               console.error('実装されてない機能：' + shape.shapeName);
+               console.error('Shape not implemented: ' + shape.shapeName);
                return;
          }
       }
