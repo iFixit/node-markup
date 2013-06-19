@@ -55,7 +55,7 @@ function ImageMarkupBuilder(fabricCanvas) {
 
    var markupObjects = new Array();
 
-   var whiteStroke = isNode ? 2 : 1;
+   var whiteStroke = isNode ? 1 : 0.5;
    var strokeWidth = null;
    var crop = null;
 
