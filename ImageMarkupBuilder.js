@@ -651,14 +651,13 @@ function ImageMarkupBuilder(fabricCanvas) {
       if (!data.x || !data.y) {
          data.x = fabricCanvas.width / resizeRatio / 2;
          data.y = fabricCanvas.height / resizeRatio / 2;
-         data.x += imageOffset.x;
-         data.y += imageOffset.y;
       } else {
          data.x /= resizeRatio;
          data.y /= resizeRatio;
-         data.x += imageOffset.x;
-         data.y += imageOffset.y;
       }
+
+      data.x += imageOffset.x;
+      data.y += imageOffset.y;
 
       if (!data.color) {
          data.color = "red";
