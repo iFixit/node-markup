@@ -246,6 +246,30 @@ function ImageMarkupBuilder(fabricCanvas) {
                initialPosition.fresh = false;
             }.bind(this)
          });
+
+         $(document).addEvent('keydown', function (e) {
+            var object;
+            if ((object = fabricCanvas.getActiveObject()) != null) {
+               switch(e.key) {
+                  case 'left':
+                     object.left -= 1;
+                     break;
+                  case 'right':
+                     object.left += 1;
+                     break;
+                  case 'up':
+                     object.top -= 1;
+                     break;
+                  case 'down':
+                     object.top += 1;
+                     break;
+                  default:
+                     break;
+               }
+
+               fabricCanvas.renderAll();
+            }
+         }.bind(this));
       }
 
       //Disable drag selection on canvas
