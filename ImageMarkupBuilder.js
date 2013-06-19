@@ -253,16 +253,28 @@ function ImageMarkupBuilder(fabricCanvas) {
             if ((markerObject = fabricCanvas.getActiveObject()) !== null) {
                switch(e.key) {
                   case 'left':
-                     markerObject.left -= 1;
+                     if (markerObject.left <= 0)
+                        markerObject.left = 0;
+                     else
+                        markerObject.left -= 1;
                      break;
                   case 'right':
-                     markerObject.left += 1;
+                     if (markerObject.left >= fabricCanvas.width)
+                        markerObject.left = fabricCanvas.width;
+                     else
+                        markerObject.left += 1;
                      break;
                   case 'up':
-                     markerObject.top -= 1;
+                     if (markerObject.top <= 0)
+                        markerObject.top = 0;
+                     else
+                        markerObject.top -= 1;
                      break;
                   case 'down':
-                     markerObject.top += 1;
+                     if (markerObject.top >= fabricCanvas.height)
+                        markerObject.top = fabricCanvas.height;
+                     else
+                        markerObject.top += 1;
                      break;
                }
 
