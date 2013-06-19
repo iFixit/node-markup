@@ -246,6 +246,29 @@ function ImageMarkupBuilder(fabricCanvas) {
                initialPosition.fresh = false;
             }.bind(this)
          });
+
+         $(document).addEvent('keydown', function (e) {
+            var markerObject;
+
+            if ((markerObject = fabricCanvas.getActiveObject()) !== null) {
+               switch(e.key) {
+                  case 'left':
+                     markerObject.left -= 1;
+                     break;
+                  case 'right':
+                     markerObject.left += 1;
+                     break;
+                  case 'up':
+                     markerObject.top -= 1;
+                     break;
+                  case 'down':
+                     markerObject.top += 1;
+                     break;
+               }
+
+               fabricCanvas.renderAll();
+            }
+         }.bind(this));
       }
 
       //Disable drag selection on canvas
@@ -724,6 +747,15 @@ function ImageMarkupBuilder(fabricCanvas) {
        */
       getShapes: function getShapes() {
          return fabricCanvas._objects;
+      },
+
+      /**
+       * Returns a reference to the currently selected shape.
+       *
+       * @return a reference to the currently selected shape.
+       */
+      getActiveShape: function getActiveShape() {
+         return fabricCanvas.getActiveObject();
       },
 
       /**
