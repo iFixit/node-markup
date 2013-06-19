@@ -434,10 +434,8 @@ function ImageMarkupBuilder(fabricCanvas) {
 
       //Fabric調整
       rect.top = rect.top + rect.height / 2
-       + rect.strokeWidth / 2;
       rect.top *= resizeRatio;
       rect.left = rect.left + rect.width / 2
-       + rect.strokeWidth / 2;
       rect.left *= resizeRatio;
       rect.width *= resizeRatio;
       rect.height *= resizeRatio;
