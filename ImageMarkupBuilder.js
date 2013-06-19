@@ -756,7 +756,7 @@ function ImageMarkupBuilder(fabricCanvas) {
        * @return a reference to the currently selected shape.
        */
       getActiveShape: function getActiveShape() {
-         return canvas.getActiveObject();
+         return fabricCanvas.getActiveObject();
       },
 
       /**
