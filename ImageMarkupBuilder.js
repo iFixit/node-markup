@@ -248,22 +248,21 @@ function ImageMarkupBuilder(fabricCanvas) {
          });
 
          $(document).addEvent('keydown', function (e) {
-            var object;
-            if ((object = fabricCanvas.getActiveObject()) != null) {
+            var markerObject;
+
+            if ((markerObject = fabricCanvas.getActiveObject()) !== null) {
                switch(e.key) {
                   case 'left':
-                     object.left -= 1;
+                     markerObject.left -= 1;
                      break;
                   case 'right':
-                     object.left += 1;
+                     markerObject.left += 1;
                      break;
                   case 'up':
-                     object.top -= 1;
+                     markerObject.top -= 1;
                      break;
                   case 'down':
-                     object.top += 1;
-                     break;
-                  default:
+                     markerObject.top += 1;
                      break;
                }
 
