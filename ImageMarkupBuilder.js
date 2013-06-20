@@ -202,6 +202,9 @@ function ImageMarkupBuilder(fabricCanvas) {
                fabricCanvas.renderAll();
             }
          }.bind(this));
+
+         // Setup drag-to-draw for this canvas
+         setupMarkerCreation(canvas);
       }
 
       //Disable drag selection on canvas
@@ -499,6 +502,97 @@ function ImageMarkupBuilder(fabricCanvas) {
       }
    }
 
+   /*************
+    * Marker Creation Interface code
+    */
+   function setupMarkerCreation(canvas) {
+      var enabled = true,
+          dragging = false,
+          mouseDownEvent,
+          color,
+          currentShape,
+          shapeMode = Enum(['circle', 'rectangle']);
+
+      canvas.on({
+      'mouse:down': function(event) {
+         if (!enabled) return;
+         mouseDownEvent = event.e;
+      },'mouse:move': function(event) {
+         if (!enabled) return;
+         if (!dragging) {
+            if (mouseDownEvent && distance(mouseDownEvent, event.e) > 10) {
+               startDragging(mouseDownEvent);
+               console.log(mouseDownEvent);
+            }
+         } else {
+            var size = Math.max(Math.abs(x(event.e) - x(mouseDownEvent)),
+                                Math.abs(y(event.e) - y(mouseDownEvent)),
+                                40);
+
+            currentShape.scaleToWidth(size*2);
+         }
+      }, 'mouse:up': function() {
+         if (dragging)
+            stopDragging();
+      }});
+
+      function startDragging(e) {
+         dragging = true;
+         console.log('start dragging');
+         currentShape = publicInterface.addCircle({
+            x: x(e),
+            y: y(e)
+         });
+      }
+
+      function stopDragging() {
+         dragging = false;
+         mouseDownEvent = null;
+         console.log('stop dragging');
+         currentShape = null;
+      }
+
+      function distance(e1, e2) {
+         return Math.abs(x(e1)- x(e2)) + Math.abs(y(e1) - y(e2));
+      }
+
+      function x(e) {
+         return e.offsetX == undefined ? e.layerX : e.offsetX;
+      }
+      function y(e) {
+         return e.offsetY == undefined ? e.layerY : e.offsetY;
+      }
+   }
+
+   /**
+    * Create an uber-simple enum with the given set of values (strings or
+    * numbers)
+    *
+    * The returned object has one method per possible value that sets the enum
+    * to that specific value.
+    *
+    * It also sports a get() that returns the current value.
+    */
+   function Enum(values) {
+      var value = null;
+      var publicInterface = {
+         get: function() {
+            return value;
+         }
+      };
+      values.forEach(function(valueName) {
+         publicInterface[valueName] = function() {
+            value = valueName;
+         };
+      });
+      return publicInterface;
+   }
+
+   /*
+    * END - Marker Creation Interface code
+    *************/
+
+
    function locate(shape) {
       for (var i = 0; i < markupObjects.length; ++i) {
          if (markupObjects[i] === shape) {
@@ -676,7 +770,7 @@ function ImageMarkupBuilder(fabricCanvas) {
       }
    });
 
-   return {
+   var publicInterface = {
       /**
        * Adds and tracks a given data object following the ShapeData schema
        * to the fabric canvas. The act of drawing is delegated to the proper
@@ -880,6 +974,7 @@ function ImageMarkupBuilder(fabricCanvas) {
          return markupString;
       }
    };
+   return publicInterface;
 }
 
 if (isNode)
