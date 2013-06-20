@@ -33,9 +33,6 @@ function ImageMarkupBuilder(fabricCanvas) {
    var inlineIndex = 1;
    var shapeIndex = 2;
 
-   // Holder for initial position of currently selected shape
-   var initialPosition = {fresh: false, left: NaN, top: NaN};
-
    var imageOffset;
    var resizeRatio = 1;
    var finalWidth = 0;
@@ -155,59 +152,6 @@ function ImageMarkupBuilder(fabricCanvas) {
 
    function applyBackground(callback) {
       if (!isNode) {
-         //Listen for shape resizes and reset strokeWidth accordingly
-         fabricCanvas.on({
-            'object:scaling': function (e) {
-               //If no initial position is logged, log it
-               if (!initialPosition.fresh) {
-                  initialPosition = {
-                     left: e.target.left,
-                     top: e.target.top,
-                     fresh: true
-                  };
-               }
-
-               var shape = e.target;
-
-               switch (shape.shapeName) {
-                  case 'rectangle':
-                     var newSize = {
-                        width: shape.getWidth(),
-                        height: shape.getHeight()
-                     };
-                     if (newSize.width <= minimumSize.rectangle) {
-                        newSize.width = minimumSize.rectangle;
-                     } else if (newSize.width >= maximumSize.rectangle) {
-                        newSize.width = maximumSize.rectangle;
-                     }
-
-                     if (newSize.height <= minimumSize.rectangle) {
-                        newSize.height = minimumSize.rectangle;
-                     } else if (newSize.height >= maximumSize.rectangle) {
-                        newSize.height = maximumSize.rectangle;
-                     }
-
-                     shape.width = newSize.width;
-                     shape.height = newSize.height;
-                     shape.scaleX = 1;
-                     shape.scaleY = 1;
-                     break;
-                  case 'circle':
-                     var newRadius = shape.getRadiusX();
-
-                     if (newRadius <= minimumSize.circle) {
-                        shape.scaleX = shape.scaleY = minimumSize.circle / shape.radius;
-                     } else if (newRadius >= maximumSize.circle) {
-                        shape.scaleX = shape.scaleY = maximumSize.circle / shape.radius;
-                     }
-
-
-                     break;
-               }
-
-            }.bind(this)
-         });
-
          //Listen for shapes falling off the edge and delete
          fabricCanvas.on({
             'object:modified': function (e) {
@@ -221,13 +165,6 @@ function ImageMarkupBuilder(fabricCanvas) {
                 shape.top - h > fabricCanvas.height) {
                   remove(shape);
                }
-            }.bind(this)
-         });
-
-         //Clear initial position on mouse up
-         fabricCanvas.on({
-            'mouse:up': function (e) {
-               initialPosition.fresh = false;
             }.bind(this)
          });
       }
@@ -372,6 +309,8 @@ function ImageMarkupBuilder(fabricCanvas) {
          top: shape.from.y - imageOffset.y,
          width: shape.size.width,
          height: shape.size.height,
+         minSize: minimumSize.rectangle,
+         maxSize: maximumSize.rectangle,
          rx: 1,
          ry: 1,
          borderWidth: shape.stroke,
@@ -414,6 +353,8 @@ function ImageMarkupBuilder(fabricCanvas) {
          left: shape.from.x - imageOffset.x,
          top: shape.from.y - imageOffset.y,
          radius: shape.radius,
+         minSize: minimumSize.circle,
+         maxSize: maximumSize.circle,
          borderWidth: shape.stroke,
          stroke: colorValues[shape.color],
          fill: 'transparent'
@@ -574,6 +515,13 @@ function ImageMarkupBuilder(fabricCanvas) {
       strokeWidth: 0,
       borderWidth: 4,
       padding: 5,
+      originX: 'center',
+      originY: 'center',
+
+      // Min and Max size to enforce (false == no enforcement)
+      minSize: false,
+      maxSize: false,
+
       centerTransform: true,
   
       outlineWidth: 1,
@@ -589,6 +537,21 @@ function ImageMarkupBuilder(fabricCanvas) {
          ctx.lineWidth = scaleU(this.borderWidth - this.outlineWidth);
          ctx.strokeStyle = this.stroke;
          ctx.stroke();
+      },
+
+      render: function(ctx) {
+         this._limitSize();
+         this.callSuper('render', ctx);
+      },
+
+      _limitSize: function() {
+         var newRadius = this.getRadiusX();
+
+         if (this.minSize !== false && newRadius < this.minSize) {
+            this.scaleX = this.scaleY = this.minSize / this.radius;
+         } else if (this.maxSize !== false && newRadius > this.maxSize) {
+            this.scaleX = this.scaleY = this.maxSize / this.radius;
+         }
       }
   });
 
@@ -598,6 +561,10 @@ function ImageMarkupBuilder(fabricCanvas) {
       borderWidth: 4,
       originX: 'left',
       originY: 'top',
+
+      // Min and Max size to enforce (false == no enforcement)
+      minSize: false,
+      maxSize: false,
   
       outlineWidth: 1,
       outlineStyle: '#FFF',
@@ -628,20 +595,50 @@ function ImageMarkupBuilder(fabricCanvas) {
        *    willy nilly and let's talk about it - Danny.
        */
       render: function(ctx) {
+         // Apply the scaling to the width and height and set scale to 1 so
+         // that stroke width is independent of scale
          this.width = this.width * this.scaleX;
          this.height = this.height * this.scaleY;
-
-         if ((this.left + this.borderWidth / 2) % 1 == 0) {
-            this.left -= 0.5;
-            this.width += 1;
-         }
-         if ((this.top + this.borderWidth / 2) % 1 == 0) {
-            this.top -= 0.5;
-            this.height += 1;
-         }
          this.scaleX = this.scaleY = 1;
 
+         // Preconditions: left, top, width, height, borderWidth are all ints
+         // left, top represent the middle of the border width.
+
+         // If the left-most edge of the border is not directly on a pixel
+         // then niether is the right-most border, 
+         var borderWidth = this.borderWidth + this.outlineWidth;
+         var partialX = (this.left + borderWidth / 2) % 1;
+         var partialY = (this.top + borderWidth / 2) % 1;
+         if (partialX != 0) {
+            this.left -= partialX;
+            this.width += partialX * 2;
+         }
+         if (partialY != 0) {
+            this.top -= partialY
+            this.height += partialY * 2;
+         }
+         this._limitSize();
+
          this.callSuper('render', ctx);
+      },
+
+      /**
+       * Enforce the min / max size if they are set for this object
+       */
+      _limitSize: function() {
+         if (this.minSize !== false) {
+            if (this.width < this.minSize)
+               this.width = this.minSize;
+            if (this.height < this.minSize)
+               this.height = this.minSize;
+         }
+
+         if (this.maxSize !== false) {
+            if (this.width > this.maxSize)
+               this.width = this.maxSize;
+            if (this.height > this.maxSize)
+               this.height = this.maxSize;
+         }
       }
    });
 
