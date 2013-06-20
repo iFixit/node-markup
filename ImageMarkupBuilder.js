@@ -520,28 +520,31 @@ function ImageMarkupBuilder(fabricCanvas) {
       },'mouse:move': function(event) {
          if (!enabled) return;
          if (!dragging) {
-            if (mouseDownEvent && distance(mouseDownEvent, event.e) > 10) {
-               startDragging(mouseDownEvent);
-               console.log(mouseDownEvent);
+            if (mouseDownEvent) {
+               var dragDist = distance(mouseDownEvent, event.e);
+               if (dragDist > 10) {
+                  startDragging(mouseDownEvent, dragDist);
+                  // console.log(mouseDownEvent);
+               }
             }
          } else {
-            var size = Math.max(Math.abs(x(event.e) - x(mouseDownEvent)),
-                                Math.abs(y(event.e) - y(mouseDownEvent)),
-                                40);
+            var radius = distance(mouseDownEvent, event.e);
 
-            currentShape.scaleToWidth(size*2);
+            currentShape.scaleToWidth(radius * 2);
+            canvas.renderAll();
          }
       }, 'mouse:up': function() {
          if (dragging)
             stopDragging();
       }});
 
-      function startDragging(e) {
+      function startDragging(e, radius) {
          dragging = true;
          console.log('start dragging');
          currentShape = publicInterface.addCircle({
             x: x(e),
-            y: y(e)
+            y: y(e),
+            radius: radius
          });
       }
 
@@ -553,7 +556,9 @@ function ImageMarkupBuilder(fabricCanvas) {
       }
 
       function distance(e1, e2) {
-         return Math.abs(x(e1)- x(e2)) + Math.abs(y(e1) - y(e2));
+         var xdiff = x(e1) - x(e2);
+         var ydiff = y(e1) - y(e2);
+         return Math.sqrt(xdiff * xdiff + ydiff * ydiff);
       }
 
       function x(e) {
