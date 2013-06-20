@@ -45,8 +45,8 @@ function ImageMarkupBuilder(fabricCanvas) {
       rectangle: 128
    };
    var maximumSizeRatio = {
-      circle: 0.45, // Max size of radius
-      rectangle: 1.3 // Max size of side
+      circle: 0.3, // Max size of radius
+      rectangle: 0.8 // Max size of side
    };
    var initialSize = {
       circle: 12,
@@ -55,7 +55,7 @@ function ImageMarkupBuilder(fabricCanvas) {
 
    var markupObjects = new Array();
 
-   var whiteStroke = isNode ? 2 : 1;
+   var whiteStroke = isNode ? 1 : 0.5;
    var strokeWidth = null;
    var crop = null;
 
@@ -167,6 +167,41 @@ function ImageMarkupBuilder(fabricCanvas) {
                }
             }.bind(this)
          });
+
+         $(document).addEvent('keydown', function (e) {
+            var markerObject;
+
+            if ((markerObject = fabricCanvas.getActiveObject()) !== null) {
+               switch(e.key) {
+                  case 'left':
+                     if (markerObject.left <= 0)
+                        markerObject.left = 0;
+                     else
+                        markerObject.left -= 1;
+                     break;
+                  case 'right':
+                     if (markerObject.left >= fabricCanvas.width)
+                        markerObject.left = fabricCanvas.width;
+                     else
+                        markerObject.left += 1;
+                     break;
+                  case 'up':
+                     if (markerObject.top <= 0)
+                        markerObject.top = 0;
+                     else
+                        markerObject.top -= 1;
+                     break;
+                  case 'down':
+                     if (markerObject.top >= fabricCanvas.height)
+                        markerObject.top = fabricCanvas.height;
+                     else
+                        markerObject.top += 1;
+                     break;
+               }
+
+               fabricCanvas.renderAll();
+            }
+         }.bind(this));
       }
 
       //Disable drag selection on canvas
@@ -428,7 +463,7 @@ function ImageMarkupBuilder(fabricCanvas) {
             shadow.strokeWidth *= 2;
             break;
          default:
-            console.error('実装されていない機能：' + shape.shapeName);
+            console.error('Shape not implemented: ' + shape.shapeName);
             return;
       }
 
@@ -458,7 +493,7 @@ function ImageMarkupBuilder(fabricCanvas) {
                shadow.height = shadow.height - stepWidth * 4 * 0.8;
                break;
             default:
-               console.error('実装されてない機能：' + shape.shapeName);
+               console.error('Shape not implemented: ' + shape.shapeName);
                return;
          }
       }
@@ -496,14 +531,13 @@ function ImageMarkupBuilder(fabricCanvas) {
       if (!data.x || !data.y) {
          data.x = fabricCanvas.width / resizeRatio / 2;
          data.y = fabricCanvas.height / resizeRatio / 2;
-         data.x += imageOffset.x;
-         data.y += imageOffset.y;
       } else {
          data.x /= resizeRatio;
          data.y /= resizeRatio;
-         data.x += imageOffset.x;
-         data.y += imageOffset.y;
       }
+
+      data.x += imageOffset.x;
+      data.y += imageOffset.y;
 
       if (!data.color) {
          data.color = "red";
@@ -710,7 +744,7 @@ function ImageMarkupBuilder(fabricCanvas) {
        * @return a reference to the currently selected shape.
        */
       getActiveShape: function getActiveShape() {
-         return canvas.getActiveObject();
+         return fabricCanvas.getActiveObject();
       },
 
       /**
