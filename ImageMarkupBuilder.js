@@ -357,24 +357,24 @@ function ImageMarkupBuilder(fabricCanvas) {
          maxSize: maximumSize.circle,
          borderWidth: shape.stroke,
          stroke: colorValues[shape.color],
-         fill: 'transparent'
+         fill: 'transparent',
+
+         // Resizing Controls
+         lockRotation:        true,
+         lockUniScaling:      true,
+         transparentCorners:  false,
+         hasRotatingPoint:    false,
+         lockUniScaling:      true,
       };
-      circle.left *= resizeRatio;
-      circle.top *= resizeRatio;
-      circle.radius *= resizeRatio;
+      circle.left    *= resizeRatio;
+      circle.top     *= resizeRatio;
+      circle.radius  *= resizeRatio;
 
       if (isNode && shadows == true) {
          drawShadow(circle, shadowStep);
       }
 
-      circle.lockRotation = true;
-      circle.lockUniScaling = true;
-      circle.transparentCorners = false;
-      circle.hasRotatingPoint = false;
       var fabricCircle = new ShapeCircle(circle);
-
-      fabricCircle.set('lockUniScaling', true);
-
       markupObjects.push(fabricCircle);
       fabricCanvas.add(fabricCircle);
 
