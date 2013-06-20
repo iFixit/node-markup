@@ -1,4 +1,4 @@
-var ImageMarkupBuilder = require('./ImageMarkupBuilder');
+var ImageMarkupBuilder = require('./ImageMarkupBuilder').Builder;
 var GM = require('gm');
 var Fabric = require('fabric').fabric;
 var argv = require('optimist').argv;

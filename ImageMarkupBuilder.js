@@ -1,4 +1,4 @@
-var isNode = typeof module != 'undefined' && module.exports;
+var isNode = typeof window == 'undefined';
 
 
 /**
@@ -982,7 +982,4 @@ function ImageMarkupBuilder(fabricCanvas) {
    return publicInterface;
 }
 
-if (isNode)
-   module.exports = ImageMarkupBuilder;
-else
-   var createImageFromMarkup = ImageMarkupBuilder;
+module.exports.Builder = ImageMarkupBuilder;
