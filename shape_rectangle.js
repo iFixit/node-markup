@@ -69,22 +69,47 @@ module.exports.klass = Fabric.util.createClass(Fabric.Rect, {
    },
 
    /**
+    * Resizes this rectangle to make the most sense given the two points (they
+    * will determine two opposite corners.
+    */
+   sizeByMousePos: function(x1, y1, x2, y2) {
+      var xdiff = x2 - x1;
+      var ydiff = y2 - y1;
+      if (xdiff < 0) {
+         this.left = x2;
+         this.width = -xdiff;
+      } else {
+         this.left = x1;
+         this.width = xdiff;
+      }
+      if (ydiff < 0) {
+         this.top = y2;
+         this.height = -ydiff;
+      } else {
+         this.top = y1;
+         this.height = ydiff;
+      }
+      this.setCoords();
+   },
+
+   /**
     * Enforce the min / max size if they are set for this object
     */
    _limitSize: function() {
       if (this.minSize !== false) {
-         if (this.width < this.minSize)
-            this.width = this.minSize;
-         if (this.height < this.minSize)
-            this.height = this.minSize;
+         if (Math.abs(this.width) < this.minSize)
+            this.width = this.width >= 0 ? this.minSize : -this.minSize;
+         if (Math.abs(this.height) < this.minSize)
+            this.height = this.height >= 0 ? this.minSize : -this.minSize;
       }
 
       if (this.maxSize !== false) {
-         if (this.width > this.maxSize)
-            this.width = this.maxSize;
-         if (this.height > this.maxSize)
-            this.height = this.maxSize;
+         if (Math.abs(this.width) > this.maxSize)
+            this.width = this.width >= 0 ? this.maxSize : -this.maxSize;
+         if (Math.abs(this.height) > this.maxSize)
+            this.height = this.height >= 0 ? this.maxSize : -this.maxSize;
       }
+      this.setCoords();
    }
 });
 

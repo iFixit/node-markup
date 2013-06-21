@@ -63,47 +63,16 @@ function ImageMarkupBuilder(fabricCanvas) {
    /**
     * Array of delegate functions to draw a proper shape.
     */
-   var addShapeDelegate = [];
-   addShapeDelegate['circle'] = function (data) {
-      if (!data.radius) {
-         data.radius = initialSize.circle / resizeRatio;
+   var addShapeDelegate = {
+      circle: drawCircle,
+      rectangle: function (data) {
+         // Because fabric considers top/left as the center of the rectangle.
+         data.from.x -= data.size.width / 2;
+         data.from.y -= data.size.height / 2;
+
+         return drawRectangle(data);
       }
-
-      var circle = {
-         from: {
-            x: data.x,
-            y: data.y
-         },
-         radius: data.radius,
-         color: data.color
-      };
-
-      return drawCircle(finalWidth, circle, imageOffset);
    };
-
-   addShapeDelegate['rectangle'] = function (data) {
-      if (!data.width || !data.height) {
-         data.width = initialSize.rectangle / resizeRatio;
-         data.height = initialSize.rectangle / resizeRatio;
-      }
-
-      data.x -= data.width / 2;
-      data.y -= data.height / 2;
-
-      var rect = {
-         from: {
-            x: data.x,
-            y: data.y
-         },
-         size: {
-            width: data.width,
-            height: data.height
-         },
-         color: data.color
-      };
-
-      return drawRectangle(finalWidth, rect, imageOffset);
-   }
 
    /**
     * Simple clone function for use in deep-copying objects containing
@@ -200,7 +169,7 @@ function ImageMarkupBuilder(fabricCanvas) {
 
                fabricCanvas.renderAll();
             }
-         }.bind(this));
+         });
 
          // Setup drag-to-draw for this canvas
          require('./drag_to_create').setup(publicInterface);
@@ -276,12 +245,10 @@ function ImageMarkupBuilder(fabricCanvas) {
 
                   switch (shapeName) {
                      case 'rectangle':
-                        drawRectangle(finalWidth,
-                         shape, imageOffset);
+                        drawRectangle(shape);
                         break;
                      case 'circle':
-                        drawCircle(finalWidth,
-                         shape, imageOffset);
+                        drawCircle(shape);
                         break;
                      default:
                         console.error('Unsupported Shape: ' + shapeName);
@@ -337,11 +304,10 @@ function ImageMarkupBuilder(fabricCanvas) {
       return width;
    }
 
-   function drawRectangle(finalWidth, shape, imageOffset) {
+   function drawRectangle(shape) {
       shape.stroke = getStrokeWidth(finalWidth);
 
       var rect = {
-         shapeName: shape.shapeName,
          left: shape.from.x - imageOffset.x,
          top: shape.from.y - imageOffset.y,
          width: shape.size.width,
@@ -386,7 +352,7 @@ function ImageMarkupBuilder(fabricCanvas) {
       return fabricRect;
    }
 
-   function drawCircle(finalWidth, shape, imageOffset) {
+   function drawCircle(shape) {
       shape.stroke = getStrokeWidth(finalWidth);
 
       var circle = {
@@ -538,16 +504,10 @@ function ImageMarkupBuilder(fabricCanvas) {
     * - if data.color is not present, it is set to "red".
     */
    function normalizeShapeData(data) {
-      if (!data.x || !data.y) {
-         data.x = fabricCanvas.width / resizeRatio / 2;
-         data.y = fabricCanvas.height / resizeRatio / 2;
-      } else {
-         data.x /= resizeRatio;
-         data.y /= resizeRatio;
-      }
-
-      data.x += imageOffset.x;
-      data.y += imageOffset.y;
+      data.from.x /= resizeRatio;
+      data.from.y /= resizeRatio;
+      data.from.x += imageOffset.x;
+      data.from.y += imageOffset.y;
 
       if (!data.color) {
          data.color = "red";

@@ -1,6 +1,6 @@
 var Fabric = require('fabric').fabric || fabric;
 
-module.exports.klass = Fabric.util.createClass(Fabric.Circle, {
+var Circle = Fabric.util.createClass(Fabric.Circle, {
    shapeName: 'circle',
    type: 'circle',
    strokeWidth: 0,
@@ -35,6 +35,21 @@ module.exports.klass = Fabric.util.createClass(Fabric.Circle, {
       this.callSuper('render', ctx);
    },
 
+   /**
+    * Resizes this shape using the two mouse coords (first is treated as the
+    * center, second is the outside edge.
+    */
+   sizeByMousePos: function(x1, y1, x2, y2) {
+      var xdiff = x2 - this.left;
+      var ydiff = y2 - this.top;
+      var radius = Math.sqrt(xdiff * xdiff + ydiff * ydiff);
+      this.scaleToWidth(radius * 2);
+      this.setCoords();
+   },
+
+   /**
+    * Enforce the min / max sizes if set.
+    */
    _limitSize: function() {
       var newRadius = this.getRadiusX();
 
@@ -43,6 +58,8 @@ module.exports.klass = Fabric.util.createClass(Fabric.Circle, {
       } else if (this.maxSize !== false && newRadius > this.maxSize) {
          this.scaleX = this.scaleY = this.maxSize / this.radius;
       }
+      this.setCoords();
    }
 });
 
+module.exports.klass = Circle;

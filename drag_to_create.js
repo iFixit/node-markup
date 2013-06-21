@@ -2,13 +2,13 @@
  * Marker Creation Interface code
  */
 function setupMarkerCreation(markupBuilder) {
-   var enabled = true,
+   var enabled = false,
        dragging = false,
        canvas = markupBuilder.fabricCanvas,
        mouseDownEvent,
        color,
        currentShape,
-       shapeMode = Enum(['circle', 'rectangle']);
+       shapeMode = Enum(['select', 'circle', 'rectangle']);
 
    canvas.on({
    'mouse:down': function(event) {
@@ -20,30 +20,25 @@ function setupMarkerCreation(markupBuilder) {
          if (mouseDownEvent) {
             var dragDist = distance(mouseDownEvent, event.e);
             if (dragDist > 10) {
-               startDragging(mouseDownEvent, dragDist);
-               // console.log(mouseDownEvent);
+               startDragging(mouseDownEvent, event.e);
             }
          }
       } else {
          
-         var radius = distance(mouseDownEvent, event.e);
-
-         currentShape.scaleToWidth(radius * 2);
+         currentShape.sizeByMousePos(x(mouseDownEvent), y(mouseDownEvent), x(event.e), y(event.e));
          canvas.renderAll();
       }
    }, 'mouse:up': function() {
-      if (dragging)
+      if (mouseDownEvent)
          stopDragging();
    }});
 
-   function startDragging(e, radius) {
+   function startDragging(mouseStart, mouseCurrent) {
       dragging = true;
-      console.log('start dragging');
-      currentShape = markupBuilder.addCircle({
-         x: x(e),
-         y: y(e),
-         radius: radius
-      });
+
+      var config = shapeCreators[shapeMode.get()](mouseStart, mouseCurrent);
+      config.color = color;
+      currentShape = markupBuilder.addShape(config)
    }
 
    function stopDragging() {
@@ -53,42 +48,83 @@ function setupMarkerCreation(markupBuilder) {
       currentShape = null;
    }
 
-   function distance(e1, e2) {
-      var xdiff = x(e1) - x(e2);
-      var ydiff = y(e1) - y(e2);
-      return Math.sqrt(xdiff * xdiff + ydiff * ydiff);
+   var shapeCreators = {
+      'circle': function(e1, e2) {
+         return {
+            type: 'circle',
+            from: {
+               x: x(e1),
+               y: y(e1),
+            },
+            radius: distance(e1, e2)
+         };
+      },
+      'rectangle': function(mouseStart, mouseCurrent) {
+         var x1 = x(mouseStart), y1 = y(mouseStart);
+         return {
+            type: 'rectangle',
+            from: {
+               x: x1,
+               y: y1
+            },
+            size: {
+               width: x(mouseCurrent) - x1,
+               height: y(mouseCurrent) - y1
+            }
+         };
+      }
    }
 
-   function x(e) {
-      return e.offsetX == undefined ? e.layerX : e.offsetX;
-   }
-   function y(e) {
-      return e.offsetY == undefined ? e.layerY : e.offsetY;
-   }
+   markupBuilder.shapeCreator = {
+      setShapeMode: function(inShapeMode) {
+         shapeMode.set(inShapeMode);
+         enabled = inShapeMode != 'select';
+      },
+      setColor: function(inColor) {
+         color = inColor;
+      }
+   };
+}
+
+function distance(e1, e2) {
+   var xdiff = x(e1) - x(e2);
+   var ydiff = y(e1) - y(e2);
+   return Math.sqrt(xdiff * xdiff + ydiff * ydiff);
 }
 
 /**
- * Create an uber-simple enum with the given set of values (strings or
- * numbers)
+ * Extracts the X coord from a mouse event in a cross-browser way
+ */
+function x(e) {
+   return e.offsetX == undefined ? e.layerX : e.offsetX;
+}
+
+/**
+ * Extracts the Y coord from a mouse event in a cross-browser way
+ */
+function y(e) {
+   return e.offsetY == undefined ? e.layerY : e.offsetY;
+}
+
+/**
+ * Create an uber-simple enum with the given set of values
  *
- * The returned object has one method per possible value that sets the enum
- * to that specific value.
- *
- * It also sports a get() that returns the current value.
+ * The returned object has get() and set(value) to retrieve and alter the
+ * current value.
  */
 function Enum(values) {
    var value = null;
-   var publicInterface = {
+   return {
       get: function() {
          return value;
+      },
+      set: function(inValue) {
+         if (values.indexOf(inValue) === -1) {
+            throw inValue + " is not one of: " + values.join(', ');
+         }
+         value = inValue;
       }
    };
-   values.forEach(function(valueName) {
-      publicInterface[valueName] = function() {
-         value = valueName;
-      };
-   });
-   return publicInterface;
 }
 
 exports.setup = setupMarkerCreation;
