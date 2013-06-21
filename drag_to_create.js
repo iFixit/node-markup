@@ -8,7 +8,7 @@ function setupMarkerCreation(markupBuilder) {
        mouseDownEvent,
        color,
        currentShape,
-       shapeMode = Enum(['select', 'circle', 'rectangle']);
+       shapeMode = Enum(['circle', 'rectangle']);
 
    canvas.on({
    'mouse:down': function(event) {
@@ -17,7 +17,7 @@ function setupMarkerCreation(markupBuilder) {
    },'mouse:move': function(event) {
       if (!enabled) return;
       if (!dragging) {
-         if (mouseDownEvent) {
+         if (mouseDownEvent && !canvas.getActiveObject()) {
             var dragDist = distance(mouseDownEvent, event.e);
             if (dragDist > 10) {
                startDragging(mouseDownEvent, event.e);
