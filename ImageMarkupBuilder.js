@@ -6,6 +6,7 @@ var isNode = typeof window == 'undefined';
  */
 function ImageMarkupBuilder(fabricCanvas) {
    var Fabric = require('fabric').fabric || fabric;
+   var FS = require('fs');
 
    var Shapes = {
       Rectangle:  require("./shape_rectangle").klass,
