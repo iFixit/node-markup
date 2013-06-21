@@ -362,6 +362,10 @@ function ImageMarkupBuilder(fabricCanvas) {
       rect.width *= resizeRatio;
       rect.height *= resizeRatio;
 
+      if (isNode) {
+         rect.minSize = rect.maxSize = false;
+      }
+
       if (isNode && shadows == true) {
          drawShadow(rect, shadowStep);
       }
@@ -407,6 +411,10 @@ function ImageMarkupBuilder(fabricCanvas) {
       circle.left    *= resizeRatio;
       circle.top     *= resizeRatio;
       circle.radius  *= resizeRatio;
+
+      if (isNode) {
+         circle.minSize = circle.maxSize = false;
+      }
 
       if (isNode && shadows == true) {
          drawShadow(circle, shadowStep);
