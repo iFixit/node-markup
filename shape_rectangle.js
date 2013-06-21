@@ -1,6 +1,7 @@
 var Fabric = require('fabric').fabric || fabric;
 
 module.exports.klass = Fabric.util.createClass(Fabric.Rect, {
+   shapeName: 'rectangle',
    type: 'rectangle',
    strokeWidth: 0,
    borderWidth: 4,

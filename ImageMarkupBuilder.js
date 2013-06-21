@@ -75,8 +75,7 @@ function ImageMarkupBuilder(fabricCanvas) {
             y: data.y
          },
          radius: data.radius,
-         color: data.color,
-         shapeName: data.type
+         color: data.color
       };
 
       return drawCircle(finalWidth, circle, imageOffset);
@@ -100,8 +99,7 @@ function ImageMarkupBuilder(fabricCanvas) {
             width: data.width,
             height: data.height
          },
-         color: data.color,
-         shapeName: "rectangle"
+         color: data.color
       };
 
       return drawRectangle(finalWidth, rect, imageOffset);
@@ -392,7 +390,6 @@ function ImageMarkupBuilder(fabricCanvas) {
       shape.stroke = getStrokeWidth(finalWidth);
 
       var circle = {
-         shapeName: shape.shapeName,
          left: shape.from.x - imageOffset.x,
          top: shape.from.y - imageOffset.y,
          radius: shape.radius,

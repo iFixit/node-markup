@@ -1,6 +1,7 @@
 var Fabric = require('fabric').fabric || fabric;
 
 module.exports.klass = Fabric.util.createClass(Fabric.Circle, {
+   shapeName: 'circle',
    type: 'circle',
    strokeWidth: 0,
    borderWidth: 4,
