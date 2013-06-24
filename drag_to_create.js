@@ -39,6 +39,7 @@ function setupMarkerCreation(markupBuilder) {
       var config = shapeCreators[shapeMode.get()](mouseStart, mouseCurrent);
       config.color = color;
       currentShape = markupBuilder.addShape(config)
+      currentShape.perPixelTargetFind = true;
    }
 
    function stopDragging() {
