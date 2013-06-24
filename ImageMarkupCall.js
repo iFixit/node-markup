@@ -189,10 +189,11 @@ function processJSON(json) {
    var canvas = Fabric.createCanvasForNode(size['width'], size['height']);
    var builder = ImageMarkupBuilder(canvas);
 
-   builder.processJSON(json, proceed);
-}
-
-function proceed(canvas) {
+   builder.processJSON(json, function() {
+      if (argv.debug) {
+         console.log(builder.getMarkupString());
+      }
+   });
 }
 
 /**

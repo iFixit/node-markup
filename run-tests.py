@@ -80,18 +80,25 @@ def compareOutputs(basename, oracleFilename, destinationFilename):
 
 
 def runNode(sourceFilename, destinationFilename, markupFilename):
-   markup = readMarkupFile(markupFilename);
+   markup = readMarkupFile(markupFilename).strip();
 
-   cmd = "node ImageMarkupCall.js --input " + sourceFilename + " --output " + \
-      destinationFilename + " --markup \"" + markup + "\"";
+   cmd = ["node", "ImageMarkupCall.js", "--input", sourceFilename, "--output",
+      destinationFilename, "--markup", markup, "--debug"];
 
-   ret = os.system(cmd);
+   proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE);
+   (out, err) = proc.communicate();
+   out = out.strip()
 
-   if ret != 0:
+   if proc.returncode != 0:
       errMsg = 'node-markup invocation failed';
+      print out,err
       raise RuntimeError(errMsg);
 
-   return ret == 0;
+   if out != markup:
+      print "Before: ", markup
+      print "After:  ", out
+      errMsg = "node-markup modified the markup string";
+      raise RuntimeError(errMsg);
 
 for filename in os.listdir(testDirectory):
    if filename.endswith(".markup"):
@@ -102,10 +109,8 @@ for filename in os.listdir(testDirectory):
       testFilename = testDirectory + basename + '.node.test.jpg';
 
       try:
-         success = runNode(sourceFilename, testFilename, markupFilename);
-
-         if success:
-            compareOutputs(basename, oracleFilename, testFilename);
+         runNode(sourceFilename, testFilename, markupFilename);
+         compareOutputs(basename, oracleFilename, testFilename);
 
       except RuntimeError, msg:
          print >> sys.stderr, basename + ':', msg;
