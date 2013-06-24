@@ -41,12 +41,7 @@ module.exports.klass = Fabric.util.createClass(Fabric.Rect, {
     *    willy nilly and let's talk about it - Danny.
     */
    render: function(ctx) {
-      // Apply the scaling to the width and height and set scale to 1 so
-      // that stroke width is independent of scale
-      this.width = this.width * this.scaleX;
-      this.height = this.height * this.scaleY;
-      this.scaleX = this.scaleY = 1;
-
+      this._resetScale();
       var _this = this;
       this._fixAndRestoreSubPixelPositioning(function() {
          _this.callSuper('render', ctx);
@@ -94,6 +89,17 @@ module.exports.klass = Fabric.util.createClass(Fabric.Rect, {
       this.top    = old.t;
       this.left   = old.l;
    },
+
+   /**
+    * Apply the scaling to the width and height and set scale to 1 so
+    * that stroke width is independent of scale
+    */
+   _resetScale: function() {
+      this.width = this.width * this.scaleX;
+      this.height = this.height * this.scaleY;
+      this.scaleX = this.scaleY = 1;
+   },
+
 
    /**
     * Resizes this rectangle to make the most sense given the two points (they
