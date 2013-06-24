@@ -318,6 +318,7 @@ function ImageMarkupBuilder(fabricCanvas) {
          ry: 1,
          borderWidth: shape.stroke,
          stroke: colorValues[shape.color],
+         color: shape.color,
          fill: 'transparent'
       }
 
@@ -363,6 +364,7 @@ function ImageMarkupBuilder(fabricCanvas) {
          maxSize: maximumSize.circle,
          borderWidth: shape.stroke,
          stroke: colorValues[shape.color],
+         color: shape.color,
          fill: 'transparent',
 
          // Resizing Controls
@@ -564,7 +566,8 @@ function ImageMarkupBuilder(fabricCanvas) {
        * Sets the color of a tracked shape.
        */
       setColor: function setColor(shape, colorName) {
-         shape.objects[shapeIndex].stroke = colorValues[colorName];
+         shape.stroke = colorValues[colorName];
+         shape.color = colorName;
 
          if (!isNode)
             fabricCanvas.renderAll();
