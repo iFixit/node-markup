@@ -44,7 +44,6 @@ function setupMarkerCreation(markupBuilder) {
    function stopDragging() {
       dragging = false;
       mouseDownEvent = null;
-      console.log('stop dragging');
       currentShape = null;
    }
 

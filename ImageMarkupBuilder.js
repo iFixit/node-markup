@@ -698,10 +698,8 @@ function ImageMarkupBuilder(fabricCanvas) {
                   break;
                case 'rectangle':
                   var from = {
-                     'x': Math.round((object.left - object.width / 2)
-                      / resizeRatio) + imageOffset.x,
-                     'y': Math.round((object.top - object.height / 2)
-                      / resizeRatio) + imageOffset.y
+                     'x': Math.round(object.left / resizeRatio) + imageOffset.x,
+                     'y': Math.round(object.top / resizeRatio) + imageOffset.y
                   };
                   var size = {
                      'width': Math.round(object.width / resizeRatio),
