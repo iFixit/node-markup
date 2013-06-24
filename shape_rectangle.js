@@ -1,4 +1,5 @@
 var Fabric = require('fabric').fabric || fabric;
+var isNode = typeof window == 'undefined';
 
 module.exports.klass = Fabric.util.createClass(Fabric.Rect, {
    shapeName: 'rectangle',
@@ -57,6 +58,13 @@ module.exports.klass = Fabric.util.createClass(Fabric.Rect, {
     * adjust the positioning, call the callback and restore the position.
     */
    _fixAndRestoreSubPixelPositioning: function(callback) {
+      // In-browser we care more about fluidity than pixel-perfection, and
+      // having the outlines jump back and forth by one pixel as you resize it
+      // can be annoying.
+      if (!isNode) {
+         callback();
+         return;
+      }
 
       var old = {
          w: this.width,
