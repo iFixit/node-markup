@@ -134,23 +134,38 @@ module.exports.klass = Fabric.util.createClass(Fabric.Rect, {
    },
 
    /**
-    * Enforce the min / max size if they are set for this object
+    * Catch the alteration of 'scaleX' and 'scaleY' properties (happens during
+    * mouse resize) and limit them so the shape doesn't exceed it's allowed
+    * dimensions.
     */
-   _limitSize: function() {
+   _set: function(key, value) {
+      var newValue = value;
+      if (key === 'scaleX') {
+         var newWidth = this.width * value;
+         newValue = this._limitDimension(newWidth) / this.width;
+      } else if (key === 'scaleY') {
+         var newHeight = this.height * value;
+         newValue = this._limitDimension(newHeight) / this.height;
+      }
+
+      return this.callSuper('_set', key, newValue);
+   },
+
+   /**
+    * Enforce the min / max size on the given value if they are set for this
+    * object.
+    */
+   _limitDimension: function(x) {
       if (this.minSize !== false) {
-         if (Math.abs(this.width) < this.minSize)
-            this.width = this.width >= 0 ? this.minSize : -this.minSize;
-         if (Math.abs(this.height) < this.minSize)
-            this.height = this.height >= 0 ? this.minSize : -this.minSize;
+         if (Math.abs(x) < this.minSize)
+            return x >= 0 ? this.minSize : -this.minSize;
       }
 
       if (this.maxSize !== false) {
-         if (Math.abs(this.width) > this.maxSize)
-            this.width = this.width >= 0 ? this.maxSize : -this.maxSize;
-         if (Math.abs(this.height) > this.maxSize)
-            this.height = this.height >= 0 ? this.maxSize : -this.maxSize;
+         if (Math.abs(x) > this.maxSize)
+            return x >= 0 ? this.maxSize : -this.maxSize;
       }
-      this.setCoords();
+      return x;
    }
 });
 
