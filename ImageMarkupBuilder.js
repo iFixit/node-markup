@@ -150,6 +150,21 @@ function ImageMarkupBuilder(fabricCanvas) {
       }
    }
 
+   /**
+    * Returns if the given object is off the edge of the fabric canvas.
+    * This is defined as whether the color stroke would be the only part of
+    * the shape still visible at those coordinates.
+    */
+   function isOffScreen(object) {
+      var w = object.width / 2;
+      var h = object.height / 2;
+
+      return (object.left + w < strokeWidth ||
+              object.left - w > fabricCanvas.width - strokeWidth ||
+              object.top  + h < strokeWidth ||
+              object.top  - h > fabricCanvas.height - strokeWidth);
+   }
+
    function applyBackground(callback) {
       if (!isNode) {
          //Listen for shape resizes and reset strokeWidth accordingly
@@ -228,15 +243,9 @@ function ImageMarkupBuilder(fabricCanvas) {
          fabricCanvas.on({
             'object:modified': function (e) {
                var shape = e.target;
-               var w = shape.width / 2;
-               var h = shape.height / 2;
 
-               if (shape.left + w < 0 ||
-                shape.left - w > fabricCanvas.width ||
-                shape.top + h < 0 ||
-                shape.top - h > fabricCanvas.height) {
+               if (isOffScreen(shape))
                   remove(shape);
-               }
             }.bind(this)
          });
 
@@ -251,28 +260,32 @@ function ImageMarkupBuilder(fabricCanvas) {
             var markerObject;
 
             if ((markerObject = fabricCanvas.getActiveObject()) !== null) {
+               var offScreen = isOffScreen(markerObject);
+               var w = markerObject.width;
+               var h = markerObject.height;
+
                switch(e.key) {
                   case 'left':
-                     if (markerObject.left <= 0)
-                        markerObject.left = 0;
+                     if (offScreen)
+                        markerObject.left = strokeWidth - w / 2;
                      else
                         markerObject.left -= 1;
                      break;
                   case 'right':
-                     if (markerObject.left >= fabricCanvas.width)
-                        markerObject.left = fabricCanvas.width;
+                     if (offScreen)
+                        markerObject.left = fabricCanvas.width + w / 2  - strokeWidth;
                      else
                         markerObject.left += 1;
                      break;
                   case 'up':
-                     if (markerObject.top <= 0)
-                        markerObject.top = 0;
+                     if (offScreen)
+                        markerObject.top = strokeWidth - h / 2;
                      else
                         markerObject.top -= 1;
                      break;
                   case 'down':
-                     if (markerObject.top >= fabricCanvas.height)
-                        markerObject.top = fabricCanvas.height;
+                     if (offScreen)
+                        markerObject.top = fabricCanvas.height + h / 2 - strokeWidth;
                      else
                         markerObject.top += 1;
                      break;
