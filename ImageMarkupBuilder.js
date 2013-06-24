@@ -690,7 +690,7 @@ function ImageMarkupBuilder(fabricCanvas) {
                      'x': Math.round(object.left / resizeRatio) + imageOffset.x,
                      'y': Math.round(object.top / resizeRatio) + imageOffset.y
                   };
-                  var radius = Math.round((object.radius) / resizeRatio);
+                  var radius = Math.round(object.getRadiusX() / resizeRatio);
                   var color = translateRGBtoColorString(object.stroke);
 
                   markupString += "circle," + from.x + "x" + from.y + ","
