@@ -47,6 +47,29 @@ module.exports.klass = Fabric.util.createClass(Fabric.Rect, {
       this.height = this.height * this.scaleY;
       this.scaleX = this.scaleY = 1;
 
+      var _this = this;
+      this._fixAndRestoreSubPixelPositioning(function() {
+         _this.callSuper('render', ctx);
+      });
+   },
+
+   /**
+    * If the outside / inside edges of the borders of this rect are not lined
+    * up with the pixels exactly, canvas will antialias them which looks bad
+    * for perfectly vertical and horizontal lines.
+    *
+    * To prevent this, we calculate if the borders will be splitting pixels,
+    * adjust the positioning, call the callback and restore the position.
+    */
+   _fixAndRestoreSubPixelPositioning: function(callback) {
+
+      var old = {
+         w: this.width,
+         h: this.height,
+         t: this.top,
+         l: this.left
+      };
+
       // Preconditions: left, top, width, height, borderWidth are all ints
       // left, top represent the middle of the border width.
 
@@ -63,9 +86,13 @@ module.exports.klass = Fabric.util.createClass(Fabric.Rect, {
          this.top -= partialY
          this.height += partialY * 2;
       }
-      this._limitSize();
 
-      this.callSuper('render', ctx);
+      callback();
+
+      this.width  = old.w;
+      this.height = old.h;
+      this.top    = old.t;
+      this.left   = old.l;
    },
 
    /**
