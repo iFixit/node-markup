@@ -255,45 +255,6 @@ function ImageMarkupBuilder(fabricCanvas) {
                initialPosition.fresh = false;
             }.bind(this)
          });
-
-         $(document).addEvent('keydown', function (e) {
-            var markerObject;
-
-            if ((markerObject = fabricCanvas.getActiveObject()) !== null) {
-               var offScreen = isOffScreen(markerObject);
-               var w = markerObject.width;
-               var h = markerObject.height;
-
-               switch(e.key) {
-                  case 'left':
-                     if (offScreen)
-                        markerObject.left = strokeWidth - w / 2;
-                     else
-                        markerObject.left -= 1;
-                     break;
-                  case 'right':
-                     if (offScreen)
-                        markerObject.left = fabricCanvas.width + w / 2  - strokeWidth;
-                     else
-                        markerObject.left += 1;
-                     break;
-                  case 'up':
-                     if (offScreen)
-                        markerObject.top = strokeWidth - h / 2;
-                     else
-                        markerObject.top -= 1;
-                     break;
-                  case 'down':
-                     if (offScreen)
-                        markerObject.top = fabricCanvas.height + h / 2 - strokeWidth;
-                     else
-                        markerObject.top += 1;
-                     break;
-               }
-
-               fabricCanvas.renderAll();
-            }
-         }.bind(this));
       }
 
       //Disable drag selection on canvas
@@ -800,6 +761,48 @@ function ImageMarkupBuilder(fabricCanvas) {
          }
 
          markupObjects = [];
+      },
+
+      /**
+       * Moves the given  shape in the given direction by the given number of
+       * pixels relative to its current position.
+       *
+       * @param shape The fabric shape to move
+       * @param direction Any one of {up, down, left, right}
+       * @param distance The number of pixels to move the shape.
+       */
+      nudge: function nudge(shape, direction, distance) {
+         if (!(typeof distance === 'number')) {
+            console.error('distance must be a number');
+            return;
+         }
+         var w = shape.width;
+         var h = shape.height;
+
+         switch(direction) {
+            case 'left':
+               shape.left -= distance;
+               if (isOffScreen(shape))
+                  shape.left += distance;
+               break;
+            case 'right':
+               shape.left += distance;
+               if (isOffScreen(shape))
+                  shape.left -= distance;
+               break;
+            case 'up':
+               shape.top -= distance;
+               if (isOffScreen(shape))
+                  shape.top += distance;
+               break;
+            case 'down':
+               shape.top += distance;
+               if (isOffScreen(shape))
+                  shape.top -= distance;
+               break;
+         }
+
+         fabricCanvas.renderAll();
       },
 
       /**
