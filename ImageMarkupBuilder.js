@@ -183,9 +183,6 @@ function ImageMarkupBuilder(fabricCanvas) {
                fabricCanvas.renderAll();
             }
          });
-
-         // Setup drag-to-draw for this canvas
-         require('./drag_to_create').setup(publicInterface);
       }
 
       //Disable drag selection on canvas
@@ -734,6 +731,10 @@ function ImageMarkupBuilder(fabricCanvas) {
          return markupString;
       }
    };
+
+   // Setup drag-to-draw for this canvas
+   require('./drag_to_create').setup(publicInterface);
+
    return publicInterface;
 }
 
