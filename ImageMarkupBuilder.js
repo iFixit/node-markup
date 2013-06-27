@@ -768,10 +768,11 @@ function ImageMarkupBuilder(fabricCanvas) {
        * pixels relative to its current position.
        *
        * @param shape The fabric shape to move
-       * @param direction Any one of {up, down, left, right}
+       * @param directionMap A key-value object with the keys {up, down, left,
+       *  right} each with a true/false value.
        * @param distance The number of pixels to move the shape.
        */
-      nudge: function nudge(shape, direction, distance) {
+      nudge: function nudge(shape, directionMap, distance) {
          if (!(typeof distance === 'number')) {
             console.error('distance must be a number');
             return;
@@ -779,27 +780,29 @@ function ImageMarkupBuilder(fabricCanvas) {
          var w = shape.width;
          var h = shape.height;
 
-         switch(direction) {
-            case 'left':
-               shape.left -= distance;
-               if (isOffScreen(shape))
-                  shape.left += distance;
-               break;
-            case 'right':
-               shape.left += distance;
-               if (isOffScreen(shape))
+         for (var direction in directionMap) {
+            if (directionMap[direction] === true) {
+               if (direction === 'left') {
                   shape.left -= distance;
-               break;
-            case 'up':
-               shape.top -= distance;
-               if (isOffScreen(shape))
-                  shape.top += distance;
-               break;
-            case 'down':
-               shape.top += distance;
-               if (isOffScreen(shape))
+                  if (isOffScreen(shape))
+                     shape.left += distance;
+               }
+               else if (direction === 'right') {
+                  shape.left += distance;
+                  if (isOffScreen(shape))
+                     shape.left -= distance;
+               }
+               else if (direction === 'up') {
                   shape.top -= distance;
-               break;
+                  if (isOffScreen(shape))
+                     shape.top += distance;
+               }
+               else if (direction === 'down') {
+                  shape.top += distance;
+                  if (isOffScreen(shape))
+                     shape.top -= distance;
+               }
+            }
          }
 
          fabricCanvas.renderAll();
