@@ -117,18 +117,18 @@ module.exports.klass = Fabric.util.createClass(Fabric.Rect, {
       var xdiff = x2 - x1;
       var ydiff = y2 - y1;
       if (xdiff < 0) {
-         this.left = x2;
-         this.width = -xdiff;
+         this.width = this._limitDimension(-xdiff)
+         this.left = x2 - (this.width - -xdiff);
       } else {
+         this.width = this._limitDimension(xdiff);
          this.left = x1;
-         this.width = xdiff;
       }
       if (ydiff < 0) {
-         this.top = y2;
-         this.height = -ydiff;
+         this.height = this._limitDimension(-ydiff);
+         this.top = y2 - (this.height - -ydiff);
       } else {
+         this.height = this._limitDimension(ydiff);
          this.top = y1;
-         this.height = ydiff;
       }
       this.setCoords();
    },
