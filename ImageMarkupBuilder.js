@@ -644,8 +644,8 @@ function ImageMarkupBuilder(fabricCanvas) {
             'y': 0
          };
 
-         if (innerJSON.previewInstructions) {
-            resizeRatio = json.previewInstructions.width / crop.size.width;
+         if (innerJSON.resizeRatio) {
+            resizeRatio = innerJSON.resizeRatio;
          }
 
          var finalSize = innerJSON.finalDimensions;
@@ -684,7 +684,7 @@ function ImageMarkupBuilder(fabricCanvas) {
 
          var markupString = ";"
 
-         if (typeof crop != "undefined") {
+         if (crop) {
             // Cut out cases where crop is used to offset non-4:3
             // images
             if (crop.from.x >= 0 && crop.from.y >= 0) {
