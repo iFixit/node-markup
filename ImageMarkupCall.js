@@ -1,5 +1,4 @@
 var ImageMarkupBuilder = require('./ImageMarkupBuilder').Builder;
-var GM = require('gm');
 var Fabric = require('fabric').fabric;
 var argv = require('optimist').argv;
 
@@ -77,6 +76,7 @@ function processArgs() {
 function convertMarkupToJSON(callback, markup, infile, outfile) {
    var json = {};
 
+   var GM = require('gm');
    GM(infile).size(function (err, size) {
       if (err) throw err;
 
