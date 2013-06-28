@@ -222,9 +222,10 @@ function ImageMarkupBuilder(fabricCanvas) {
                      left -= 0.5;
                   }
 
-                  fabricCanvas.add(fimg.set('top', top).set('left', left));
-
-                  applyMarkup(callback);
+                  fimg.onload = function() {
+                     fabricCanvas.add(fimg.set('top', top).set('left', left));
+                     applyMarkup(callback);
+                  }
                });
             });
          } else {
