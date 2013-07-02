@@ -1,23 +1,27 @@
 {
   "name"            : "imagemarkup",
   "description"     : "iFixit's image markup backend library",
-  "homepage"        : "http://www.ifixit.com/",
+  "homepage"        : "https://github.com/iFixit/node-markup",
   "author"          : "iFixit",
   "contributors"    : [
     {
       "name"      : "Cedric Wienold",
       "email"     : "cedric@ifixit.com"
+    },
+    {
+      "name"      : "Daniel Beardsley",
+      "email"     : "daniel@ifixit.com"
     }
   ],
   "repository"      : {
     "type"        : "git",
-    "url"         : "git@github.com:iFixit/node-canvas.git"
+    "url"         : "https://github.com/iFixit/node-markup"
   },
   "dependencies"    : {
-    "fabric"      : "git://github.com/iFixit/fabric.js.git"
+    "fabric"      : "https://github.com/iFixit/fabric.js#ifixit-production"
    ,"jsdom"       : "0.5.6"
    ,"xmldom"      : ">= 0.1.13"
-   ,"optimist"    : "git://github.com/substack/node-optimist.git"
+   ,"optimist"    : "https://github.com/substack/node-optimist"
    ,"gm"          : ">= 1.8.1"
   },
   "version"         : "0.0.2"
