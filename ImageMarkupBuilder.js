@@ -777,32 +777,26 @@ function ImageMarkupBuilder(fabricCanvas) {
             console.error('distance must be a number');
             return;
          }
-         var w = shape.width;
-         var h = shape.height;
 
-         for (var direction in directionMap) {
-            if (directionMap[direction] === true) {
-               if (direction === 'left') {
-                  shape.left -= distance;
-                  if (isOffScreen(shape))
-                     shape.left += distance;
-               }
-               else if (direction === 'right') {
-                  shape.left += distance;
-                  if (isOffScreen(shape))
-                     shape.left -= distance;
-               }
-               else if (direction === 'up') {
-                  shape.top -= distance;
-                  if (isOffScreen(shape))
-                     shape.top += distance;
-               }
-               else if (direction === 'down') {
-                  shape.top += distance;
-                  if (isOffScreen(shape))
-                     shape.top -= distance;
-               }
-            }
+         if (directionMap.left) {
+            shape.left -= distance;
+            if (isOffScreen(shape))
+               shape.left += distance;
+         }
+         if (directionMap.right) {
+            shape.left += distance;
+            if (isOffScreen(shape))
+               shape.left -= distance;
+         }
+         if (directionMap.up) {
+            shape.top -= distance;
+            if (isOffScreen(shape))
+               shape.top += distance;
+         }
+         if (directionMap.down) {
+            shape.top += distance;
+            if (isOffScreen(shape))
+               shape.top -= distance;
          }
 
          fabricCanvas.renderAll();
