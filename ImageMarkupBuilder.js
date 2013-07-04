@@ -119,18 +119,35 @@ function ImageMarkupBuilder(fabricCanvas) {
    }
 
    /**
+    * Returns true if the given shape uses coordinates relative to its center
+    * rather than its top-left corner.
+    */
+   function usesCenterCoordinates(object) {
+      return object.shapeName === "circle";
+   }
+
+   /**
     * Returns if the given object is off the edge of the fabric canvas.
     * This is defined as whether the color stroke would be the only part of
     * the shape still visible at those coordinates.
     */
    function isOffScreen(object) {
-      var w = object.width / 2;
-      var h = object.height / 2;
+      var w = usesCenterCoordinates(object) ?
+       object.getWidth() / 2 : object.getWidth();
+      var h = usesCenterCoordinates(object) ?
+       object.getHeight() / 2 : object.getHeight();
 
-      return (object.left + w < strokeWidth ||
-              object.left - w > fabricCanvas.width - strokeWidth ||
-              object.top  + h < strokeWidth ||
-              object.top  - h > fabricCanvas.height - strokeWidth);
+      if (usesCenterCoordinates(object)) {
+         return (object.left + w < strokeWidth ||
+                 object.left - w > fabricCanvas.width - strokeWidth ||
+                 object.top  + h < strokeWidth ||
+                 object.top  - h > fabricCanvas.height - strokeWidth);
+      } else {
+         return (object.left + w < strokeWidth ||
+                 object.left > fabricCanvas.width - strokeWidth ||
+                 object.top + h < strokeWidth ||
+                 object.top > fabricCanvas.height - strokeWidth);
+      }
    }
 
    function applyBackground(callback) {
