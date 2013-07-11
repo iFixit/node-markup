@@ -119,35 +119,16 @@ function ImageMarkupBuilder(fabricCanvas) {
    }
 
    /**
-    * Returns true if the given shape uses coordinates relative to its center
-    * rather than its top-left corner.
-    */
-   function usesCenterCoordinates(object) {
-      return object.shapeName === "circle";
-   }
-
-   /**
     * Returns if the given object is off the edge of the fabric canvas.
     * This is defined as whether the color stroke would be the only part of
     * the shape still visible at those coordinates.
     */
    function isOffScreen(object) {
-      var w = usesCenterCoordinates(object) ?
-       object.getWidth() / 2 : object.getWidth();
-      var h = usesCenterCoordinates(object) ?
-       object.getHeight() / 2 : object.getHeight();
-
-      if (usesCenterCoordinates(object)) {
-         return (object.left + w < strokeWidth ||
-                 object.left - w > fabricCanvas.width - strokeWidth ||
-                 object.top  + h < strokeWidth ||
-                 object.top  - h > fabricCanvas.height - strokeWidth);
-      } else {
-         return (object.left + w < strokeWidth ||
-                 object.left > fabricCanvas.width - strokeWidth ||
-                 object.top + h < strokeWidth ||
-                 object.top > fabricCanvas.height - strokeWidth);
-      }
+      var rect = object.getBoundingRect();
+      return (rect.left + rect.width - (strokeWidth * 2) < 0 ||
+              rect.left + (strokeWidth * 2) > fabricCanvas.width ||
+              rect.top + rect.height - (strokeWidth * 2) < 0 ||
+              rect.top + (strokeWidth * 2) > fabricCanvas.height);
    }
 
    function applyBackground(callback) {
@@ -613,23 +594,31 @@ function ImageMarkupBuilder(fabricCanvas) {
 
          if (directionMap.left) {
             shape.left -= distance;
-            if (isOffScreen(shape))
+            shape.setCoords();
+            if (isOffScreen(shape)) {
                shape.left += distance;
+            }
          }
          if (directionMap.right) {
             shape.left += distance;
-            if (isOffScreen(shape))
+            shape.setCoords();
+            if (isOffScreen(shape)) {
                shape.left -= distance;
+            }
          }
          if (directionMap.up) {
             shape.top -= distance;
-            if (isOffScreen(shape))
+            shape.setCoords();
+            if (isOffScreen(shape)) {
                shape.top += distance;
+            }
          }
          if (directionMap.down) {
             shape.top += distance;
-            if (isOffScreen(shape))
+            shape.setCoords();
+            if (isOffScreen(shape)) {
                shape.top -= distance;
+            }
          }
          shape.setCoords();
 
