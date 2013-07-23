@@ -15,13 +15,13 @@
   ],
   "repository"      : {
     "type"        : "git",
-    "url"         : "https://github.com/iFixit/node-markup"
+    "url"         : "git://github.com/iFixit/node-markup.git"
   },
   "dependencies"    : {
-    "fabric"      : "https://github.com/iFixit/fabric.js#ifixit-production"
+    "fabric"      : "git://github.com/iFixit/fabric.js.git#ifixit-production"
    ,"jsdom"       : "0.5.6"
    ,"xmldom"      : ">= 0.1.13"
-   ,"optimist"    : "https://github.com/substack/node-optimist"
+   ,"optimist"    : "git://github.com/substack/node-optimist.git"
    ,"gm"          : ">= 1.8.1"
   },
   "version"         : "0.0.2"
