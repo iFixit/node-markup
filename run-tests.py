@@ -100,6 +100,7 @@ def runNode(sourceFilename, destinationFilename, markupFilename):
       errMsg = "node-markup modified the markup string";
       raise RuntimeError(errMsg);
 
+errors = 0
 for filename in os.listdir(testDirectory):
    if filename.endswith(".markup"):
       markupFilename = testDirectory + filename;
@@ -114,4 +115,6 @@ for filename in os.listdir(testDirectory):
 
       except RuntimeError, msg:
          print >> sys.stderr, basename + ':', msg;
+         errors += 1
          continue;
+sys.exit(errors)
