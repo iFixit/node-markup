@@ -93,6 +93,7 @@ def runNode(sourceFilename, destinationFilename, markupFilename):
 
    return ret == 0;
 
+errors = 0
 for filename in os.listdir(testDirectory):
    if filename.endswith(".markup"):
       markupFilename = testDirectory + filename;
@@ -109,4 +110,6 @@ for filename in os.listdir(testDirectory):
 
       except RuntimeError, msg:
          print >> sys.stderr, basename + ':', msg;
+         errors += 1
          continue;
+sys.exit(errors)
