@@ -248,7 +248,8 @@ function ImageMarkupBuilder(fabricCanvas) {
       fabricCanvas.renderAll();
       var outstream = FS.createWriteStream(innerJSON.destinationFile),
       stream = fabricCanvas.createJPEGStream({
-         quality: 93
+         quality: 93,
+         progressive: true
       });
 
       stream.on('data', function(chunk) {
