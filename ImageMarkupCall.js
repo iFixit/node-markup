@@ -1,5 +1,4 @@
-var ImageMarkupBuilder = require('./ImageMarkupBuilder');
-var GM = require('gm');
+var ImageMarkupBuilder = require('./ImageMarkupBuilder').Builder;
 var Fabric = require('fabric').fabric;
 var argv = require('optimist').argv;
 
@@ -77,6 +76,7 @@ function processArgs() {
 function convertMarkupToJSON(callback, markup, infile, outfile) {
    var json = {};
 
+   var GM = require('gm');
    GM(infile).size(function (err, size) {
       if (err) throw err;
 
@@ -189,10 +189,11 @@ function processJSON(json) {
    var canvas = Fabric.createCanvasForNode(size['width'], size['height']);
    var builder = ImageMarkupBuilder(canvas);
 
-   builder.processJSON(json, proceed);
-}
-
-function proceed(canvas) {
+   builder.processJSON(json, function() {
+      if (argv.debug) {
+         console.log(builder.getMarkupString());
+      }
+   });
 }
 
 /**
