@@ -627,6 +627,41 @@ function ImageMarkupBuilder(fabricCanvas) {
       },
 
       /**
+       * Grows or shrinks the given shape depending on the given key
+       * by the given number of pixels
+       *
+       * @param shape The fabric shape to resize
+       * @param key '+' or '-'
+       * @param increment The number of pixels to resize the shape.
+       */
+      incrementSize: function incrementSize(shape, key, increment) {
+         if (!(typeof increment === 'number')) {
+            console.error('increment must be a number');
+            return;
+         }
+
+         //Using "=" so that users don't need to press shift to use the "+" key
+         if (key === '=') {
+            shape.scaleToWidth(shape.currentWidth + increment);
+            shape.setCoords();
+            if (isOffScreen(shape)) {
+               shape.scaleToWidth(shape.currentWidth - increment);
+            }
+         }
+
+         if (key === '-') {
+            shape.scaleToWidth(shape.currentWidth - increment);
+            shape.setCoords();
+            if (isOffScreen(shape)) {
+               shape.scaleToWidth(shape.currentWidth + increment);
+            }
+         }
+         shape.setCoords();
+
+         fabricCanvas.renderAll();
+      },
+
+      /**
        * Takes a Builder-schema JSON object and performs the operations
        * listed therein, then calls the callback function.
        */
