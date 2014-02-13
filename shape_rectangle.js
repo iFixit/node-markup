@@ -133,6 +133,21 @@ module.exports.klass = Fabric.util.createClass(Fabric.Rect, {
       this.setCoords();
    },
 
+   incrementSize: function(increment) {
+      var newWidth = this.width + increment;
+      var newHeight = this.height + increment;
+
+      // Checks to see if the new size will be too big/small.
+      if (newWidth < this.maxSize && newWidth > this.minSize &&
+       newHeight < this.maxSize && newHeight > this.minSize) {
+         this.width = newWidth;
+         this.height = newHeight;
+         this.left -= increment / 2;
+         this.top -= increment / 2;
+      }
+      this.setCoords();
+   },
+
    /**
     * Catch the alteration of 'scaleX' and 'scaleY' properties (happens during
     * mouse resize) and limit them so the shape doesn't exceed it's allowed

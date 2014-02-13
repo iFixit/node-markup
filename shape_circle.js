@@ -47,6 +47,11 @@ var Circle = Fabric.util.createClass(Fabric.Circle, {
       this.setCoords();
    },
 
+   incrementSize: function(increment) {
+      this.scaleToWidth(this.currentWidth + increment);
+      this.setCoords();
+   },
+
    /**
     * Enforce the min / max sizes if set.
     */
