@@ -631,24 +631,25 @@ function ImageMarkupBuilder(fabricCanvas) {
        * by the given number of pixels.
        *
        * @param shape The fabric shape to resize.
-       * @param key '=' or '-'
+       * @param keyMap A key-value object with the keys {plus, minus} each
+       *  with a true/false value.
        * @param increment The number of pixels to resize the shape.
        */
-      incrementSize: function incrementSize(shape, key, increment) {
+      incrementSize: function incrementSize(shape, keyMap, increment) {
          if (!(typeof increment === 'number')) {
             console.error('increment must be a number');
             return;
          }
 
          // Using "=" so that users don't need to press shift to use the "+" key.
-         if (key === '=') {
+         if (keyMap.plus) {
             shape.incrementSize(increment);
             if (isOffScreen(shape)) {
                shape.incrementSize(increment * -1);
             }
          }
 
-         if (key === '-') {
+         if (keyMap.minus) {
             shape.incrementSize(increment * -1);
             if (isOffScreen(shape)) {
                shape.incrementSize(increment);
