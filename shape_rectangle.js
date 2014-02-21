@@ -86,7 +86,7 @@ module.exports.klass = Fabric.util.createClass(Fabric.Rect, {
          this.width += partialX * 2;
       }
       if (partialY != 0) {
-         this.top -= partialY
+         this.top -= partialY;
          this.height += partialY * 2;
       }
 
@@ -117,7 +117,7 @@ module.exports.klass = Fabric.util.createClass(Fabric.Rect, {
       var xdiff = x2 - x1;
       var ydiff = y2 - y1;
       if (xdiff < 0) {
-         this.width = this._limitDimension(-xdiff)
+         this.width = this._limitDimension(-xdiff);
          this.left = x2 - (this.width - -xdiff);
       } else {
          this.width = this._limitDimension(xdiff);
