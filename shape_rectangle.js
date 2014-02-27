@@ -188,6 +188,24 @@ var Rectangle = Fabric.util.createClass(Fabric.Rect, {
             return x >= 0 ? this.maxSize : -this.maxSize;
       }
       return x;
+   },
+
+   toObject: function(propertiesToInclude) {
+      return extend(this.callSuper('toObject', propertiesToInclude), {
+         color: this.color,
+         minSize: this.minSize,
+         maxSize: this.maxSize,
+         borderWidth: this.borderWidth,
+         stroke: this.stroke,
+         shapeName: this.shapeName,
+         outlineWidth: this.outlineWidth,
+         outlineStyle: this.outlineStyle
+      });
    }
 });
 
+Rectangle.fromObject = function(object) {
+   return new Rectangle(object);
+};
+
+module.exports.klass = Rectangle;

@@ -72,7 +72,24 @@ var Circle = Fabric.util.createClass(Fabric.Circle, {
          this.scaleX = this.scaleY = this.maxSize / this.radius;
       }
       this.setCoords();
+   },
+
+   toObject: function(propertiesToInclude) {
+      return extend(this.callSuper('toObject', propertiesToInclude), {
+         color: this.color,
+         minSize: this.minSize,
+         maxSize: this.maxSize,
+         borderWidth: this.borderWidth,
+         stroke: this.stroke,
+         shapeName: this.shapeName,
+         outlineWidth: this.outlineWidth,
+         outlineStyle: this.outlineStyle
+      });
    }
 });
+
+Circle.fromObject = function(object) {
+   return new Circle(object);
+};
 
 module.exports.klass = Circle;
