@@ -287,8 +287,7 @@ function ImageMarkupBuilder(fabricCanvas) {
          ry: 1,
          borderWidth: shape.stroke,
          stroke: colorValues[shape.color],
-         color: shape.color,
-         fill: 'transparent'
+         color: shape.color
       }
 
       //Fabric調整
@@ -306,10 +305,6 @@ function ImageMarkupBuilder(fabricCanvas) {
       }
 
       var fabricRect = new Shapes.Rectangle(rect);
-
-      fabricRect.lockRotation = true;
-      fabricRect.transparentCorners = false;
-      fabricRect.hasRotatingPoint = false;
 
       markupObjects.push(fabricRect);
       fabricCanvas.add(fabricRect);
@@ -333,15 +328,7 @@ function ImageMarkupBuilder(fabricCanvas) {
          maxSize: maximumSize.circle,
          borderWidth: shape.stroke,
          stroke: colorValues[shape.color],
-         color: shape.color,
-         fill: 'transparent',
-
-         // Resizing Controls
-         lockRotation:        true,
-         lockUniScaling:      true,
-         transparentCorners:  false,
-         hasRotatingPoint:    false,
-         lockUniScaling:      true,
+         color: shape.color
       };
       circle.left    *= resizeRatio;
       circle.top     *= resizeRatio;

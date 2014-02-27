@@ -1,18 +1,25 @@
 var Fabric = require('fabric').fabric || fabric;
+var extend = Fabric.util.object.extend;
 var isNode = typeof window == 'undefined';
 
-module.exports.klass = Fabric.util.createClass(Fabric.Rect, {
-   shapeName: 'rectangle',
+var Rectangle = Fabric.util.createClass(Fabric.Rect, {
+   // Inherited fields with new values.
    type: 'rectangle',
    strokeWidth: 0,
-   borderWidth: 4,
    originX: 'left',
    originY: 'top',
+   lockRotation: true,
+   transparentCorners: false,
+   hasRotatingPoint: false,
+   fill: 'transparent',
 
+   // New fields.
+   shapeName: 'rectangle',
+   color: 'red',
    // Min and Max size to enforce (false == no enforcement)
    minSize: false,
    maxSize: false,
-
+   borderWidth: 4,
    outlineWidth: 1,
    outlineStyle: '#FFF',
 

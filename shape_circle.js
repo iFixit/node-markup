@@ -1,20 +1,28 @@
 var Fabric = require('fabric').fabric || fabric;
+var extend = Fabric.util.object.extend;
 
 var Circle = Fabric.util.createClass(Fabric.Circle, {
-   shapeName: 'circle',
+   // Inherited variables with new values.
    type: 'circle',
    strokeWidth: 0,
-   borderWidth: 4,
    padding: 5,
    originX: 'center',
    originY: 'center',
+   lockRotation: true,
+   lockUniScaling: true,
+   transparentCorners: false,
+   hasRotatingPoint: false,
+   lockUniScaling: true,
+   fill: 'transparent',
+   centerTransform: true,
 
+   // New fields.
+   shapeName: 'circle',
+   color: 'red',
    // Min and Max size to enforce (false == no enforcement)
    minSize: false,
    maxSize: false,
-
-   centerTransform: true,
-
+   borderWidth: 4,
    outlineWidth: 1,
    outlineStyle: '#FFF',
 
