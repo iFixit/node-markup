@@ -140,6 +140,9 @@ var Rectangle = Fabric.util.createClass(Fabric.Rect, {
       this.setCoords();
    },
 
+   /**
+    * Increment the size of the rectangle about its center.
+    */
    incrementSize: function(increment) {
       var newWidth = this.width + increment;
       var newHeight = this.height + increment;

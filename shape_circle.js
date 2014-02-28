@@ -55,6 +55,9 @@ var Circle = Fabric.util.createClass(Fabric.Circle, {
       this.setCoords();
    },
 
+   /**
+    * Increment the size of the circle about its center.
+    */
    incrementSize: function(increment) {
       this.scaleToWidth(this.currentWidth + increment);
       this.setCoords();
