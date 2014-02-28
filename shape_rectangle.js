@@ -155,6 +155,12 @@ var Rectangle = Fabric.util.createClass(Fabric.Rect, {
       this.setCoords();
    },
 
+   center: function() {
+      this.centerTransform = true;
+      this.callSuper('center');
+      this.centerTransform = false;
+   },
+
    /**
     * Catch the alteration of 'scaleX' and 'scaleY' properties (happens during
     * mouse resize) and limit them so the shape doesn't exceed it's allowed
