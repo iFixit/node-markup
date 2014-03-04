@@ -1,20 +1,28 @@
 var Fabric = require('fabric').fabric || fabric;
+var extend = Fabric.util.object.extend;
 
 var Circle = Fabric.util.createClass(Fabric.Circle, {
-   shapeName: 'circle',
+   // Inherited variables with new values.
    type: 'circle',
    strokeWidth: 0,
-   borderWidth: 4,
    padding: 5,
    originX: 'center',
    originY: 'center',
+   lockRotation: true,
+   lockUniScaling: true,
+   transparentCorners: false,
+   hasRotatingPoint: false,
+   lockUniScaling: true,
+   fill: 'transparent',
+   centerTransform: true,
 
+   // New fields.
+   shapeName: 'circle',
+   color: 'red',
    // Min and Max size to enforce (false == no enforcement)
    minSize: false,
    maxSize: false,
-
-   centerTransform: true,
-
+   borderWidth: 4,
    outlineWidth: 1,
    outlineStyle: '#FFF',
 
@@ -48,6 +56,14 @@ var Circle = Fabric.util.createClass(Fabric.Circle, {
    },
 
    /**
+    * Increment the size of the circle about its center.
+    */
+   incrementSize: function(increment) {
+      this.scaleToWidth(this.currentWidth + increment);
+      this.setCoords();
+   },
+
+   /**
     * Enforce the min / max sizes if set.
     */
    _limitSize: function() {
@@ -59,7 +75,24 @@ var Circle = Fabric.util.createClass(Fabric.Circle, {
          this.scaleX = this.scaleY = this.maxSize / this.radius;
       }
       this.setCoords();
+   },
+
+   toObject: function(propertiesToInclude) {
+      return extend(this.callSuper('toObject', propertiesToInclude), {
+         color: this.color,
+         minSize: this.minSize,
+         maxSize: this.maxSize,
+         borderWidth: this.borderWidth,
+         stroke: this.stroke,
+         shapeName: this.shapeName,
+         outlineWidth: this.outlineWidth,
+         outlineStyle: this.outlineStyle
+      });
    }
 });
+
+Circle.fromObject = function(object) {
+   return new Circle(object);
+};
 
 module.exports.klass = Circle;

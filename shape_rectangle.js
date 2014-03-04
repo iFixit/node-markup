@@ -1,18 +1,25 @@
 var Fabric = require('fabric').fabric || fabric;
+var extend = Fabric.util.object.extend;
 var isNode = typeof window == 'undefined';
 
-module.exports.klass = Fabric.util.createClass(Fabric.Rect, {
-   shapeName: 'rectangle',
+var Rectangle = Fabric.util.createClass(Fabric.Rect, {
+   // Inherited fields with new values.
    type: 'rectangle',
    strokeWidth: 0,
-   borderWidth: 4,
    originX: 'left',
    originY: 'top',
+   lockRotation: true,
+   transparentCorners: false,
+   hasRotatingPoint: false,
+   fill: 'transparent',
 
+   // New fields.
+   shapeName: 'rectangle',
+   color: 'red',
    // Min and Max size to enforce (false == no enforcement)
    minSize: false,
    maxSize: false,
-
+   borderWidth: 4,
    outlineWidth: 1,
    outlineStyle: '#FFF',
 
@@ -86,7 +93,7 @@ module.exports.klass = Fabric.util.createClass(Fabric.Rect, {
          this.width += partialX * 2;
       }
       if (partialY != 0) {
-         this.top -= partialY
+         this.top -= partialY;
          this.height += partialY * 2;
       }
 
@@ -117,7 +124,7 @@ module.exports.klass = Fabric.util.createClass(Fabric.Rect, {
       var xdiff = x2 - x1;
       var ydiff = y2 - y1;
       if (xdiff < 0) {
-         this.width = this._limitDimension(-xdiff)
+         this.width = this._limitDimension(-xdiff);
          this.left = x2 - (this.width - -xdiff);
       } else {
          this.width = this._limitDimension(xdiff);
@@ -131,6 +138,30 @@ module.exports.klass = Fabric.util.createClass(Fabric.Rect, {
          this.top = y1;
       }
       this.setCoords();
+   },
+
+   /**
+    * Increment the size of the rectangle about its center.
+    */
+   incrementSize: function(increment) {
+      var newWidth = this.width + increment;
+      var newHeight = this.height + increment;
+
+      // Checks to see if the new size will be too big/small.
+      if (newWidth < this.maxSize && newWidth > this.minSize &&
+       newHeight < this.maxSize && newHeight > this.minSize) {
+         this.width = newWidth;
+         this.height = newHeight;
+         this.left -= increment / 2;
+         this.top -= increment / 2;
+      }
+      this.setCoords();
+   },
+
+   center: function() {
+      this.centerTransform = true;
+      this.callSuper('center');
+      this.centerTransform = false;
    },
 
    /**
@@ -166,6 +197,24 @@ module.exports.klass = Fabric.util.createClass(Fabric.Rect, {
             return x >= 0 ? this.maxSize : -this.maxSize;
       }
       return x;
+   },
+
+   toObject: function(propertiesToInclude) {
+      return extend(this.callSuper('toObject', propertiesToInclude), {
+         color: this.color,
+         minSize: this.minSize,
+         maxSize: this.maxSize,
+         borderWidth: this.borderWidth,
+         stroke: this.stroke,
+         shapeName: this.shapeName,
+         outlineWidth: this.outlineWidth,
+         outlineStyle: this.outlineStyle
+      });
    }
 });
 
+Rectangle.fromObject = function(object) {
+   return new Rectangle(object);
+};
+
+module.exports.klass = Rectangle;
