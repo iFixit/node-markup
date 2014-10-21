@@ -40,7 +40,7 @@ function processArgs() {
 
    if (shadows) {
       if (argv.step) {
-         shadowStep = parseInt(argv.step);
+         shadowStep = Int(argv.step);
       }
    }
 
@@ -63,7 +63,7 @@ function processArgs() {
       }
 
       if (argv.stroke) {
-         stroke = parseInt(argv.stroke);
+         stroke = Int(argv.stroke);
       }
 
       convertMarkupToJSON(processJSON, argv.markup, argv.input, argv.output);
@@ -94,16 +94,16 @@ function convertMarkupToJSON(callback, markup, infile, outfile) {
       switch (command) {
          case 'crop':
             var position = args[1].split("x");
-            position[0] = parseInt(position[0]);
-            position[1] = parseInt(position[1]);
+            position[0] = Int(position[0]);
+            position[1] = Int(position[1]);
             var from = {
                'x': position[0],
                'y': position[1]
             };
 
             var dimensions = args[2].split("x");
-            dimensions[0] = parseInt(dimensions[0]);
-            dimensions[1] = parseInt(dimensions[1]);
+            dimensions[0] = Int(dimensions[0]);
+            dimensions[1] = Int(dimensions[1]);
             var size = {
                'width': dimensions[0],
                'height': dimensions[1]
@@ -121,14 +121,14 @@ function convertMarkupToJSON(callback, markup, infile, outfile) {
                json['instructions']['draw'] = new Array();
 
             var position = args[1].split("x");
-            position[0] = parseInt(position[0]);
-            position[1] = parseInt(position[1]);
+            position[0] = Int(position[0]);
+            position[1] = Int(position[1]);
             var from = {
                'x': position[0],
                'y': position[1]
             };
 
-            var radius = parseInt(args[2]);
+            var radius = Int(args[2]);
             var color = args[3];
 
             var circle = {};
@@ -142,16 +142,16 @@ function convertMarkupToJSON(callback, markup, infile, outfile) {
             if (!json['instructions']['draw']) json['instructions']['draw'] = new Array();
 
             var position = args[1].split("x");
-            position[0] = parseInt(position[0]);
-            position[1] = parseInt(position[1]);
+            position[0] = Int(position[0]);
+            position[1] = Int(position[1]);
             var from = {
                'x': position[0],
                'y': position[1]
             };
 
             var dimensions = args[2].split("x");
-            dimensions[0] = parseInt(dimensions[0]);
-            dimensions[1] = parseInt(dimensions[1]);
+            dimensions[0] = Int(dimensions[0]);
+            dimensions[1] = Int(dimensions[1]);
             var size = {
                'width': dimensions[0],
                'height': dimensions[1]
@@ -245,7 +245,7 @@ function cleanJSON(json, context) {
          cleanJSON(json[property], context + '.' + property);
       } else if (integerProperties.indexOf(property) != -1) {
          if (typeof(json[property]) == 'string') {
-            json[property] = parseInt(json[property]);
+            json[property] = Int(json[property]);
             if (isNaN(json[property])) {
                var msg = "In '" + context + "': property '" + property
                 + "' is not a number.";
@@ -254,6 +254,13 @@ function cleanJSON(json, context) {
          }
       }
    }
+}
+
+/**
+ * Just like parseInt, but fixed to base-10
+ */
+function Int(str) {
+   return parseInt(str, 10);
 }
 
 processArgs();
