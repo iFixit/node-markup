@@ -4,7 +4,6 @@ var extend = Fabric.util.object.extend;
 var Circle = Fabric.util.createClass(Fabric.Circle, {
    // Inherited variables with new values.
    type: 'circle',
-   strokeWidth: 0,
    padding: 5,
    originX: 'center',
    originY: 'center',
@@ -22,21 +21,6 @@ var Circle = Fabric.util.createClass(Fabric.Circle, {
    // Min and Max size to enforce (false == no enforcement)
    minSize: false,
    maxSize: false,
-   borderWidth: 4,
-   outlineWidth: 1,
-   outlineStyle: '#FFF',
-
-   _stroke: function(ctx) {
-      var myScale = this.scaleX;
-      function scaleU(x) { return x / myScale; }
-      ctx.lineWidth = scaleU(this.borderWidth + this.outlineWidth);
-      ctx.strokeStyle = this.outlineStyle;
-      ctx.stroke();
-
-      ctx.lineWidth = scaleU(this.borderWidth - this.outlineWidth);
-      ctx.strokeStyle = this.stroke;
-      ctx.stroke();
-   },
 
    render: function(ctx) {
       this.callSuper('render', ctx);
@@ -77,6 +61,8 @@ var Circle = Fabric.util.createClass(Fabric.Circle, {
       });
    }
 });
+
+extend(Circle.prototype, require('./highlighted_stroke.mixin'));
 
 Circle.fromObject = function(object) {
    return new Circle(object);

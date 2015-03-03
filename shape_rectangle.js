@@ -5,7 +5,6 @@ var isNode = typeof window == 'undefined';
 var Rectangle = Fabric.util.createClass(Fabric.Rect, {
    // Inherited fields with new values.
    type: 'rectangle',
-   strokeWidth: 0,
    originX: 'left',
    originY: 'top',
    lockRotation: true,
@@ -19,25 +18,6 @@ var Rectangle = Fabric.util.createClass(Fabric.Rect, {
    // Min and Max size to enforce (false == no enforcement)
    minSize: false,
    maxSize: false,
-   borderWidth: 4,
-   outlineWidth: 1,
-   outlineStyle: '#FFF',
-
-   /**
-    * Provide a custom stroke function that draws a fat white line THEN a
-    * narrower colored line on top.
-    */
-   _stroke: function(ctx) {
-      var myScale = this.scaleX;
-      function scale(x) { return (x / myScale); }
-      ctx.lineWidth = scale(this.borderWidth + this.outlineWidth);
-      ctx.strokeStyle = this.outlineStyle;
-      ctx.stroke();
-
-      ctx.lineWidth = scale(this.borderWidth - this.outlineWidth);
-      ctx.strokeStyle = this.stroke;
-      ctx.stroke();
-   },
 
    /**
     * Wrap the underlying render function to do two things.
@@ -184,6 +164,8 @@ var Rectangle = Fabric.util.createClass(Fabric.Rect, {
       });
    }
 });
+
+extend(Rectangle.prototype, require('./highlighted_stroke.mixin'));
 
 Rectangle.fromObject = function(object) {
    return new Rectangle(object);
