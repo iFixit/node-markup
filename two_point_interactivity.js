@@ -30,9 +30,23 @@ module.exports = (function(){
        * that stroke width is independent of the scale transform
        */
       _resetScale: function() {
-         // There is a brief period (one frame) where the 
-         this.width = this.width * Math.abs(this.scaleX);
-         this.height = this.height * Math.abs(this.scaleY);
+         // There is a brief period where scaleX == 0 and fabric.js disappears
+         // objects that have width = 0 so we can't let that happen.
+         if (this.scaleX == 0) {
+            this.width = 1
+         } else {
+            // Note: there is a brief period (one frame) where the scale goes
+            // negative when the resize control crosses an axis. Using abs()
+            // keeps the motion fluid instead of a few pixel jump.
+            this.width *= Math.abs(this.scaleX);
+         }
+
+         if (this.scaleY == 0) {
+            this.height = 1;
+         } else {
+            this.height *= Math.abs(this.scaleY);
+         }
+
          this.scaleX = 1;
          this.scaleY = 1;
       },
@@ -67,8 +81,8 @@ module.exports = (function(){
    
          var flipX = self.x1 > self.x2 ? 1 : -1;
          var flipY = self.y1 > self.y2 ? 1 : -1;
-         var halfWidth = self.width / 2;
-         var halfHeight = self.height / 2;
+         var halfWidth  = self.width  === 1 ? 0 : self.width / 2;
+         var halfHeight = self.height === 1 ? 0 : self.height / 2;
          // In this context, 0,0 is the center of the line so we draw a handle
          // half of the line length away from the origin in both directions.
          circle(halfWidth * flipX, halfHeight * flipY);
