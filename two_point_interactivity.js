@@ -77,6 +77,26 @@ module.exports = (function(){
    
          ctx.restore();
          return self;
+      },
+
+      getEndpoints: function() {
+         var self = this;
+         var flipX = self.x1 > self.x2 ? 1 : -1;
+         var flipY = self.y1 > self.y2 ? 1 : -1;
+         // Objects in fabric can't have 0-width, so a vertical line ends up
+         // with witdth = 1 so we detect that and ensure the midpoint isn't on
+         // a pixel boundary and the width actually ends up 0.
+         var halfWidth  = self.width  === 1 ? 0 : self.width / 2;
+         var halfHeight = self.height === 1 ? 0 : self.height / 2;
+         var left = self.width  === 1 ? Math.floor(self.left) : self.left;
+         var top  = self.height === 1 ? Math.floor(self.top)  : self.top;
+         return [{
+            x: (left + halfWidth * flipX),
+            y: (top + halfHeight * flipY)
+         },{
+            x: (left - halfWidth * flipX),
+            y: (top - halfHeight * flipY)
+         }];
       }
    }
 })();

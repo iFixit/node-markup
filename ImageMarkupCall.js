@@ -167,6 +167,26 @@ function convertMarkupToJSON(callback, markup, infile, outfile) {
 
             json['instructions']['draw'].push({'rectangle': rectangle});
             break;
+         case 'line':
+            if (!json['instructions']['draw']) json['instructions']['draw'] = new Array();
+
+            var p1 = args[1].split("x");
+            var p2 = args[2].split("x");
+
+            var line = {
+               from: {
+                  x: Int(p1[0]),
+                  y: Int(p1[1])
+               },
+               to: {
+                  x: Int(p2[0]),
+                  y: Int(p2[1])
+               },
+               color: args[3]
+            };
+
+            json['instructions']['draw'].push({line: line});
+            break;
          default:
       }
       }

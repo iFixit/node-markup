@@ -219,6 +219,9 @@ function ImageMarkupBuilder(fabricCanvas) {
                      case 'circle':
                         drawCircle(shape);
                         break;
+                     case 'line':
+                        drawLine(shape);
+                        break;
                      default:
                         console.error('Unsupported Shape: ' + shapeName);
                   }
@@ -322,10 +325,6 @@ function ImageMarkupBuilder(fabricCanvas) {
       shape.stroke = getStrokeWidth(finalWidth);
 
       var line = {
-         left: shape.from.x - imageOffset.x,
-         top: shape.from.y - imageOffset.y,
-         width: shape.to.x - shape.from.x,
-         height: shape.to.y - shape.from.y,
          minSize: minimumSize.line,
          maxSize: maximumSize.line,
          borderWidth: shape.stroke,
@@ -333,16 +332,18 @@ function ImageMarkupBuilder(fabricCanvas) {
          color: shape.color
       }
 
-      line.top *= resizeRatio;
-      line.left *= resizeRatio;
-      line.width *= resizeRatio;
-      line.height *= resizeRatio;
+      var points = [
+         shape.from.x * resizeRatio,
+         shape.from.y * resizeRatio,
+         shape.to.x * resizeRatio,
+         shape.to.y * resizeRatio
+      ];
 
       if (isNode) {
          line.minSize = line.maxSize = false;
       }
 
-      var fabricLine = new Shapes.Line(line);
+      var fabricLine = new Shapes.Line(points, line);
       fabricLine.color = shape.color;
 
       markupObjects.push(fabricLine);
@@ -730,6 +731,9 @@ function ImageMarkupBuilder(fabricCanvas) {
 
                   markupString += "rectangle," + from.x + "x" + from.y + ","
                    + size.width + "x" + size.height + "," + color +  ";";
+                  break;
+               case 'line':
+                  markupString += object.toMarkup(resizeRatio);
                   break;
                default:
                   console.error("Unexpected object name: " + object.shapeName);

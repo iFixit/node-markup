@@ -27,6 +27,18 @@ var Line = Fabric.util.createClass(Fabric.Line, {
       this.y2 = y2;
       this._setWidthHeight();
       this.setCoords();
+   },
+
+   toMarkup: function(scale) {
+      var points = this.getEndpoints();
+      var p1 = points[0],
+          p2 = points[1];
+      return [
+          'line',
+          p1.x / scale + 'x' + p1.y / scale,
+          p2.x / scale + 'x' + p2.y / scale,
+          this.color
+      ].join(',') + ';';
    }
 });
 
