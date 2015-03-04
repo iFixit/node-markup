@@ -10,7 +10,8 @@ function ImageMarkupBuilder(fabricCanvas) {
 
    var Shapes = {
       Rectangle:  require("./shape_rectangle").klass,
-      Circle:     require("./shape_circle").klass
+      Circle:     require("./shape_circle").klass,
+      Line:       require("./shape_line").klass
    };
 
    var colorValues = {
@@ -39,19 +40,17 @@ function ImageMarkupBuilder(fabricCanvas) {
    var finalWidth = 0;
    var minimumSize = {
       circle: 8,
-      rectangle: 16
+      rectangle: 16,
+      line: 16
    };
    var maximumSize = {
       circle: 128,
-      rectangle: 128
+      rectangle: 128,
+      line: 128
    };
    var maximumSizeRatio = {
       circle: 0.6, // Max size of radius
       rectangle: 0.8 // Max size of side
-   };
-   var initialSize = {
-      circle: 12,
-      rectangle: 24
    };
 
    var markupObjects = new Array();
@@ -64,6 +63,7 @@ function ImageMarkupBuilder(fabricCanvas) {
     * Array of delegate functions to draw a proper shape.
     */
    var addShapeDelegate = {
+      line: drawLine,
       circle: drawCircle,
       rectangle: function (data) {
          // Because fabric considers top/left as the center of the rectangle.
@@ -316,6 +316,44 @@ function ImageMarkupBuilder(fabricCanvas) {
       }
 
       return fabricRect;
+   }
+
+   function drawLine(shape) {
+      shape.stroke = getStrokeWidth(finalWidth);
+
+      var line = {
+         left: shape.from.x - imageOffset.x,
+         top: shape.from.y - imageOffset.y,
+         width: shape.to.x - shape.from.x,
+         height: shape.to.y - shape.from.y,
+         minSize: minimumSize.line,
+         maxSize: maximumSize.line,
+         borderWidth: shape.stroke,
+         stroke: colorValues[shape.color],
+         color: shape.color
+      }
+
+      line.top *= resizeRatio;
+      line.left *= resizeRatio;
+      line.width *= resizeRatio;
+      line.height *= resizeRatio;
+
+      if (isNode) {
+         line.minSize = line.maxSize = false;
+      }
+
+      var fabricLine = new Shapes.Line(line);
+      fabricLine.color = shape.color;
+
+      markupObjects.push(fabricLine);
+      fabricCanvas.add(fabricLine);
+
+      if (!isNode) {
+         // Set this as the active object
+         fabricCanvas.setActiveObject(fabricLine);
+      }
+
+      return fabricLine;
    }
 
    function drawCircle(shape) {
