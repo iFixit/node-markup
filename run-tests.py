@@ -82,7 +82,7 @@ def compareOutputs(basename, oracleFilename, destinationFilename):
 def runNode(sourceFilename, destinationFilename, markupFilename):
    markup = readMarkupFile(markupFilename).strip();
 
-   cmd = ["node", "ImageMarkupCall.js", "--input", sourceFilename, "--output",
+   cmd = ["bash", "node-markup.sh", "--input", sourceFilename, "--output",
       destinationFilename, "--markup", markup, "--debug"];
 
    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE);
