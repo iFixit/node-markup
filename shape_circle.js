@@ -39,7 +39,6 @@ var Circle = Fabric.util.createClass(Fabric.Circle, {
    },
 
    render: function(ctx) {
-      this._limitSize();
       this.callSuper('render', ctx);
    },
 
@@ -51,8 +50,10 @@ var Circle = Fabric.util.createClass(Fabric.Circle, {
       var xdiff = x2 - this.left;
       var ydiff = y2 - this.top;
       var radius = Math.sqrt(xdiff * xdiff + ydiff * ydiff);
-      this.scaleToWidth(radius * 2);
-      this.setCoords();
+      this._withSizeLimitations(function() {
+         this.scaleToWidth(this._limitDimension(radius * 2));
+         this.setCoords();
+      });
    },
 
    /**
@@ -60,20 +61,6 @@ var Circle = Fabric.util.createClass(Fabric.Circle, {
     */
    incrementSize: function(increment) {
       this.scaleToWidth(this.currentWidth + increment);
-      this.setCoords();
-   },
-
-   /**
-    * Enforce the min / max sizes if set.
-    */
-   _limitSize: function() {
-      var newRadius = this.getRadiusX();
-
-      if (this.minSize !== false && newRadius < this.minSize) {
-         this.scaleX = this.scaleY = this.minSize / this.radius;
-      } else if (this.maxSize !== false && newRadius > this.maxSize) {
-         this.scaleX = this.scaleY = this.maxSize / this.radius;
-      }
       this.setCoords();
    },
 
@@ -94,5 +81,8 @@ var Circle = Fabric.util.createClass(Fabric.Circle, {
 Circle.fromObject = function(object) {
    return new Circle(object);
 };
+
+extend(Circle.prototype, require('./limit_size'));
+extend(Circle.prototype, require('./nudge'));
 
 module.exports.klass = Circle;

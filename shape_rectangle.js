@@ -121,40 +121,47 @@ var Rectangle = Fabric.util.createClass(Fabric.Rect, {
     * will determine two opposite corners.
     */
    sizeByMousePos: function(x1, y1, x2, y2) {
-      var xdiff = x2 - x1;
-      var ydiff = y2 - y1;
-      if (xdiff < 0) {
-         this.width = this._limitDimension(-xdiff);
-         this.left = x2 - (this.width - -xdiff);
-      } else {
-         this.width = this._limitDimension(xdiff);
-         this.left = x1;
-      }
-      if (ydiff < 0) {
-         this.height = this._limitDimension(-ydiff);
-         this.top = y2 - (this.height - -ydiff);
-      } else {
-         this.height = this._limitDimension(ydiff);
-         this.top = y1;
-      }
-      this.setCoords();
+      this._withSizeLimitations(function() {
+         var xdiff = x2 - x1;
+         var ydiff = y2 - y1;
+         if (xdiff < 0) {
+            this.width = this._limitDimension(-xdiff);
+            this.left = x2 - (this.width - -xdiff);
+         } else {
+            this.width = this._limitDimension(xdiff);
+            this.left = x1;
+         }
+         if (ydiff < 0) {
+            this.height = this._limitDimension(-ydiff);
+            this.top = y2 - (this.height - -ydiff);
+         } else {
+            this.height = this._limitDimension(ydiff);
+            this.top = y1;
+         }
+         this.setCoords();
+      });
    },
 
    /**
     * Increment the size of the rectangle about its center.
     */
-   incrementSize: function(increment) {
-      var newWidth = this.width + increment;
-      var newHeight = this.height + increment;
+   incrementSize: function(increment, axis) {
+      var portionW = this.width / (this.width + this.height);
+      if (axis == 'X') {
+         portionW = 1;
+      } else if (axis == 'Y') {
+         portionW = 0;
+      }
+      var deltaX = increment * portionW;
+      var deltaY = increment * (1 - portionW);
+      var newWidth = this.width + deltaX
+      var newHeight = this.height + deltaY
 
       // Checks to see if the new size will be too big/small.
-      if (newWidth < this.maxSize && newWidth > this.minSize &&
-       newHeight < this.maxSize && newHeight > this.minSize) {
-         this.width = newWidth;
-         this.height = newHeight;
-         this.left -= increment / 2;
-         this.top -= increment / 2;
-      }
+      this.width = newWidth;
+      this.height = newHeight;
+      this.left -= deltaX / 2;
+      this.top -= deltaY / 2;
       this.setCoords();
    },
 
@@ -162,41 +169,6 @@ var Rectangle = Fabric.util.createClass(Fabric.Rect, {
       this.centerTransform = true;
       this.callSuper('center');
       this.centerTransform = false;
-   },
-
-   /**
-    * Catch the alteration of 'scaleX' and 'scaleY' properties (happens during
-    * mouse resize) and limit them so the shape doesn't exceed it's allowed
-    * dimensions.
-    */
-   _set: function(key, value) {
-      var newValue = value;
-      if (key === 'scaleX') {
-         var newWidth = this.width * value;
-         newValue = this._limitDimension(newWidth) / this.width;
-      } else if (key === 'scaleY') {
-         var newHeight = this.height * value;
-         newValue = this._limitDimension(newHeight) / this.height;
-      }
-
-      return this.callSuper('_set', key, newValue);
-   },
-
-   /**
-    * Enforce the min / max size on the given value if they are set for this
-    * object.
-    */
-   _limitDimension: function(x) {
-      if (this.minSize !== false) {
-         if (Math.abs(x) < this.minSize)
-            return x >= 0 ? this.minSize : -this.minSize;
-      }
-
-      if (this.maxSize !== false) {
-         if (Math.abs(x) > this.maxSize)
-            return x >= 0 ? this.maxSize : -this.maxSize;
-      }
-      return x;
    },
 
    toObject: function(propertiesToInclude) {
@@ -216,5 +188,8 @@ var Rectangle = Fabric.util.createClass(Fabric.Rect, {
 Rectangle.fromObject = function(object) {
    return new Rectangle(object);
 };
+
+extend(Rectangle.prototype, require('./limit_size'));
+extend(Rectangle.prototype, require('./nudge'));
 
 module.exports.klass = Rectangle;

@@ -42,11 +42,11 @@ function ImageMarkupBuilder(fabricCanvas) {
       rectangle: 16
    };
    var maximumSize = {
-      circle: 64,
+      circle: 128,
       rectangle: 128
    };
    var maximumSizeRatio = {
-      circle: 0.3, // Max size of radius
+      circle: 0.6, // Max size of radius
       rectangle: 0.8 // Max size of side
    };
    var initialSize = {
@@ -73,6 +73,20 @@ function ImageMarkupBuilder(fabricCanvas) {
          return drawRectangle(data);
       }
    };
+
+   /**
+    * Returns true if the given object is off the edge of the fabric canvas.
+    * This is defined as whether the color stroke would be the only part of
+    * the shape still visible at those coordinates.
+    */
+   fabricCanvas.isOffScreen = function(object) {
+      var rect = object.getBoundingRect();
+      return (rect.left + rect.width - (strokeWidth * 2) < 0 ||
+              rect.left + (strokeWidth * 2) > this.width ||
+              rect.top + rect.height - (strokeWidth * 2) < 0 ||
+              rect.top + (strokeWidth * 2) > this.height);
+   }
+
 
    /**
     * Simple clone function for use in deep-copying objects containing
@@ -118,19 +132,6 @@ function ImageMarkupBuilder(fabricCanvas) {
       }
    }
 
-   /**
-    * Returns if the given object is off the edge of the fabric canvas.
-    * This is defined as whether the color stroke would be the only part of
-    * the shape still visible at those coordinates.
-    */
-   function isOffScreen(object) {
-      var rect = object.getBoundingRect();
-      return (rect.left + rect.width - (strokeWidth * 2) < 0 ||
-              rect.left + (strokeWidth * 2) > fabricCanvas.width ||
-              rect.top + rect.height - (strokeWidth * 2) < 0 ||
-              rect.top + (strokeWidth * 2) > fabricCanvas.height);
-   }
-
    function applyBackground(callback) {
       if (!isNode) {
          //Listen for shapes falling off the edge and delete
@@ -138,7 +139,7 @@ function ImageMarkupBuilder(fabricCanvas) {
             'object:modified': function (e) {
                var shape = e.target;
 
-               if (isOffScreen(shape))
+               if (fabricCanvas.isOffScreen(shape))
                   remove(shape);
             }.bind(this)
          });
@@ -566,54 +567,6 @@ function ImageMarkupBuilder(fabricCanvas) {
       },
 
       /**
-       * Moves the given  shape in the given direction by the given number of
-       * pixels relative to its current position.
-       *
-       * @param shape The fabric shape to move
-       * @param directionMap A key-value object with the keys {up, down, left,
-       *  right} each with a true/false value.
-       * @param distance The number of pixels to move the shape.
-       */
-      nudge: function nudge(shape, directionMap, distance) {
-         if (!(typeof distance === 'number')) {
-            console.error('distance must be a number');
-            return;
-         }
-
-         if (directionMap.left) {
-            shape.left -= distance;
-            shape.setCoords();
-            if (isOffScreen(shape)) {
-               shape.left += distance;
-            }
-         }
-         if (directionMap.right) {
-            shape.left += distance;
-            shape.setCoords();
-            if (isOffScreen(shape)) {
-               shape.left -= distance;
-            }
-         }
-         if (directionMap.up) {
-            shape.top -= distance;
-            shape.setCoords();
-            if (isOffScreen(shape)) {
-               shape.top += distance;
-            }
-         }
-         if (directionMap.down) {
-            shape.top += distance;
-            shape.setCoords();
-            if (isOffScreen(shape)) {
-               shape.top -= distance;
-            }
-         }
-         shape.setCoords();
-
-         fabricCanvas.renderAll();
-      },
-
-      /**
        * Grows or shrinks the given shape depending on the given key
        * by the given number of pixels.
        *
@@ -628,7 +581,7 @@ function ImageMarkupBuilder(fabricCanvas) {
          }
 
          shape.incrementSize(increment);
-         if (isOffScreen(shape)) {
+         if (fabricCanvas.isOffScreen(shape)) {
             shape.incrementSize(increment * -1);
          }
 
