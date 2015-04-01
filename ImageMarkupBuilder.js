@@ -1,12 +1,10 @@
 var isNode = typeof window == 'undefined';
 
-
 /**
  * Expects a Fabric.js Canvas
  */
 function ImageMarkupBuilder(fabricCanvas) {
    var Fabric = require('fabric').fabric || fabric;
-   var FS = require('fs');
 
    var Shapes = {
       Rectangle:  require("./shape_rectangle").klass,
@@ -162,7 +160,7 @@ function ImageMarkupBuilder(fabricCanvas) {
             whiteStroke = 1;
          }
          if (isNode) {
-            FS.readFile(innerJSON.sourceFile, function (err, blob) {
+            require('fs').readFile(innerJSON.sourceFile, function (err, blob) {
                if (err) throw err;
 
                var dimensions = innerJSON.dimensions;
@@ -250,7 +248,7 @@ function ImageMarkupBuilder(fabricCanvas) {
     */
    function writeCanvas(callback) {
       fabricCanvas.renderAll();
-      var outstream = FS.createWriteStream(innerJSON.destinationFile),
+      var outstream = require('fs').createWriteStream(innerJSON.destinationFile),
       stream = fabricCanvas.createJPEGStream({
          quality: 93,
          progressive: true
