@@ -10,6 +10,7 @@ var Rectangle = Fabric.util.createClass(Fabric.Rect, {
    lockRotation: true,
    transparentCorners: false,
    hasRotatingPoint: false,
+   hasBorders: false,
    fill: 'transparent',
 
    // New fields.
