@@ -505,6 +505,13 @@ function ImageMarkupBuilder(fabricCanvas) {
       data.from.x += imageOffset.x;
       data.from.y += imageOffset.y;
 
+      if (data.to) {
+         data.to.x /= resizeRatio;
+         data.to.y /= resizeRatio;
+         data.to.x += imageOffset.x;
+         data.to.y += imageOffset.y;
+      }
+
       if (!data.color) {
          data.color = "red";
       }
