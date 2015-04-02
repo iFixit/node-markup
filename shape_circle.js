@@ -22,10 +22,6 @@ var Circle = Fabric.util.createClass(Fabric.Circle, {
    minSize: false,
    maxSize: false,
 
-   render: function(ctx) {
-      this.callSuper('render', ctx);
-   },
-
    /**
     * Resizes this shape using the two mouse coords (first is treated as the
     * center, second is the outside edge.
