@@ -30,9 +30,8 @@ var Rectangle = Fabric.util.createClass(Fabric.Rect, {
     */
    render: function(ctx) {
       this._resetScale();
-      var _this = this;
       this._fixAndRestoreSubPixelPositioning(function() {
-         _this.callSuper('render', ctx);
+         this.callSuper('render', ctx);
       });
    },
 
@@ -49,7 +48,7 @@ var Rectangle = Fabric.util.createClass(Fabric.Rect, {
       // having the outlines jump back and forth by one pixel as you resize it
       // can be annoying.
       if (!isNode) {
-         callback();
+         callback.call(this);
          return;
       }
 
@@ -77,7 +76,7 @@ var Rectangle = Fabric.util.createClass(Fabric.Rect, {
          this.height += partialY * 2;
       }
 
-      callback();
+      callback.call(this);
 
       this.width  = old.w;
       this.height = old.h;
