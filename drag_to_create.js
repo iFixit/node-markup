@@ -74,12 +74,11 @@ function setupMarkerCreation(markupBuilder) {
          };
       },
       'line': function(mouseStart, mouseCurrent) {
-         var x1 = x(mouseStart), y1 = y(mouseStart);
          return {
             type: 'line',
             from: {
-               x: x1,
-               y: y1
+               x: x(mouseStart),
+               y: y(mouseStart)
             },
             to: {
                x: x(mouseCurrent),
