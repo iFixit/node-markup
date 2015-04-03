@@ -95,31 +95,28 @@ var Rectangle = Fabric.util.createClass(Fabric.Rect, {
       this.scaleX = this.scaleY = 1;
    },
 
-
    /**
     * Resizes this rectangle to make the most sense given the two points (they
     * will determine two opposite corners.
     */
    sizeByMousePos: function(x1, y1, x2, y2) {
-      this._withSizeLimitations(function() {
-         var xdiff = x2 - x1;
-         var ydiff = y2 - y1;
-         if (xdiff < 0) {
-            this.width = this._limitDimension(-xdiff);
-            this.left = x2 - (this.width - -xdiff);
-         } else {
-            this.width = this._limitDimension(xdiff);
-            this.left = x1;
-         }
-         if (ydiff < 0) {
-            this.height = this._limitDimension(-ydiff);
-            this.top = y2 - (this.height - -ydiff);
-         } else {
-            this.height = this._limitDimension(ydiff);
-            this.top = y1;
-         }
-         this.setCoords();
-      });
+      var xdiff = x2 - x1;
+      var ydiff = y2 - y1;
+      if (xdiff < 0) {
+         this.width = this._limitDimension(-xdiff);
+         this.left = x2 - (this.width - -xdiff);
+      } else {
+         this.width = this._limitDimension(xdiff);
+         this.left = x1;
+      }
+      if (ydiff < 0) {
+         this.height = this._limitDimension(-ydiff);
+         this.top = y2 - (this.height - -ydiff);
+      } else {
+         this.height = this._limitDimension(ydiff);
+         this.top = y1;
+      }
+      this.setCoords();
    },
 
    /**

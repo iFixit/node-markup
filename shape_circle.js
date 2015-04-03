@@ -30,10 +30,8 @@ var Circle = Fabric.util.createClass(Fabric.Circle, {
       var xdiff = x2 - this.left;
       var ydiff = y2 - this.top;
       var radius = Math.sqrt(xdiff * xdiff + ydiff * ydiff);
-      this._withSizeLimitations(function() {
-         this.scaleToWidth(this._limitDimension(radius * 2));
-         this.setCoords();
-      });
+      this.scaleToWidth(this._limitDimension(radius * 2));
+      this.setCoords();
    },
 
    /**

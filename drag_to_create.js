@@ -25,7 +25,9 @@ function setupMarkerCreation(markupBuilder) {
          }
       } else {
          
-         currentShape.sizeByMousePos(x(mouseDownEvent), y(mouseDownEvent), x(event.e), y(event.e));
+         currentShape._withSizeLimitations(function() {
+            currentShape.sizeByMousePos(x(mouseDownEvent), y(mouseDownEvent), x(event.e), y(event.e));
+         });
          canvas.renderAll();
       }
    }, 'mouse:up': function() {
