@@ -35,14 +35,6 @@ var Circle = Fabric.util.createClass(Fabric.Circle, {
       this.setCoords();
    },
 
-   /**
-    * Increment the size of the circle about its center.
-    */
-   incrementSize: function(increment) {
-      this.scaleToWidth(this.currentWidth + increment);
-      this.setCoords();
-   },
-
    toObject: function(propertiesToInclude) {
       return extend(this.callSuper('toObject', propertiesToInclude), {
          color: this.color,
@@ -62,6 +54,14 @@ mixin(proto, require('./highlighted_stroke.mixin'));
 mixin(proto, require('./limit_size'));
 mixin(proto, require('./nudge'));
 
+/**
+ * Increment the size of the circle about its center.
+ * Note: At the end so it overwrites the one in the `nudge` mixin
+ */
+proto.incrementSize = function(increment) {
+   this.scaleToWidth(this.currentWidth + increment);
+   this.setCoords();
+};
 
 Circle.fromObject = function(object) {
    return new Circle(object);

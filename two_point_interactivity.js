@@ -51,7 +51,6 @@ module.exports = (function(){
          this.scaleY = 1;
       },
 
-
       /**
        * We don't want line-based shapes to have a bounding box (it looks dumb
        * around lines.

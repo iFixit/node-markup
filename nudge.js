@@ -1,5 +1,30 @@
 module.exports = {
    /**
+    * Increment the size of the rectangle about its center.
+    */
+   incrementSize: function(increment, axis) {
+      var portionW = this.width / (this.width + this.height);
+      if (axis == 'X') {
+         portionW = 1;
+      } else if (axis == 'Y') {
+         portionW = 0;
+      }
+      var deltaX = increment * portionW;
+      var deltaY = increment * (1 - portionW);
+      var newWidth = this.width + deltaX
+      var newHeight = this.height + deltaY
+
+      // Checks to see if the new size will be too big/small.
+      this.width = newWidth;
+      this.height = newHeight;
+      if (this.originX !== 'center') {
+         this.left -= deltaX / 2;
+         this.top -= deltaY / 2;
+      }
+      this.setCoords();
+   },
+
+   /**
     * Grows the given shape in the given direction by the given number of
     * pixels relative to its current position.
     *
