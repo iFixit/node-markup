@@ -75,7 +75,7 @@ module.exports = (function(){
          ctx.beginPath();
  
          function circle(x,y) {
-            ctx.arc(x, y, self.cornerSize/2, 0, 2 * Math.PI, false);
+            ctx.arc(x, y, self.cornerSize/1.4, 0, 2 * Math.PI, false);
          }
    
          var flipX = self.x1 > self.x2 ? 1 : -1;
