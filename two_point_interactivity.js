@@ -111,6 +111,18 @@ module.exports = (function(){
             x: (left - halfWidth * flipX),
             y: (top - halfHeight * flipY)
          }];
+      },
+
+      toMarkup: function(scale) {
+         var points = this.getEndpoints();
+         var p1 = points[0],
+             p2 = points[1];
+         return [
+             this.type,
+             p1.x / scale + 'x' + p1.y / scale,
+             p2.x / scale + 'x' + p2.y / scale,
+             this.color
+         ].join(',') + ';';
       }
    }
 })();
