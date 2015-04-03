@@ -12,19 +12,15 @@ var Line = Fabric.util.createClass(Fabric.Line, {
    // New fields.
    shapeName: 'line',
 
-   // Min and Max size to enforce (false == no enforcement)
-   minSize: false,
-   maxSize: false,
-
    /**
-    * Resizes this rectangle to make the most sense given the two points (they
+    * Resizes this line to make the most sense given the two points (they
     * will determine two opposite corners.
     */
    sizeByMousePos: function(x1, y1, x2, y2) {
       this.x1 = x1;
       this.y1 = y1;
-      this.x2 = x2;
-      this.y2 = y2;
+      this.x2 = x1 + this._limitDimension(x2 - x1);
+      this.y2 = y1 + this._limitDimension(y2 - y1);
       this._setWidthHeight();
       this.setCoords();
    },
