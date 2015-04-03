@@ -302,10 +302,6 @@ function ImageMarkupBuilder(fabricCanvas) {
          rect.minSize = rect.maxSize = false;
       }
 
-      if (isNode && shadows == true) {
-         drawShadow(rect, shadowStep);
-      }
-
       var fabricRect = new Shapes.Rectangle(rect);
 
       markupObjects.push(fabricRect);
@@ -376,10 +372,6 @@ function ImageMarkupBuilder(fabricCanvas) {
          circle.minSize = circle.maxSize = false;
       }
 
-      if (isNode && shadows == true) {
-         drawShadow(circle, shadowStep);
-      }
-
       var fabricCircle = new Shapes.Circle(circle);
       markupObjects.push(fabricCircle);
       fabricCanvas.add(fabricCircle);
@@ -391,85 +383,6 @@ function ImageMarkupBuilder(fabricCanvas) {
 
       return fabricCircle;
    }
-
-   /**
-    * Draw a fuzzy shadow for the shape given.
-    * Take care to draw the shadow before the shape.
-    */
-   function drawShadow(shape, step) {
-      if (step < 1) {
-         step = 1;
-      }
-      var shadow = Cloner.clone(shape);
-      if (step > shadow.strokeWidth) {
-         step = shadow.strokeWidth;
-      }
-
-      var offsetX = 8;
-      var offsetY = offsetX;
-
-      var shadow = Cloner.clone(shape);
-      shadow.left += offsetX;
-      shadow.top += offsetY;
-      shadow.rx = 5;
-      shadow.ry = 5;
-      shadow.stroke = 'rgba(0,0,0,0.5)';
-      shadow.strokeWidth = shadow.strokeWidth / step;
-      var stepWidth = shadow.strokeWidth;
-
-      //Empirically-derived pixel tweaks to line up shadow sizes with their
-      //parents. TODO: Base these numbers on something real.
-      var circleTweak = 0.6875;
-      var rectangleTweak = 1.3125;
-
-      //Adjust shadow outlines to outer edge, to work towards inside later.
-      switch (shape.shapeName) {
-         case 'circle':
-            shadow.radius += shape.strokeWidth * circleTweak;
-            shadow.strokeWidth *= 2;
-            break;
-         case 'rectangle':
-            shadow.width += shape.strokeWidth * rectangleTweak;
-            shadow.height += shape.strokeWidth * rectangleTweak;
-            shadow.strokeWidth *= 2;
-            break;
-         default:
-            console.error('Shape not implemented: ' + shape.shapeName);
-            return;
-      }
-
-      var alpha;
-      for (var i = 0; i < step; ++i) {
-         if (i < (step / 2)) {
-            alpha = (((i + 1) * 2) / (step));
-         }
-         else if (i == step / 2) {
-            //Math ain't working to my likings
-            alpha = 1;
-         }
-         else {
-            alpha = (((step - (i + 1)) * 2) / (step));
-         }
-
-         shadow.stroke = 'rgba(0,0,0,' + alpha + ')';
-
-         switch (shape.shapeName) {
-            case 'circle':
-               fabricCanvas.add(new Fabric.Circle(shadow));
-               shadow.radius = shadow.radius - stepWidth * 2 * 0.8;
-               break;
-            case 'rectangle':
-               fabricCanvas.add(new Fabric.Rect(shadow));
-               shadow.width = shadow.width - stepWidth * 4 * 0.8;
-               shadow.height = shadow.height - stepWidth * 4 * 0.8;
-               break;
-            default:
-               console.error('Shape not implemented: ' + shape.shapeName);
-               return;
-         }
-      }
-   }
-
 
    function locate(shape) {
       for (var i = 0; i < markupObjects.length; ++i) {
