@@ -20,7 +20,7 @@ module.exports = (function(){
             this.y1 = this.y2; this.y2 = y1;
          }
 
-         this.callSuper('_set', key, value);
+         this.callParent(key, value);
          this._resetScale();
          return this;
       },

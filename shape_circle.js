@@ -1,5 +1,6 @@
 var Fabric = require('fabric').fabric || fabric;
 var extend = Fabric.util.object.extend;
+var mixin = require('./mixin');
 
 var Circle = Fabric.util.createClass(Fabric.Circle, {
    // Inherited variables with new values.
@@ -56,13 +57,15 @@ var Circle = Fabric.util.createClass(Fabric.Circle, {
    }
 });
 
-extend(Circle.prototype, require('./highlighted_stroke.mixin'));
+var proto = Circle.prototype;
+mixin(proto, require('./highlighted_stroke.mixin'));
+mixin(proto, require('./limit_size'));
+mixin(proto, require('./nudge'));
+
 
 Circle.fromObject = function(object) {
    return new Circle(object);
 };
 
-extend(Circle.prototype, require('./limit_size'));
-extend(Circle.prototype, require('./nudge'));
 
 module.exports.klass = Circle;

@@ -1,6 +1,6 @@
 var Fabric = require('fabric').fabric || fabric;
-var extend = Fabric.util.object.extend;
 var isNode = typeof window == 'undefined';
+var mixin = require('./mixin');
 
 var Line = Fabric.util.createClass(Fabric.Line, {
    type: 'line',
@@ -88,11 +88,15 @@ var Line = Fabric.util.createClass(Fabric.Line, {
    },
 });
 
+var proto = Line.prototype;
+mixin(proto, require('./highlighted_stroke.mixin'));
+mixin(proto, require('./limit_size'));
+mixin(proto, require('./nudge'));
+mixin(proto, require('./two_point_interactivity'));
+
+
 Line.fromObject = function(object) {
    return new Line(object);
 };
-
-extend(Line.prototype, require('./two_point_interactivity'));
-extend(Line.prototype, require('./highlighted_stroke.mixin'));
 
 module.exports.klass = Line;

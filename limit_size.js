@@ -15,7 +15,7 @@ module.exports = {
          newValue = this._limitDimension(newHeight) / this.height;
       }
 
-      return this.callSuper('_set', key, newValue);
+      return this.callParent(key, newValue);
    },
 
    _limitDimension: function(x) {

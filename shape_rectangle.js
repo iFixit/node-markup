@@ -1,6 +1,7 @@
 var Fabric = require('fabric').fabric || fabric;
 var extend = Fabric.util.object.extend;
 var isNode = typeof window == 'undefined';
+var mixin = require('./mixin');
 
 var Rectangle = Fabric.util.createClass(Fabric.Rect, {
    // Inherited fields with new values.
@@ -162,13 +163,13 @@ var Rectangle = Fabric.util.createClass(Fabric.Rect, {
    }
 });
 
-extend(Rectangle.prototype, require('./highlighted_stroke.mixin'));
+var proto = Rectangle.prototype;
+mixin(proto, require('./highlighted_stroke.mixin'));
+mixin(proto, require('./limit_size'));
+mixin(proto, require('./nudge'));
 
 Rectangle.fromObject = function(object) {
    return new Rectangle(object);
 };
-
-extend(Rectangle.prototype, require('./limit_size'));
-extend(Rectangle.prototype, require('./nudge'));
 
 module.exports.klass = Rectangle;
