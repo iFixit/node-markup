@@ -92,6 +92,35 @@ module.exports = (function(){
          return self;
       },
 
+      /**
+       * If a line is perfectly vertical or horizontal and the outside edges of
+       * the borders are not lined up with pixels exactly, canvas will antialias
+       * them which looks bad.
+       *
+       * To prevent this, we calculate if the borders will be splitting pixels,
+       * adjust the positioning, call the callback and restore the position.
+       */
+      _fixAndRestoreSubPixelPositioning: function(callback) {
+         var oldT = this.top,
+             oldL = this.left;
+
+         // Preconditions: width, height, borderWidth are all ints
+         // left, top represent the middle of the line
+         // Note x % 1 effectively does x - (int)x
+         var borderWidth = this.borderWidth + (this.outlineWidth * this.borderWidth);
+         if (this.width <= 1) {
+            this.left -= (this.left + borderWidth / 2) % 1;
+         }
+         if (this.height <= 1) {
+            this.top -= (this.top + borderWidth / 2) % 1;
+         }
+
+         callback.call(this);
+
+         this.top  = oldT;
+         this.left = oldL;
+      },
+
       getEndpoints: function() {
          var self = this;
          var flipX = self.x1 > self.x2 ? 1 : -1;
