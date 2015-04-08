@@ -18,10 +18,19 @@ var Line = Fabric.util.createClass(Fabric.Line, {
     * will determine two opposite corners.
     */
    sizeByMousePos: function(x1, y1, x2, y2) {
+      var xd = x2 - x1;
+      var yd = y2 - y1;
+      var rad = Math.sqrt(xd * xd + yd * yd);
+      if (!rad) {
+         xd = yd = this.minSize;
+         var ratio = 1;
+      } else {
+         var ratio = this._limitDimension(rad) / rad ;
+      }
       this.x1 = x1;
       this.y1 = y1;
-      this.x2 = x1 + this._limitDimension(x2 - x1);
-      this.y2 = y1 + this._limitDimension(y2 - y1);
+      this.x2 = x1 + ratio * xd;
+      this.y2 = y1 + ratio * yd;
       this._setWidthHeight();
       this.setCoords();
    },

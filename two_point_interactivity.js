@@ -3,6 +3,7 @@ module.exports = (function(){
    var Fabric = require('fabric').fabric || fabric;
 
    return {
+      _limitByDiagonal: true,
 
       /**
        * Intercept the set('scaleX') calls during resize so we can flip the

@@ -39,12 +39,12 @@ function ImageMarkupBuilder(fabricCanvas) {
    var minimumSize = {
       circle: 8,
       rectangle: 16,
-      line: 16
+      line: 20
    };
    var maximumSize = {
       circle: 128,
       rectangle: 128,
-      line: 300
+      line: 400
    };
    var maximumSizeRatio = {
       circle: 0.6, // Max size of radius
