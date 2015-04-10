@@ -277,8 +277,6 @@ function ImageMarkupBuilder(fabricCanvas) {
          top: shape.from.y - imageOffset.y,
          width: shape.size.width,
          height: shape.size.height,
-         rx: 1,
-         ry: 1,
          borderWidth: shape.stroke,
          stroke: colorValues[shape.color],
          color: shape.color

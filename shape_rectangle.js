@@ -13,10 +13,11 @@ var Rectangle = Fabric.util.createClass(Fabric.Rect, {
    hasRotatingPoint: false,
    hasBorders: false,
    fill: 'transparent',
+   strokeLineJoin: 'round',
 
    // New fields.
    shapeName: 'rectangle',
-   color: 'red',
+
    // Min and Max size to enforce (false == no enforcement)
    sizeLimits: [0.03, 0.6],
 
