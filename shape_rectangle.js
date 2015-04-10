@@ -18,8 +18,7 @@ var Rectangle = Fabric.util.createClass(Fabric.Rect, {
    shapeName: 'rectangle',
    color: 'red',
    // Min and Max size to enforce (false == no enforcement)
-   minSize: false,
-   maxSize: false,
+   sizeLimits: [0.03, 0.6],
 
    /**
     * Wrap the underlying render function to do two things.
@@ -129,8 +128,6 @@ var Rectangle = Fabric.util.createClass(Fabric.Rect, {
    toObject: function(propertiesToInclude) {
       return extend(this.callSuper('toObject', propertiesToInclude), {
          color: this.color,
-         minSize: this.minSize,
-         maxSize: this.maxSize,
          borderWidth: this.borderWidth,
          stroke: this.stroke,
          shapeName: this.shapeName,

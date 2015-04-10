@@ -1,4 +1,22 @@
 module.exports = {
+   _minSize: function() {
+      if (!this.sizeLimits || !this.sizeLimits[0] || !this.canvas)
+         return false;
+
+      return this.sizeLimits[0] * this._canvasSize();
+   },
+
+   _maxSize: function() {
+      if (!this.sizeLimits || !this.sizeLimits[1] || !this.canvas)
+         return false;
+
+      return this.sizeLimits[1] * this._canvasSize();
+   },
+
+   _canvasSize: function() {
+      return Math.max(this.canvas.width, this.canvas.height);
+   },
+
    _withSizeLimitations: function(callback) {
       this._limitSize = true;
       callback.apply(this);
@@ -59,15 +77,18 @@ module.exports = {
          return x;
       }
 
-      if (this.minSize !== false) {
+      var min = this._minSize();
+      var max = this._maxSize();
+
+      if (min !== false) {
          // Sometimes we have to limit negative values too (see: scaleX)
-         if (Math.abs(x) < this.minSize)
-            return x >= 0 ? this.minSize : -this.minSize;
+         if (Math.abs(x) < min)
+            return x >= 0 ? min : -min;
       }
 
-      if (this.maxSize !== false) {
-         if (Math.abs(x) > this.maxSize)
-            return x >= 0 ? this.maxSize : -this.maxSize;
+      if (max !== false) {
+         if (Math.abs(x) > max)
+            return x >= 0 ? max : -max;
       }
       return x;
    },

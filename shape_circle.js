@@ -19,9 +19,7 @@ var Circle = Fabric.util.createClass(Fabric.Circle, {
    // New fields.
    shapeName: 'circle',
    color: 'red',
-   // Min and Max size to enforce (false == no enforcement)
-   minSize: false,
-   maxSize: false,
+   sizeLimits: [0.05, 0.4],
 
    /**
     * Resizes this shape using the two mouse coords (first is treated as the
@@ -38,8 +36,6 @@ var Circle = Fabric.util.createClass(Fabric.Circle, {
    toObject: function(propertiesToInclude) {
       return extend(this.callSuper('toObject', propertiesToInclude), {
          color: this.color,
-         minSize: this.minSize,
-         maxSize: this.maxSize,
          borderWidth: this.borderWidth,
          stroke: this.stroke,
          shapeName: this.shapeName,

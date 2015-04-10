@@ -13,6 +13,7 @@ var Line = Fabric.util.createClass(Fabric.Line, {
 
    // New fields.
    shapeName: 'line',
+   sizeLimits: [0.04, 0.4],
 
    /**
     * Resizes this line to make the most sense given the two points (they
@@ -23,7 +24,7 @@ var Line = Fabric.util.createClass(Fabric.Line, {
       var yd = y2 - y1;
       var rad = Math.sqrt(xd * xd + yd * yd);
       if (!rad) {
-         xd = yd = this.minSize;
+         xd = yd = this._limitDimension(rad);
          var ratio = 1;
       } else {
          var ratio = this._limitDimension(rad) / rad ;
@@ -40,8 +41,7 @@ var Line = Fabric.util.createClass(Fabric.Line, {
       this._fixAndRestoreSubPixelPositioning(function() {
          this.callSuper('render', ctx, /* noTransform */ false);
       });
-   },
-
+   }
 });
 
 var proto = Line.prototype;

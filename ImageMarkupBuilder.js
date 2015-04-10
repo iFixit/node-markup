@@ -37,23 +37,6 @@ function ImageMarkupBuilder(fabricCanvas) {
    var imageOffset;
    var resizeRatio = 1;
    var finalWidth = 0;
-   var minimumSize = {
-      circle: 8,
-      rectangle: 16,
-      line: 20,
-      arrow: 20
-   };
-   var maximumSize = {
-      circle: 128,
-      rectangle: 128,
-      line: 200,
-      arrow: 200
-   };
-   var maximumSizeRatio = {
-      circle: 0.6, // Max size of radius
-      rectangle: 0.8 // Max size of side
-   };
-
    var markupObjects = new Array();
 
    var whiteStroke = isNode ? 1 : 0.5;
@@ -294,8 +277,6 @@ function ImageMarkupBuilder(fabricCanvas) {
          top: shape.from.y - imageOffset.y,
          width: shape.size.width,
          height: shape.size.height,
-         minSize: minimumSize.rectangle,
-         maxSize: maximumSize.rectangle,
          rx: 1,
          ry: 1,
          borderWidth: shape.stroke,
@@ -308,10 +289,6 @@ function ImageMarkupBuilder(fabricCanvas) {
       rect.left *= resizeRatio;
       rect.width *= resizeRatio;
       rect.height *= resizeRatio;
-
-      if (isNode) {
-         rect.minSize = rect.maxSize = false;
-      }
 
       var fabricRect = new Shapes.Rectangle(rect);
 
@@ -330,8 +307,6 @@ function ImageMarkupBuilder(fabricCanvas) {
       shape.stroke = getStrokeWidth(finalWidth);
 
       var line = {
-         minSize: minimumSize.line,
-         maxSize: maximumSize.line,
          borderWidth: shape.stroke,
          stroke: colorValues[shape.color],
          color: shape.color
@@ -343,10 +318,6 @@ function ImageMarkupBuilder(fabricCanvas) {
          shape.to.x * resizeRatio,
          shape.to.y * resizeRatio
       ];
-
-      if (isNode) {
-         line.minSize = line.maxSize = false;
-      }
 
       var fabricLine = new klass(points, line);
       fabricLine.color = shape.color;
@@ -369,8 +340,6 @@ function ImageMarkupBuilder(fabricCanvas) {
          left: shape.from.x - imageOffset.x,
          top: shape.from.y - imageOffset.y,
          radius: shape.radius,
-         minSize: minimumSize.circle,
-         maxSize: maximumSize.circle,
          borderWidth: shape.stroke,
          stroke: colorValues[shape.color],
          color: shape.color
@@ -378,10 +347,6 @@ function ImageMarkupBuilder(fabricCanvas) {
       circle.left    *= resizeRatio;
       circle.top     *= resizeRatio;
       circle.radius  *= resizeRatio;
-
-      if (isNode) {
-         circle.minSize = circle.maxSize = false;
-      }
 
       var fabricCircle = new Shapes.Circle(circle);
       markupObjects.push(fabricCircle);
@@ -585,13 +550,6 @@ function ImageMarkupBuilder(fabricCanvas) {
          if (innerJSON.resizeRatio) {
             resizeRatio = innerJSON.resizeRatio;
          }
-
-         var finalSize = innerJSON.finalDimensions;
-         maximumSize.rectangle = Math.min(finalSize.height, finalSize.width)
-                                 * maximumSizeRatio.rectangle;
-
-         maximumSize.circle = Math.min(finalSize.height, finalSize.width)
-                              * maximumSizeRatio.circle;
 
          applyBackground(callback);
       },
