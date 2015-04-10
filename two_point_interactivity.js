@@ -105,6 +105,12 @@ module.exports = (function(){
          var oldT = this.top,
              oldL = this.left;
 
+         // // Make sure this doesn't become invisible
+         // if (this.width <= 2 && this.height <= 2) {
+         //    this.width = 2;
+         //    this.height = 2;
+         // }
+
          // Preconditions: width, height, borderWidth are all ints
          // left, top represent the middle of the line
          // Note x % 1 effectively does x - (int)x

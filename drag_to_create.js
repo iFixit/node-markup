@@ -8,7 +8,7 @@ function setupMarkerCreation(markupBuilder) {
        mouseDownEvent,
        color,
        currentShape,
-       shapeMode = Enum(['circle', 'rectangle', 'line']);
+       shapeMode = Enum(['circle', 'rectangle', 'line', 'arrow']);
 
    canvas.on({
    'mouse:down': function(event) {
@@ -72,6 +72,19 @@ function setupMarkerCreation(markupBuilder) {
             size: {
                width: x(mouseCurrent) - x1,
                height: y(mouseCurrent) - y1
+            }
+         };
+      },
+      'arrow': function(mouseStart, mouseCurrent) {
+         return {
+            type: 'arrow',
+            from: {
+               x: x(mouseStart),
+               y: y(mouseStart)
+            },
+            to: {
+               x: x(mouseCurrent),
+               y: y(mouseCurrent)
             }
          };
       },

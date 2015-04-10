@@ -9,7 +9,8 @@ function ImageMarkupBuilder(fabricCanvas) {
    var Shapes = {
       Rectangle:  require("./shape_rectangle").klass,
       Circle:     require("./shape_circle").klass,
-      Line:       require("./shape_line").klass
+      Line:       require("./shape_line").klass,
+      Arrow:      require("./shape_arrow").klass
    };
 
    var colorValues = {
@@ -39,12 +40,14 @@ function ImageMarkupBuilder(fabricCanvas) {
    var minimumSize = {
       circle: 8,
       rectangle: 16,
-      line: 20
+      line: 20,
+      arrow: 20
    };
    var maximumSize = {
       circle: 128,
       rectangle: 128,
-      line: 400
+      line: 200,
+      arrow: 200
    };
    var maximumSizeRatio = {
       circle: 0.6, // Max size of radius
@@ -61,7 +64,12 @@ function ImageMarkupBuilder(fabricCanvas) {
     * Array of delegate functions to draw a proper shape.
     */
    var addShapeDelegate = {
-      line: drawLine,
+      arrow: function (data) {
+         return drawLineBasedShape(Shapes.Arrow, data);
+      },
+      line: function (data) {
+         return drawLineBasedShape(Shapes.Line, data);
+      },
       circle: drawCircle,
       rectangle: function (data) {
          // Because fabric considers top/left as the center of the rectangle.
@@ -218,7 +226,10 @@ function ImageMarkupBuilder(fabricCanvas) {
                         drawCircle(shape);
                         break;
                      case 'line':
-                        drawLine(shape);
+                        drawLineBasedShape(Shapes.Line, shape);
+                        break;
+                     case 'arrow':
+                        drawLineBasedShape(Shapes.Arrow, shape);
                         break;
                      default:
                         console.error('Unsupported Shape: ' + shapeName);
@@ -315,7 +326,7 @@ function ImageMarkupBuilder(fabricCanvas) {
       return fabricRect;
    }
 
-   function drawLine(shape) {
+   function drawLineBasedShape(klass, shape) {
       shape.stroke = getStrokeWidth(finalWidth);
 
       var line = {
@@ -337,7 +348,7 @@ function ImageMarkupBuilder(fabricCanvas) {
          line.minSize = line.maxSize = false;
       }
 
-      var fabricLine = new Shapes.Line(points, line);
+      var fabricLine = new klass(points, line);
       fabricLine.color = shape.color;
 
       markupObjects.push(fabricLine);
@@ -650,6 +661,7 @@ function ImageMarkupBuilder(fabricCanvas) {
                   markupString += "rectangle," + from.x + "x" + from.y + ","
                    + size.width + "x" + size.height + "," + color +  ";";
                   break;
+               case 'arrow':
                case 'line':
                   markupString += object.toMarkup(resizeRatio);
                   break;
