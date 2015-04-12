@@ -1,5 +1,4 @@
 var Fabric = require('fabric').fabric || fabric;
-var extend = Fabric.util.object.extend;
 var isNode = typeof window == 'undefined';
 var mixin = require('./mixin');
 
@@ -124,27 +123,13 @@ var Rectangle = Fabric.util.createClass(Fabric.Rect, {
       this.centerTransform = true;
       this.callSuper('center');
       this.centerTransform = false;
-   },
-
-   toObject: function(propertiesToInclude) {
-      return extend(this.callSuper('toObject', propertiesToInclude), {
-         color: this.color,
-         borderWidth: this.borderWidth,
-         stroke: this.stroke,
-         shapeName: this.shapeName,
-         outlineWidth: this.outlineWidth,
-         outlineStyle: this.outlineStyle
-      });
    }
 });
 
 var proto = Rectangle.prototype;
+mixin(proto, require('./clone.mixin'));
 mixin(proto, require('./highlighted_stroke.mixin'));
 mixin(proto, require('./limit_size'));
 mixin(proto, require('./nudge'));
-
-Rectangle.fromObject = function(object) {
-   return new Rectangle(object);
-};
 
 module.exports.klass = Rectangle;

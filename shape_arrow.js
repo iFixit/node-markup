@@ -3,6 +3,7 @@ var mixin = require('./mixin');
 
 var Arrow = Fabric.util.createClass(require('./shape_line').klass, {
    type: 'arrow',
+   shapeName: 'arrow',
 
    _stroke: function(ctx) {
       var angle = this._getAngle();

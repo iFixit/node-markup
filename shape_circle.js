@@ -31,21 +31,11 @@ var Circle = Fabric.util.createClass(Fabric.Circle, {
       var radius = Math.sqrt(xdiff * xdiff + ydiff * ydiff);
       this.scaleToWidth(this._limitDimension(radius * 2));
       this.setCoords();
-   },
-
-   toObject: function(propertiesToInclude) {
-      return extend(this.callSuper('toObject', propertiesToInclude), {
-         color: this.color,
-         borderWidth: this.borderWidth,
-         stroke: this.stroke,
-         shapeName: this.shapeName,
-         outlineWidth: this.outlineWidth,
-         outlineStyle: this.outlineStyle
-      });
    }
 });
 
 var proto = Circle.prototype;
+mixin(proto, require('./clone.mixin'));
 mixin(proto, require('./highlighted_stroke.mixin'));
 mixin(proto, require('./limit_size'));
 mixin(proto, require('./nudge'));
@@ -58,10 +48,5 @@ proto.incrementSize = function(increment) {
    this.scaleToWidth(this.currentWidth + increment);
    this.setCoords();
 };
-
-Circle.fromObject = function(object) {
-   return new Circle(object);
-};
-
 
 module.exports.klass = Circle;

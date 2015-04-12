@@ -45,14 +45,18 @@ var Line = Fabric.util.createClass(Fabric.Line, {
 });
 
 var proto = Line.prototype;
+mixin(proto, require('./clone.mixin'));
 mixin(proto, require('./highlighted_stroke.mixin'));
 mixin(proto, require('./limit_size'));
 mixin(proto, require('./nudge'));
 mixin(proto, require('./two_point_interactivity'));
 
-
-Line.fromObject = function(object) {
-   return new Line(object);
+// Overrides the method from the to_object.mixin beccause the
+// constructor of Line is differen than the rest of the shapes.
+proto.clone = function() {
+   var obj = this.toObject();
+   var points = [obj.x1, obj.y1, obj.x2, obj.y2];
+   return new this.constructor(points, obj);
 };
 
 module.exports.klass = Line;
