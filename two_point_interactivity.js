@@ -1,3 +1,6 @@
+var Fabric = require('fabric').fabric || fabric;
+var extend = Fabric.util.object.extend;
+
 module.exports = (function(){
 
    var Fabric = require('fabric').fabric || fabric;
@@ -105,12 +108,6 @@ module.exports = (function(){
          var oldT = this.top,
              oldL = this.left;
 
-         // // Make sure this doesn't become invisible
-         // if (this.width <= 2 && this.height <= 2) {
-         //    this.width = 2;
-         //    this.height = 2;
-         // }
-
          // Preconditions: width, height, borderWidth are all ints
          // left, top represent the middle of the line
          // Note x % 1 effectively does x - (int)x
@@ -158,6 +155,16 @@ module.exports = (function(){
              p2.x / scale + 'x' + p2.y / scale,
              this.color
          ].join(',') + ';';
-      }
+      },
+
+      toObject: function(propertiesToInclude) {
+         var points = this.getEndpoints();
+         return extend(this.callParent(propertiesToInclude), {
+            x1: points[0].x,
+            y1: points[0].y,
+            x2: points[1].x,
+            y2: points[1].y,
+         });
+      },
    }
 })();
