@@ -10,7 +10,8 @@ function ImageMarkupBuilder(fabricCanvas) {
       Rectangle:  require("./shape_rectangle").klass,
       Circle:     require("./shape_circle").klass,
       Line:       require("./shape_line").klass,
-      Arrow:      require("./shape_arrow").klass
+      Arrow:      require("./shape_arrow").klass,
+      Gap:        require("./shape_gap").klass
    };
 
    var colorValues = {
@@ -49,6 +50,9 @@ function ImageMarkupBuilder(fabricCanvas) {
    var addShapeDelegate = {
       arrow: function (data) {
          return drawLineBasedShape(Shapes.Arrow, data);
+      },
+      gap: function (data) {
+         return drawLineBasedShape(Shapes.Gap, data);
       },
       line: function (data) {
          return drawLineBasedShape(Shapes.Line, data);
@@ -210,6 +214,9 @@ function ImageMarkupBuilder(fabricCanvas) {
                         break;
                      case 'line':
                         drawLineBasedShape(Shapes.Line, shape);
+                        break;
+                     case 'gap':
+                        drawLineBasedShape(Shapes.Gap, shape);
                         break;
                      case 'arrow':
                         drawLineBasedShape(Shapes.Arrow, shape);
@@ -617,6 +624,7 @@ function ImageMarkupBuilder(fabricCanvas) {
                   markupString += "rectangle," + from.x + "x" + from.y + ","
                    + size.width + "x" + size.height + "," + color +  ";";
                   break;
+               case 'gap':
                case 'arrow':
                case 'line':
                   markupString += object.toMarkup(resizeRatio);

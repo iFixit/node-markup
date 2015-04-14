@@ -8,7 +8,7 @@ function setupMarkerCreation(markupBuilder) {
        mouseDownEvent,
        color,
        currentShape,
-       shapeMode = Enum(['circle', 'rectangle', 'line', 'arrow']);
+       shapeMode = Enum(['circle', 'rectangle', 'line', 'arrow', 'gap']);
 
    canvas.on({
    'mouse:down': function(event) {
@@ -50,6 +50,22 @@ function setupMarkerCreation(markupBuilder) {
       currentShape = null;
    }
 
+   function lineCreator(type) {
+      return function(mouseStart, mouseCurrent) {
+         return {
+            type: type,
+            from: {
+               x: x(mouseStart),
+               y: y(mouseStart)
+            },
+            to: {
+               x: x(mouseCurrent),
+               y: y(mouseCurrent)
+            }
+         };
+      };
+   }
+
    var shapeCreators = {
       'circle': function(e1, e2) {
          return {
@@ -75,32 +91,9 @@ function setupMarkerCreation(markupBuilder) {
             }
          };
       },
-      'arrow': function(mouseStart, mouseCurrent) {
-         return {
-            type: 'arrow',
-            from: {
-               x: x(mouseStart),
-               y: y(mouseStart)
-            },
-            to: {
-               x: x(mouseCurrent),
-               y: y(mouseCurrent)
-            }
-         };
-      },
-      'line': function(mouseStart, mouseCurrent) {
-         return {
-            type: 'line',
-            from: {
-               x: x(mouseStart),
-               y: y(mouseStart)
-            },
-            to: {
-               x: x(mouseCurrent),
-               y: y(mouseCurrent)
-            }
-         };
-      },
+      'line':  lineCreator('line'),
+      'arrow': lineCreator('arrow'),
+      'gap':   lineCreator('gap'),
    }
 
    markupBuilder.shapeCreator = {

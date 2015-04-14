@@ -187,6 +187,39 @@ module.exports = (function(){
             x2: points[1].x,
             y2: points[1].y,
          });
+      },
+
+      /**
+       * Returns the angle of this line in radians
+       * where horizontal and x1 < x2 * y2 = 0
+       */
+      _getAngle: function() {
+         return Math.atan2(this._getDeltaY(), this._getDeltaX());
+      },
+
+      /**
+       * Get the deltaX of the given line.
+       * Note: rounds to 0 if <= 1 cause Fabric never allows 0-width
+       * objects.
+       */
+      _getDeltaX: function() {
+         var delta = this.x1 <= this.x2 ? -this.width : this.width;
+         return Math.abs(delta) <= 1 ? 0 : delta;
+      },
+
+      /**
+       * Get the deltaY of the given line.
+       * Note: rounds to 0 if <= 1 cause Fabric never allows
+       * 0-width objects.
+       */
+      _getDeltaY: function() {
+         var delta = this.y1 <= this.y2 ? -this.height : this.height;
+         return Math.abs(delta) <= 1 ? 0 : delta;
+      },
+
+      _getLength: function() {
+         return Math.sqrt(this.width * this.width +
+                          this.height * this.height);
       }
    }
 })();
