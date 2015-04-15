@@ -6,6 +6,13 @@ module.exports = (function(){
    var Fabric = require('fabric').fabric || fabric;
 
    return {
+      initialize: function() {
+         // Disable all controls by default
+         this._controlsVisibility = { };
+         this._enableCorrectControls();
+         this.callParent.apply(this, arguments);
+      },
+
       _limitByDiagonal: true,
 
       /**
@@ -27,7 +34,25 @@ module.exports = (function(){
          this.x2 = x1 + ratio * xd;
          this.y2 = y1 + ratio * yd;
          this._setWidthHeight();
+         this._resetScale();
          this.setCoords();
+      },
+
+      /**
+       * Enable only the controls that make sense for the given direction of
+       * the line. This prevents the user from clicking controls that we don't
+       * draw.
+       */
+      _enableCorrectControls: function () {
+         var px = this._signOfDeltaX();
+         var py = this._signOfDeltaY();
+         var sameSign = px === py;
+         this.setControlsVisibility({
+            tl: sameSign,
+            br: sameSign,
+            tr: !sameSign,
+            bl: !sameSign
+         });
       },
 
       /**
@@ -37,15 +62,6 @@ module.exports = (function(){
        * scale transform present when drawing the stroke.
        */
       _set: function(key, value) {
-         if (key === 'scaleX' && value < 0) {
-            var x1 = this.x1
-            this.x1 = this.x2; this.x2 = x1;
-         }
-         else if (key === 'scaleY' && value < 0) {
-            var y1 = this.y1
-            this.y1 = this.y2; this.y2 = y1;
-         }
-
          this.callParent(key, value);
          this._resetScale();
          return this;
@@ -61,20 +77,18 @@ module.exports = (function(){
          if (this.scaleX == 0) {
             this.width = 1
          } else {
-            // Note: there is a brief period (one frame) where the scale goes
-            // negative when the resize control crosses an axis. Using abs()
-            // keeps the motion fluid instead of a few pixel jump.
-            this.width *= Math.abs(this.scaleX);
+            this.width *= this.scaleX;
          }
 
          if (this.scaleY == 0) {
             this.height = 1;
          } else {
-            this.height *= Math.abs(this.scaleY);
+            this.height *= this.scaleY;
          }
 
          this.scaleX = 1;
          this.scaleY = 1;
+         this._enableCorrectControls();
       },
 
       /**
@@ -88,7 +102,7 @@ module.exports = (function(){
       /**
        * Override the `drawControls` to only draw handles at endpoints of the
        * line (two corners of the bounding box) instead of all corners and all
-       * midpoints.
+       * midpoints. Also, draw pretty circles instead of squares.
        */
       drawControls: function(ctx) {
          var self = this;
@@ -103,9 +117,9 @@ module.exports = (function(){
          function circle(x,y) {
             ctx.arc(x, y, self.cornerSize/1.4, 0, 2 * Math.PI, false);
          }
-   
-         var flipX = self.x1 > self.x2 ? 1 : -1;
-         var flipY = self.y1 > self.y2 ? 1 : -1;
+
+         var flipX = self._signOfDeltaX();
+         var flipY = self._signOfDeltaY();
          var halfWidth  = self.width  === 1 ? 0 : self.width / 2;
          var halfHeight = self.height === 1 ? 0 : self.height / 2;
          // In this context, 0,0 is the center of the line so we draw a handle
@@ -149,8 +163,8 @@ module.exports = (function(){
 
       getEndpoints: function() {
          var self = this;
-         var flipX = this.flipX ? -1 :  1;
-         var flipY = this.flipY ? -1 :  1;
+         var flipX = self._signOfDeltaX();
+         var flipY = self._signOfDeltaY();
          // Objects in fabric can't have 0-width, so a vertical line ends up
          // with witdth = 1 so we detect that and ensure the midpoint isn't on
          // a pixel boundary and the width actually ends up 0.
@@ -164,6 +178,20 @@ module.exports = (function(){
             x2: (left - halfWidth * flipX),
             y2: (top - halfHeight * flipY)
          };
+      },
+
+      _signOfDeltaX: function() {
+         // During creation, These point values change
+         var flip = (this.x1 > this.x2) ? -1 :  1;
+         // During sizing, the this.flip? values change 
+         return (this.flipX) ? -flip : flip;
+      },
+
+      _signOfDeltaY: function() {
+         // During creation, These point values change
+         var flip = (this.y1 > this.y2) ? -1 :  1;
+         // During sizing, the this.flip? values change 
+         return (this.flipY) ? -flip : flip;
       },
 
       toMarkup: function(scale) {
