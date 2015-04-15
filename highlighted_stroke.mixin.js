@@ -1,6 +1,6 @@
 module.exports = {
    borderWidth: 4,
-   strokeWidth: 0,
+   strokeWidth: 0.1,
    // in percentage of borderWidth
    outlineWidth: 0.25,
    outlineStyle: '#FFF',
