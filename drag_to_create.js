@@ -40,7 +40,7 @@ function setupMarkerCreation(markupBuilder) {
 
       var config = shapeCreators[shapeMode.get()](mouseStart, mouseCurrent);
       config.color = color;
-      currentShape = markupBuilder.addShape(config)
+      currentShape = markupBuilder.addShape(config);
       currentShape.perPixelTargetFind = true;
    }
 
@@ -93,7 +93,7 @@ function setupMarkerCreation(markupBuilder) {
       },
       'line':  lineCreator('line'),
       'arrow': lineCreator('arrow'),
-      'gap':   lineCreator('gap'),
+      'gap':   lineCreator('gap')
    }
 
    markupBuilder.shapeCreator = {
