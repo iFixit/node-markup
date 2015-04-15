@@ -149,8 +149,8 @@ module.exports = (function(){
 
       getEndpoints: function() {
          var self = this;
-         var flipX = self.x1 > self.x2 ? 1 : -1;
-         var flipY = self.y1 > self.y2 ? 1 : -1;
+         var flipX = this.flipX ? -1 :  1;
+         var flipY = this.flipY ? -1 :  1;
          // Objects in fabric can't have 0-width, so a vertical line ends up
          // with witdth = 1 so we detect that and ensure the midpoint isn't on
          // a pixel boundary and the width actually ends up 0.
@@ -158,35 +158,27 @@ module.exports = (function(){
          var halfHeight = self.height === 1 ? 0 : self.height / 2;
          var left = self.width  === 1 ? Math.floor(self.left) : self.left;
          var top  = self.height === 1 ? Math.floor(self.top)  : self.top;
-         return [{
-            x: (left + halfWidth * flipX),
-            y: (top + halfHeight * flipY)
-         },{
-            x: (left - halfWidth * flipX),
-            y: (top - halfHeight * flipY)
-         }];
+         return {
+            x1: (left + halfWidth * flipX),
+            y1: (top + halfHeight * flipY),
+            x2: (left - halfWidth * flipX),
+            y2: (top - halfHeight * flipY)
+         };
       },
 
       toMarkup: function(scale) {
-         var points = this.getEndpoints();
-         var p1 = points[0],
-             p2 = points[1];
+         var p = this.getEndpoints();
          return [
              this.type,
-             p1.x / scale + 'x' + p1.y / scale,
-             p2.x / scale + 'x' + p2.y / scale,
+             p.x1 / scale + 'x' + p.y1 / scale,
+             p.x2 / scale + 'x' + p.y2 / scale,
              this.color
          ].join(',') + ';';
       },
 
       toObject: function(propertiesToInclude) {
          var points = this.getEndpoints();
-         return extend(this.callParent(propertiesToInclude), {
-            x1: points[0].x,
-            y1: points[0].y,
-            x2: points[1].x,
-            y2: points[1].y,
-         });
+         return extend(this.callParent(propertiesToInclude), points);
       },
 
       /**
