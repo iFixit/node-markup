@@ -14,12 +14,6 @@ var Line = Fabric.util.createClass(Fabric.Line, {
    // New fields.
    shapeName: 'line',
    sizeLimits: [0.04, 0.4],
-
-   render: function(ctx) {
-      this._fixAndRestoreSubPixelPositioning(function() {
-         this.callSuper('render', ctx, /* noTransform */ false);
-      });
-   },
 });
 
 var proto = Line.prototype;

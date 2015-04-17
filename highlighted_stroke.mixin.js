@@ -1,8 +1,8 @@
 module.exports = {
-   borderWidth: 4,
+   borderWidth: 5,
    strokeWidth: 0.1,
    // in percentage of borderWidth
-   outlineWidth: 0.25,
+   outlineWidth: 0.20,
    outlineStyle: '#FFF',
 
    /**
@@ -11,8 +11,8 @@ module.exports = {
     */
    _stroke: function(ctx) {
       var myScale = this.scaleX;
-      var outline = Math.floor(this.borderWidth * this.outlineWidth);
-      function scale(x) { return (x / myScale); }
+      var outline = this._outlineWidth();
+      function scale(x) { return Math.round(x / myScale); }
       ctx.lineWidth = scale(this.borderWidth + outline);
       ctx.strokeStyle = this.outlineStyle;
       ctx.stroke();
@@ -20,5 +20,9 @@ module.exports = {
       ctx.lineWidth = scale(this.borderWidth - outline);
       ctx.strokeStyle = this.stroke;
       ctx.stroke();
+   },
+
+   _outlineWidth: function() {
+      return Math.max(1,Math.round(this.borderWidth * this.outlineWidth));
    }
 };

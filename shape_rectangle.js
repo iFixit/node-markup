@@ -65,7 +65,9 @@ var Rectangle = Fabric.util.createClass(Fabric.Rect, {
 
       // If the left-most edge of the border is not directly on a pixel
       // then niether is the right-most border, 
-      var borderWidth = this.borderWidth + (this.outlineWidth * this.borderWidth);
+      var self = this;
+      function scale(x) { return Math.round(x / self.scaleX); }
+      var borderWidth = scale(this.borderWidth + this._outlineWidth());
       var partialX = (this.left + borderWidth / 2) % 1;
       var partialY = (this.top + borderWidth / 2) % 1;
       if (partialX != 0) {

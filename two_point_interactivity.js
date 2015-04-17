@@ -13,6 +13,13 @@ module.exports = (function(){
          this.callParent.apply(this, arguments);
       },
 
+      render: function(ctx) {
+         this._resetScale();
+         this._fixAndRestoreSubPixelPositioning(function() {
+            this.callParent(ctx);
+         });
+      },
+
       _limitByDiagonal: true,
 
       /**
@@ -142,23 +149,32 @@ module.exports = (function(){
        */
       _fixAndRestoreSubPixelPositioning: function(callback) {
          var oldT = this.top,
-             oldL = this.left;
+             oldL = this.left,
+             oldW = this.width,
+             oldH = this.height;
 
          // Preconditions: width, height, borderWidth are all ints
          // left, top represent the middle of the line
          // Note x % 1 effectively does x - (int)x
-         var borderWidth = this.borderWidth + (this.outlineWidth * this.borderWidth);
+         var self = this;
+         function scale(x) { return Math.round(x / self.scaleX); }
+         var borderWidth = scale(this.borderWidth + this._outlineWidth());
+
          if (this.width <= 1) {
             this.left -= (this.left + borderWidth / 2) % 1;
+            this.width = 0;
          }
          if (this.height <= 1) {
             this.top -= (this.top + borderWidth / 2) % 1;
+            this.height = 0;
          }
 
          callback.call(this);
 
-         this.top  = oldT;
-         this.left = oldL;
+         this.top    = oldT;
+         this.left   = oldL;
+         this.width  = oldW;
+         this.height = oldH;
       },
 
       getEndpoints: function() {
