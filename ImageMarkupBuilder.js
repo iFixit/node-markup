@@ -162,15 +162,17 @@ function ImageMarkupBuilder(fabricCanvas) {
                img = {
                   'width': dimensions.width,
                   'height': dimensions.height,
+                  originX: 'left',
+                  originY: 'top',
                   'src': blob
                };
 
                Fabric.Image.fromObject(img, function(fimg) {
-                  top = img.height/2 - imageOffset.y;
+                  var top = - imageOffset.y;
                   if (top % 1 != 0) {
                      top -= 0.5;
                   }
-                  left = img.width / 2 - imageOffset.x;
+                  var left = - imageOffset.x;
                   if (left % 1 != 0) {
                      left -= 0.5;
                   }
