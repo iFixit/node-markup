@@ -629,7 +629,7 @@ function ImageMarkupBuilder(fabricCanvas) {
                case 'gap':
                case 'arrow':
                case 'line':
-                  markupString += object.toMarkup(resizeRatio);
+                  markupString += object.toMarkup(resizeRatio, imageOffset);
                   break;
                default:
                   console.error("Unexpected object name: " + object.shapeName);

@@ -179,20 +179,26 @@ module.exports = (function(){
 
       getEndpoints: function() {
          var self = this;
+
          var flipX = self._signOfDeltaX();
          var flipY = self._signOfDeltaY();
          // Objects in fabric can't have 0-width, so a vertical line ends up
          // with witdth = 1 so we detect that and ensure the midpoint isn't on
          // a pixel boundary and the width actually ends up 0.
-         var halfWidth  = self.width  === 1 ? 0 : self.width / 2;
-         var halfHeight = self.height === 1 ? 0 : self.height / 2;
-         var left = self.width  === 1 ? Math.floor(self.left) : self.left;
-         var top  = self.height === 1 ? Math.floor(self.top)  : self.top;
+         var width  = self.width  === 1 ? 0 : self.width;
+         var height = self.height === 1 ? 0 : self.height;
+         var left   = self.width  === 1 ? Math.floor(self.left) : self.left;
+         var top    = self.height === 1 ? Math.floor(self.top)  : self.top;
+         var r = Math.round;
+         var x1 = flipX == 1 ? left : left + width;
+         var y1 = flipY == 1 ? top  : top + height;
+         var x2 = flipX == 1 ? left + width : left;
+         var y2 = flipY == 1 ? top + height : top;
          return {
-            x1: (left + halfWidth * flipX),
-            y1: (top + halfHeight * flipY),
-            x2: (left - halfWidth * flipX),
-            y2: (top - halfHeight * flipY)
+            x1: x1,
+            y1: y1,
+            x2: x2,
+            y2: y2
          };
       },
 
@@ -210,12 +216,13 @@ module.exports = (function(){
          return (this.flipY) ? -flip : flip;
       },
 
-      toMarkup: function(scale) {
+      toMarkup: function(scale, offset) {
          var p = this.getEndpoints();
+         var ox = offset.x, oy = offset.y;
          return [
              this.type,
-             p.x1 / scale + 'x' + p.y1 / scale,
-             p.x2 / scale + 'x' + p.y2 / scale,
+             (p.x1 / scale + ox) + 'x' + (p.y1 / scale + oy),
+             (p.x2 / scale + ox) + 'x' + (p.y2 / scale + oy),
              this.color
          ].join(',') + ';';
       },
