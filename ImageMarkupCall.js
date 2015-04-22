@@ -168,6 +168,8 @@ function convertMarkupToJSON(callback, markup, infile, outfile) {
             json['instructions']['draw'].push({'rectangle': rectangle});
             break;
          case 'line':
+         case 'arrow':
+         case 'gap':
             if (!json['instructions']['draw']) json['instructions']['draw'] = new Array();
 
             var p1 = args[1].split("x");
@@ -184,8 +186,10 @@ function convertMarkupToJSON(callback, markup, infile, outfile) {
                },
                color: args[3]
             };
+            var instruction = {};
+            instruction[command] = line;
 
-            json['instructions']['draw'].push({line: line});
+            json['instructions']['draw'].push(instruction);
             break;
          default:
       }
