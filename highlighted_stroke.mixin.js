@@ -12,7 +12,7 @@ module.exports = {
    _stroke: function(ctx) {
       var myScale = this.scaleX;
       var outline = this._outlineWidth();
-      function scale(x) { return Math.round(x / myScale); }
+      function scale(x) { return Math.round(x) / myScale; }
       ctx.lineWidth = scale(this.borderWidth + outline);
       ctx.strokeStyle = this.outlineStyle;
       ctx.stroke();
