@@ -14,7 +14,7 @@ var Circle = Fabric.util.createClass(Fabric.Circle, {
    hasRotatingPoint: false,
    lockUniScaling: true,
    fill: 'transparent',
-   centerTransform: true,
+   centeredScaling: true,
 
    // New fields.
    shapeName: 'circle',

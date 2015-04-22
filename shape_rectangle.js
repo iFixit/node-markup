@@ -122,9 +122,11 @@ var Rectangle = Fabric.util.createClass(Fabric.Rect, {
    },
 
    center: function() {
-      this.centerTransform = true;
       this.callSuper('center');
-      this.centerTransform = false;
+      this.top    = Math.round(this.top);
+      this.left   = Math.round(this.left);
+      this.width  = Math.round(this.width);
+      this.height = Math.round(this.height);
    }
 });
 
