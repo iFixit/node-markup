@@ -8,7 +8,7 @@ var Rectangle = Fabric.util.createClass(Fabric.Rect, {
    originX: 'left',
    originY: 'top',
    lockRotation: true,
-   transparentCorners: false,
+   transparentCorners: true,
    hasRotatingPoint: false,
    hasBorders: false,
    fill: 'transparent',
@@ -127,6 +127,14 @@ var Rectangle = Fabric.util.createClass(Fabric.Rect, {
       this.left   = Math.round(this.left);
       this.width  = Math.round(this.width);
       this.height = Math.round(this.height);
+   },
+
+   /**
+    * Override the parent function so we can explictly use fillRect without
+    * it calling 'clearRect' as well.
+    */
+   _drawControl: function(control, ctx, methodName, left, top) {
+      return this.callSuper('_drawControl', control, ctx, 'fillRect', left, top);
    }
 });
 
