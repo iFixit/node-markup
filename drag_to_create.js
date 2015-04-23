@@ -16,19 +16,22 @@ function setupMarkerCreation(markupBuilder) {
       mouseDownEvent = event.e;
    },'mouse:move': function(event) {
       if (!enabled) return;
+      function updateShape() {
+         currentShape._withSizeLimitations(function() {
+            currentShape.sizeByMousePos(x(mouseDownEvent), y(mouseDownEvent), x(event.e), y(event.e));
+         });
+         canvas.renderAll();
+      }
       if (!dragging) {
          if (mouseDownEvent && !canvas.getActiveObject()) {
             var dragDist = distance(mouseDownEvent, event.e);
             if (dragDist > 10) {
                startDragging(mouseDownEvent, event.e);
+               updateShape();
             }
          }
       } else {
-         
-         currentShape._withSizeLimitations(function() {
-            currentShape.sizeByMousePos(x(mouseDownEvent), y(mouseDownEvent), x(event.e), y(event.e));
-         });
-         canvas.renderAll();
+         updateShape();
       }
    }, 'mouse:up': function() {
       if (mouseDownEvent)
