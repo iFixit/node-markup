@@ -46,7 +46,8 @@ mixin(proto, require('./nudge'));
  * Note: At the end so it overwrites the one in the `nudge` mixin
  */
 proto.incrementSize = function(increment) {
-   this.scaleToWidth(this.currentWidth + increment);
+   var r = this.radius + increment/2;
+   this.setRadius(this._limitDimension(r*2)/2);
    this.setCoords();
 };
 

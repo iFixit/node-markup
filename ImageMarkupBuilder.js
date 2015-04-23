@@ -520,10 +520,12 @@ function ImageMarkupBuilder(fabricCanvas) {
             return;
          }
 
-         shape.incrementSize(increment);
-         if (fabricCanvas.isOffScreen(shape)) {
-            shape.incrementSize(increment * -1);
-         }
+         shape._withSizeLimitations(function() {
+            shape.incrementSize(increment);
+            if (fabricCanvas.isOffScreen(shape)) {
+               shape.incrementSize(increment * -1);
+            }
+         }, true);
 
          shape.setCoords();
          fabricCanvas.renderAll();

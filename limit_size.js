@@ -17,9 +17,11 @@ module.exports = {
       return Math.max(this.canvas.width, this.canvas.height);
    },
 
-   _withSizeLimitations: function(callback) {
+   _withSizeLimitations: function(callback, skipMax) {
       this._limitSize = true;
+      this._skipMax = skipMax;
       callback.apply(this);
+      this._skipMax = false;
       this._limitSize = false;
    },
 
@@ -78,7 +80,7 @@ module.exports = {
       }
 
       var min = this._minSize();
-      var max = this._maxSize();
+      var max = this._skipMax ? false : this._maxSize();
 
       if (min !== false) {
          // Sometimes we have to limit negative values too (see: scaleX)

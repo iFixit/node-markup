@@ -11,8 +11,10 @@ module.exports = {
       }
       var deltaX = increment * portionW;
       var deltaY = increment * (1 - portionW);
-      var newWidth = this.width + deltaX
-      var newHeight = this.height + deltaY
+      deltaX = this._limitDimension(this.width  + deltaX) - this.width;
+      deltaY = this._limitDimension(this.height + deltaY) - this.height;
+      var newWidth  = this.width + deltaX;
+      var newHeight = this.height + deltaY;
 
       // Checks to see if the new size will be too big/small.
       this.width = newWidth;
