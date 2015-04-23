@@ -19,7 +19,7 @@ var Circle = Fabric.util.createClass(Fabric.Circle, {
    // New fields.
    shapeName: 'circle',
    color: 'red',
-   sizeLimits: [0.05, 0.4],
+   sizeLimits: [0.03, 0.4],
 
    /**
     * Resizes this shape using the two mouse coords (first is treated as the
@@ -29,7 +29,8 @@ var Circle = Fabric.util.createClass(Fabric.Circle, {
       var xdiff = x2 - this.left;
       var ydiff = y2 - this.top;
       var radius = Math.sqrt(xdiff * xdiff + ydiff * ydiff);
-      this.scaleToWidth(this._limitDimension(radius * 2));
+      var diameter = this._limitDimension(radius * 2);
+      this.setRadius(diameter / 2);
       this.setCoords();
    }
 });
