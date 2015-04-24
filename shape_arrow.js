@@ -16,7 +16,7 @@ var Arrow = Fabric.util.createClass(require('./shape_line').klass, {
       var y  = Math.sin(angle - headWidthRadians) * size;
       var x2 = Math.cos(angle + headWidthRadians) * size;
       var y2 = Math.sin(angle + headWidthRadians) * size;
-      ctx.translate(-this._getDeltaX()/2, -this._getDeltaY()/2);
+      ctx.translate(-this._getDeltaX() / 2, -this._getDeltaY() / 2);
       ctx.moveTo(x, y);
       ctx.lineTo(0, 0);
       ctx.lineTo(x2, y2);
