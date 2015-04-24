@@ -23,7 +23,7 @@ module.exports = {
    },
 
    _outlineWidth: function() {
-      return Math.max(1,Math.round(this.borderWidth * this.outlineWidth));
+      return Math.max(1, Math.round(this.borderWidth * this.outlineWidth));
    },
 
    /**
