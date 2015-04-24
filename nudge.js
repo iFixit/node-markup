@@ -34,22 +34,22 @@ module.exports = {
     *  right} each with a true/false value.
     * @param distance The number of pixels to move the shape.
     */
-   grow: function nudge(directionMap, distance) {
+   grow: function(directionMap, distance) {
       var shape = this;
       if (directionMap.left) {
-         shape.left -= distance/2;
+         shape.left -= distance / 2;
          shape.incrementSize(distance, 'X');
       }
       if (directionMap.right) {
-         shape.left += distance/2;
+         shape.left += distance / 2;
          shape.incrementSize(distance, 'X');
       }
       if (directionMap.up) {
-         shape.top -= distance/2;
+         shape.top -= distance / 2;
          shape.incrementSize(distance, 'Y');
       }
       if (directionMap.down) {
-         shape.top += distance/2;
+         shape.top += distance / 2;
          shape.incrementSize(distance, 'Y');
       }
       shape.setCoords();
@@ -63,7 +63,7 @@ module.exports = {
     *  right} each with a true/false value.
     * @param distance The number of pixels to move the shape.
     */
-   nudge: function nudge(directionMap, distance) {
+   nudge: function(directionMap, distance) {
       var shape = this;
 
       if (directionMap.left) {
