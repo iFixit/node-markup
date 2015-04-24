@@ -2,8 +2,6 @@ var Fabric = require('fabric').fabric || fabric;
 var extend = Fabric.util.object.extend;
 
 module.exports = (function() {
-   var Fabric = require('fabric').fabric || fabric;
-
    return {
       initialize: function() {
          // Disable all controls by default
