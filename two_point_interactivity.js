@@ -1,8 +1,7 @@
 var Fabric = require('fabric').fabric || fabric;
 var extend = Fabric.util.object.extend;
 
-module.exports = (function(){
-
+module.exports = (function() {
    var Fabric = require('fabric').fabric || fabric;
 
    return {
@@ -82,7 +81,7 @@ module.exports = (function(){
          // There is a brief period where scaleX == 0 and fabric.js disappears
          // objects that have width = 0 so we can't let that happen.
          if (this.scaleX == 0) {
-            this.width = 1
+            this.width = 1;
          } else {
             this.width *= this.scaleX;
          }
@@ -189,7 +188,6 @@ module.exports = (function(){
          var height = self.height === 1 ? 0 : self.height;
          var left   = self.width  === 1 ? Math.floor(self.left) : self.left;
          var top    = self.height === 1 ? Math.floor(self.top)  : self.top;
-         var r = Math.round;
          var x1 = flipX == 1 ? left : left + width;
          var y1 = flipY == 1 ? top  : top + height;
          var x2 = flipX == 1 ? left + width : left;
