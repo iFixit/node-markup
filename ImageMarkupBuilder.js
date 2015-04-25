@@ -1,16 +1,17 @@
 var isNode = typeof window == 'undefined';
 
-
 /**
  * Expects a Fabric.js Canvas
  */
 function ImageMarkupBuilder(fabricCanvas) {
    var Fabric = require('fabric').fabric || fabric;
-   var FS = require('fs');
 
    var Shapes = {
       Rectangle:  require("./shape_rectangle").klass,
-      Circle:     require("./shape_circle").klass
+      Circle:     require("./shape_circle").klass,
+      Line:       require("./shape_line").klass,
+      Arrow:      require("./shape_arrow").klass,
+      Gap:        require("./shape_gap").klass
    };
 
    var colorValues = {
@@ -37,23 +38,6 @@ function ImageMarkupBuilder(fabricCanvas) {
    var imageOffset;
    var resizeRatio = 1;
    var finalWidth = 0;
-   var minimumSize = {
-      circle: 8,
-      rectangle: 16
-   };
-   var maximumSize = {
-      circle: 64,
-      rectangle: 128
-   };
-   var maximumSizeRatio = {
-      circle: 0.3, // Max size of radius
-      rectangle: 0.8 // Max size of side
-   };
-   var initialSize = {
-      circle: 12,
-      rectangle: 24
-   };
-
    var markupObjects = new Array();
 
    var whiteStroke = isNode ? 1 : 0.5;
@@ -64,6 +48,15 @@ function ImageMarkupBuilder(fabricCanvas) {
     * Array of delegate functions to draw a proper shape.
     */
    var addShapeDelegate = {
+      arrow: function (data) {
+         return drawLineBasedShape(Shapes.Arrow, data);
+      },
+      gap: function (data) {
+         return drawLineBasedShape(Shapes.Gap, data);
+      },
+      line: function (data) {
+         return drawLineBasedShape(Shapes.Line, data);
+      },
       circle: drawCircle,
       rectangle: function (data) {
          // Because fabric considers top/left as the center of the rectangle.
@@ -73,6 +66,20 @@ function ImageMarkupBuilder(fabricCanvas) {
          return drawRectangle(data);
       }
    };
+
+   /**
+    * Returns true if the given object is off the edge of the fabric canvas.
+    * This is defined as whether the color stroke would be the only part of
+    * the shape still visible at those coordinates.
+    */
+   fabricCanvas.isOffScreen = function(object) {
+      var rect = object.getBoundingRect();
+      return (rect.left + rect.width - (strokeWidth * 2) < 0 ||
+              rect.left + (strokeWidth * 2) > this.width ||
+              rect.top + rect.height - (strokeWidth * 2) < 0 ||
+              rect.top + (strokeWidth * 2) > this.height);
+   }
+
 
    /**
     * Simple clone function for use in deep-copying objects containing
@@ -118,19 +125,6 @@ function ImageMarkupBuilder(fabricCanvas) {
       }
    }
 
-   /**
-    * Returns if the given object is off the edge of the fabric canvas.
-    * This is defined as whether the color stroke would be the only part of
-    * the shape still visible at those coordinates.
-    */
-   function isOffScreen(object) {
-      var rect = object.getBoundingRect();
-      return (rect.left + rect.width - (strokeWidth * 2) < 0 ||
-              rect.left + (strokeWidth * 2) > fabricCanvas.width ||
-              rect.top + rect.height - (strokeWidth * 2) < 0 ||
-              rect.top + (strokeWidth * 2) > fabricCanvas.height);
-   }
-
    function applyBackground(callback) {
       if (!isNode) {
          //Listen for shapes falling off the edge and delete
@@ -138,7 +132,7 @@ function ImageMarkupBuilder(fabricCanvas) {
             'object:modified': function (e) {
                var shape = e.target;
 
-               if (isOffScreen(shape))
+               if (fabricCanvas.isOffScreen(shape))
                   remove(shape);
             }.bind(this)
          });
@@ -161,22 +155,24 @@ function ImageMarkupBuilder(fabricCanvas) {
             whiteStroke = 1;
          }
          if (isNode) {
-            FS.readFile(innerJSON.sourceFile, function (err, blob) {
+            require('fs').readFile(innerJSON.sourceFile, function (err, blob) {
                if (err) throw err;
 
                var dimensions = innerJSON.dimensions;
                img = {
                   'width': dimensions.width,
                   'height': dimensions.height,
+                  originX: 'left',
+                  originY: 'top',
                   'src': blob
                };
 
                Fabric.Image.fromObject(img, function(fimg) {
-                  top = img.height/2 - imageOffset.y;
+                  var top = - imageOffset.y;
                   if (top % 1 != 0) {
                      top -= 0.5;
                   }
-                  left = img.width / 2 - imageOffset.x;
+                  var left = - imageOffset.x;
                   if (left % 1 != 0) {
                      left -= 0.5;
                   }
@@ -218,6 +214,15 @@ function ImageMarkupBuilder(fabricCanvas) {
                      case 'circle':
                         drawCircle(shape);
                         break;
+                     case 'line':
+                        drawLineBasedShape(Shapes.Line, shape);
+                        break;
+                     case 'gap':
+                        drawLineBasedShape(Shapes.Gap, shape);
+                        break;
+                     case 'arrow':
+                        drawLineBasedShape(Shapes.Arrow, shape);
+                        break;
                      default:
                         console.error('Unsupported Shape: ' + shapeName);
                   }
@@ -246,7 +251,7 @@ function ImageMarkupBuilder(fabricCanvas) {
     */
    function writeCanvas(callback) {
       fabricCanvas.renderAll();
-      var outstream = FS.createWriteStream(innerJSON.destinationFile),
+      var outstream = require('fs').createWriteStream(innerJSON.destinationFile),
       stream = fabricCanvas.createJPEGStream({
          quality: 93,
          progressive: true
@@ -281,10 +286,6 @@ function ImageMarkupBuilder(fabricCanvas) {
          top: shape.from.y - imageOffset.y,
          width: shape.size.width,
          height: shape.size.height,
-         minSize: minimumSize.rectangle,
-         maxSize: maximumSize.rectangle,
-         rx: 1,
-         ry: 1,
          borderWidth: shape.stroke,
          stroke: colorValues[shape.color],
          color: shape.color
@@ -295,14 +296,6 @@ function ImageMarkupBuilder(fabricCanvas) {
       rect.left *= resizeRatio;
       rect.width *= resizeRatio;
       rect.height *= resizeRatio;
-
-      if (isNode) {
-         rect.minSize = rect.maxSize = false;
-      }
-
-      if (isNode && shadows == true) {
-         drawShadow(rect, shadowStep);
-      }
 
       var fabricRect = new Shapes.Rectangle(rect);
 
@@ -317,6 +310,36 @@ function ImageMarkupBuilder(fabricCanvas) {
       return fabricRect;
    }
 
+   function drawLineBasedShape(klass, shape) {
+      shape.stroke = getStrokeWidth(finalWidth);
+
+      var line = {
+         borderWidth: shape.stroke,
+         stroke: colorValues[shape.color],
+         color: shape.color
+      }
+
+      var points = [
+         shape.from.x * resizeRatio,
+         shape.from.y * resizeRatio,
+         shape.to.x * resizeRatio,
+         shape.to.y * resizeRatio
+      ];
+
+      var fabricLine = new klass(points, line);
+      fabricLine.color = shape.color;
+
+      markupObjects.push(fabricLine);
+      fabricCanvas.add(fabricLine);
+
+      if (!isNode) {
+         // Set this as the active object
+         fabricCanvas.setActiveObject(fabricLine);
+      }
+
+      return fabricLine;
+   }
+
    function drawCircle(shape) {
       shape.stroke = getStrokeWidth(finalWidth);
 
@@ -324,8 +347,6 @@ function ImageMarkupBuilder(fabricCanvas) {
          left: shape.from.x - imageOffset.x,
          top: shape.from.y - imageOffset.y,
          radius: shape.radius,
-         minSize: minimumSize.circle,
-         maxSize: maximumSize.circle,
          borderWidth: shape.stroke,
          stroke: colorValues[shape.color],
          color: shape.color
@@ -333,14 +354,6 @@ function ImageMarkupBuilder(fabricCanvas) {
       circle.left    *= resizeRatio;
       circle.top     *= resizeRatio;
       circle.radius  *= resizeRatio;
-
-      if (isNode) {
-         circle.minSize = circle.maxSize = false;
-      }
-
-      if (isNode && shadows == true) {
-         drawShadow(circle, shadowStep);
-      }
 
       var fabricCircle = new Shapes.Circle(circle);
       markupObjects.push(fabricCircle);
@@ -353,85 +366,6 @@ function ImageMarkupBuilder(fabricCanvas) {
 
       return fabricCircle;
    }
-
-   /**
-    * Draw a fuzzy shadow for the shape given.
-    * Take care to draw the shadow before the shape.
-    */
-   function drawShadow(shape, step) {
-      if (step < 1) {
-         step = 1;
-      }
-      var shadow = Cloner.clone(shape);
-      if (step > shadow.strokeWidth) {
-         step = shadow.strokeWidth;
-      }
-
-      var offsetX = 8;
-      var offsetY = offsetX;
-
-      var shadow = Cloner.clone(shape);
-      shadow.left += offsetX;
-      shadow.top += offsetY;
-      shadow.rx = 5;
-      shadow.ry = 5;
-      shadow.stroke = 'rgba(0,0,0,0.5)';
-      shadow.strokeWidth = shadow.strokeWidth / step;
-      var stepWidth = shadow.strokeWidth;
-
-      //Empirically-derived pixel tweaks to line up shadow sizes with their
-      //parents. TODO: Base these numbers on something real.
-      var circleTweak = 0.6875;
-      var rectangleTweak = 1.3125;
-
-      //Adjust shadow outlines to outer edge, to work towards inside later.
-      switch (shape.shapeName) {
-         case 'circle':
-            shadow.radius += shape.strokeWidth * circleTweak;
-            shadow.strokeWidth *= 2;
-            break;
-         case 'rectangle':
-            shadow.width += shape.strokeWidth * rectangleTweak;
-            shadow.height += shape.strokeWidth * rectangleTweak;
-            shadow.strokeWidth *= 2;
-            break;
-         default:
-            console.error('Shape not implemented: ' + shape.shapeName);
-            return;
-      }
-
-      var alpha;
-      for (var i = 0; i < step; ++i) {
-         if (i < (step / 2)) {
-            alpha = (((i + 1) * 2) / (step));
-         }
-         else if (i == step / 2) {
-            //Math ain't working to my likings
-            alpha = 1;
-         }
-         else {
-            alpha = (((step - (i + 1)) * 2) / (step));
-         }
-
-         shadow.stroke = 'rgba(0,0,0,' + alpha + ')';
-
-         switch (shape.shapeName) {
-            case 'circle':
-               fabricCanvas.add(new Fabric.Circle(shadow));
-               shadow.radius = shadow.radius - stepWidth * 2 * 0.8;
-               break;
-            case 'rectangle':
-               fabricCanvas.add(new Fabric.Rect(shadow));
-               shadow.width = shadow.width - stepWidth * 4 * 0.8;
-               shadow.height = shadow.height - stepWidth * 4 * 0.8;
-               break;
-            default:
-               console.error('Shape not implemented: ' + shape.shapeName);
-               return;
-         }
-      }
-   }
-
 
    function locate(shape) {
       for (var i = 0; i < markupObjects.length; ++i) {
@@ -466,6 +400,13 @@ function ImageMarkupBuilder(fabricCanvas) {
       data.from.y /= resizeRatio;
       data.from.x += imageOffset.x;
       data.from.y += imageOffset.y;
+
+      if (data.to) {
+         data.to.x /= resizeRatio;
+         data.to.y /= resizeRatio;
+         data.to.x += imageOffset.x;
+         data.to.y += imageOffset.y;
+      }
 
       if (!data.color) {
          data.color = "red";
@@ -566,54 +507,6 @@ function ImageMarkupBuilder(fabricCanvas) {
       },
 
       /**
-       * Moves the given  shape in the given direction by the given number of
-       * pixels relative to its current position.
-       *
-       * @param shape The fabric shape to move
-       * @param directionMap A key-value object with the keys {up, down, left,
-       *  right} each with a true/false value.
-       * @param distance The number of pixels to move the shape.
-       */
-      nudge: function nudge(shape, directionMap, distance) {
-         if (!(typeof distance === 'number')) {
-            console.error('distance must be a number');
-            return;
-         }
-
-         if (directionMap.left) {
-            shape.left -= distance;
-            shape.setCoords();
-            if (isOffScreen(shape)) {
-               shape.left += distance;
-            }
-         }
-         if (directionMap.right) {
-            shape.left += distance;
-            shape.setCoords();
-            if (isOffScreen(shape)) {
-               shape.left -= distance;
-            }
-         }
-         if (directionMap.up) {
-            shape.top -= distance;
-            shape.setCoords();
-            if (isOffScreen(shape)) {
-               shape.top += distance;
-            }
-         }
-         if (directionMap.down) {
-            shape.top += distance;
-            shape.setCoords();
-            if (isOffScreen(shape)) {
-               shape.top -= distance;
-            }
-         }
-         shape.setCoords();
-
-         fabricCanvas.renderAll();
-      },
-
-      /**
        * Grows or shrinks the given shape depending on the given key
        * by the given number of pixels.
        *
@@ -627,10 +520,12 @@ function ImageMarkupBuilder(fabricCanvas) {
             return;
          }
 
-         shape.incrementSize(increment);
-         if (isOffScreen(shape)) {
-            shape.incrementSize(increment * -1);
-         }
+         shape._withSizeLimitations(function() {
+            shape.incrementSize(increment);
+            if (fabricCanvas.isOffScreen(shape)) {
+               shape.incrementSize(increment * -1);
+            }
+         }, true);
 
          shape.setCoords();
          fabricCanvas.renderAll();
@@ -664,13 +559,6 @@ function ImageMarkupBuilder(fabricCanvas) {
          if (innerJSON.resizeRatio) {
             resizeRatio = innerJSON.resizeRatio;
          }
-
-         var finalSize = innerJSON.finalDimensions;
-         maximumSize.rectangle = Math.min(finalSize.height, finalSize.width)
-                                 * maximumSizeRatio.rectangle;
-
-         maximumSize.circle = Math.min(finalSize.height, finalSize.width)
-                              * maximumSizeRatio.circle;
 
          applyBackground(callback);
       },
@@ -739,6 +627,11 @@ function ImageMarkupBuilder(fabricCanvas) {
 
                   markupString += "rectangle," + from.x + "x" + from.y + ","
                    + size.width + "x" + size.height + "," + color +  ";";
+                  break;
+               case 'gap':
+               case 'arrow':
+               case 'line':
+                  markupString += object.toMarkup(resizeRatio, imageOffset);
                   break;
                default:
                   console.error("Unexpected object name: " + object.shapeName);

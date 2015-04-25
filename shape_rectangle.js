@@ -1,43 +1,24 @@
 var Fabric = require('fabric').fabric || fabric;
-var extend = Fabric.util.object.extend;
 var isNode = typeof window == 'undefined';
+var mixin = require('./mixin');
 
 var Rectangle = Fabric.util.createClass(Fabric.Rect, {
    // Inherited fields with new values.
    type: 'rectangle',
-   strokeWidth: 0,
    originX: 'left',
    originY: 'top',
    lockRotation: true,
-   transparentCorners: false,
+   transparentCorners: true,
    hasRotatingPoint: false,
+   hasBorders: false,
    fill: 'transparent',
+   strokeLineJoin: 'round',
 
    // New fields.
    shapeName: 'rectangle',
-   color: 'red',
+
    // Min and Max size to enforce (false == no enforcement)
-   minSize: false,
-   maxSize: false,
-   borderWidth: 4,
-   outlineWidth: 1,
-   outlineStyle: '#FFF',
-
-   /**
-    * Provide a custom stroke function that draws a fat white line THEN a
-    * narrower colored line on top.
-    */
-   _stroke: function(ctx) {
-      var myScale = this.scaleX;
-      function scale(x) { return (x / myScale); }
-      ctx.lineWidth = scale(this.borderWidth + this.outlineWidth);
-      ctx.strokeStyle = this.outlineStyle;
-      ctx.stroke();
-
-      ctx.lineWidth = scale(this.borderWidth - this.outlineWidth);
-      ctx.strokeStyle = this.stroke;
-      ctx.stroke();
-   },
+   sizeLimits: [0.03, 0.6],
 
    /**
     * Wrap the underlying render function to do two things.
@@ -50,9 +31,8 @@ var Rectangle = Fabric.util.createClass(Fabric.Rect, {
     */
    render: function(ctx) {
       this._resetScale();
-      var _this = this;
       this._fixAndRestoreSubPixelPositioning(function() {
-         _this.callSuper('render', ctx);
+         this.callSuper('render', ctx);
       });
    },
 
@@ -69,7 +49,7 @@ var Rectangle = Fabric.util.createClass(Fabric.Rect, {
       // having the outlines jump back and forth by one pixel as you resize it
       // can be annoying.
       if (!isNode) {
-         callback();
+         callback.call(this);
          return;
       }
 
@@ -85,7 +65,9 @@ var Rectangle = Fabric.util.createClass(Fabric.Rect, {
 
       // If the left-most edge of the border is not directly on a pixel
       // then niether is the right-most border, 
-      var borderWidth = this.borderWidth + this.outlineWidth;
+      var self = this;
+      function scale(x) { return Math.round(x / self.scaleX); }
+      var borderWidth = scale(this.borderWidth + this._outlineWidth());
       var partialX = (this.left + borderWidth / 2) % 1;
       var partialY = (this.top + borderWidth / 2) % 1;
       if (partialX != 0) {
@@ -97,7 +79,7 @@ var Rectangle = Fabric.util.createClass(Fabric.Rect, {
          this.height += partialY * 2;
       }
 
-      callback();
+      callback.call(this);
 
       this.width  = old.w;
       this.height = old.h;
@@ -114,7 +96,6 @@ var Rectangle = Fabric.util.createClass(Fabric.Rect, {
       this.height = this.height * this.scaleY;
       this.scaleX = this.scaleY = 1;
    },
-
 
    /**
     * Resizes this rectangle to make the most sense given the two points (they
@@ -140,81 +121,27 @@ var Rectangle = Fabric.util.createClass(Fabric.Rect, {
       this.setCoords();
    },
 
-   /**
-    * Increment the size of the rectangle about its center.
-    */
-   incrementSize: function(increment) {
-      var newWidth = this.width + increment;
-      var newHeight = this.height + increment;
-
-      // Checks to see if the new size will be too big/small.
-      if (newWidth < this.maxSize && newWidth > this.minSize &&
-       newHeight < this.maxSize && newHeight > this.minSize) {
-         this.width = newWidth;
-         this.height = newHeight;
-         this.left -= increment / 2;
-         this.top -= increment / 2;
-      }
-      this.setCoords();
-   },
-
    center: function() {
-      this.centerTransform = true;
       this.callSuper('center');
-      this.centerTransform = false;
+      this.top    = Math.round(this.top);
+      this.left   = Math.round(this.left);
+      this.width  = Math.round(this.width);
+      this.height = Math.round(this.height);
    },
 
    /**
-    * Catch the alteration of 'scaleX' and 'scaleY' properties (happens during
-    * mouse resize) and limit them so the shape doesn't exceed it's allowed
-    * dimensions.
+    * Override the parent function so we can explictly use fillRect without
+    * it calling 'clearRect' as well.
     */
-   _set: function(key, value) {
-      var newValue = value;
-      if (key === 'scaleX') {
-         var newWidth = this.width * value;
-         newValue = this._limitDimension(newWidth) / this.width;
-      } else if (key === 'scaleY') {
-         var newHeight = this.height * value;
-         newValue = this._limitDimension(newHeight) / this.height;
-      }
-
-      return this.callSuper('_set', key, newValue);
-   },
-
-   /**
-    * Enforce the min / max size on the given value if they are set for this
-    * object.
-    */
-   _limitDimension: function(x) {
-      if (this.minSize !== false) {
-         if (Math.abs(x) < this.minSize)
-            return x >= 0 ? this.minSize : -this.minSize;
-      }
-
-      if (this.maxSize !== false) {
-         if (Math.abs(x) > this.maxSize)
-            return x >= 0 ? this.maxSize : -this.maxSize;
-      }
-      return x;
-   },
-
-   toObject: function(propertiesToInclude) {
-      return extend(this.callSuper('toObject', propertiesToInclude), {
-         color: this.color,
-         minSize: this.minSize,
-         maxSize: this.maxSize,
-         borderWidth: this.borderWidth,
-         stroke: this.stroke,
-         shapeName: this.shapeName,
-         outlineWidth: this.outlineWidth,
-         outlineStyle: this.outlineStyle
-      });
+   _drawControl: function(control, ctx, methodName, left, top) {
+      return this.callSuper('_drawControl', control, ctx, 'fillRect', left, top);
    }
 });
 
-Rectangle.fromObject = function(object) {
-   return new Rectangle(object);
-};
+var proto = Rectangle.prototype;
+mixin(proto, require('./clone.mixin'));
+mixin(proto, require('./highlighted_stroke.mixin'));
+mixin(proto, require('./limit_size'));
+mixin(proto, require('./nudge'));
 
 module.exports.klass = Rectangle;

@@ -8,7 +8,7 @@ function setupMarkerCreation(markupBuilder) {
        mouseDownEvent,
        color,
        currentShape,
-       shapeMode = Enum(['circle', 'rectangle']);
+       shapeMode = Enum(['circle', 'rectangle', 'line', 'arrow', 'gap']);
 
    canvas.on({
    'mouse:down': function(event) {
@@ -16,17 +16,22 @@ function setupMarkerCreation(markupBuilder) {
       mouseDownEvent = event.e;
    },'mouse:move': function(event) {
       if (!enabled) return;
+      function updateShape() {
+         currentShape._withSizeLimitations(function() {
+            currentShape.sizeByMousePos(x(mouseDownEvent), y(mouseDownEvent), x(event.e), y(event.e));
+         });
+         canvas.renderAll();
+      }
       if (!dragging) {
          if (mouseDownEvent && !canvas.getActiveObject()) {
             var dragDist = distance(mouseDownEvent, event.e);
             if (dragDist > 10) {
                startDragging(mouseDownEvent, event.e);
+               updateShape();
             }
          }
       } else {
-         
-         currentShape.sizeByMousePos(x(mouseDownEvent), y(mouseDownEvent), x(event.e), y(event.e));
-         canvas.renderAll();
+         updateShape();
       }
    }, 'mouse:up': function() {
       if (mouseDownEvent)
@@ -38,7 +43,7 @@ function setupMarkerCreation(markupBuilder) {
 
       var config = shapeCreators[shapeMode.get()](mouseStart, mouseCurrent);
       config.color = color;
-      currentShape = markupBuilder.addShape(config)
+      currentShape = markupBuilder.addShape(config);
       currentShape.perPixelTargetFind = true;
    }
 
@@ -46,6 +51,22 @@ function setupMarkerCreation(markupBuilder) {
       dragging = false;
       mouseDownEvent = null;
       currentShape = null;
+   }
+
+   function lineCreator(type) {
+      return function(mouseStart, mouseCurrent) {
+         return {
+            type: type,
+            from: {
+               x: x(mouseStart),
+               y: y(mouseStart)
+            },
+            to: {
+               x: x(mouseCurrent),
+               y: y(mouseCurrent)
+            }
+         };
+      };
    }
 
    var shapeCreators = {
@@ -72,7 +93,10 @@ function setupMarkerCreation(markupBuilder) {
                height: y(mouseCurrent) - y1
             }
          };
-      }
+      },
+      'line':  lineCreator('line'),
+      'arrow': lineCreator('arrow'),
+      'gap':   lineCreator('gap')
    }
 
    markupBuilder.shapeCreator = {

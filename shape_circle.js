@@ -1,10 +1,10 @@
 var Fabric = require('fabric').fabric || fabric;
 var extend = Fabric.util.object.extend;
+var mixin = require('./mixin');
 
 var Circle = Fabric.util.createClass(Fabric.Circle, {
    // Inherited variables with new values.
    type: 'circle',
-   strokeWidth: 0,
    padding: 5,
    originX: 'center',
    originY: 'center',
@@ -14,34 +14,12 @@ var Circle = Fabric.util.createClass(Fabric.Circle, {
    hasRotatingPoint: false,
    lockUniScaling: true,
    fill: 'transparent',
-   centerTransform: true,
+   centeredScaling: true,
 
    // New fields.
    shapeName: 'circle',
    color: 'red',
-   // Min and Max size to enforce (false == no enforcement)
-   minSize: false,
-   maxSize: false,
-   borderWidth: 4,
-   outlineWidth: 1,
-   outlineStyle: '#FFF',
-
-   _stroke: function(ctx) {
-      var myScale = this.scaleX;
-      function scaleU(x) { return x / myScale; }
-      ctx.lineWidth = scaleU(this.borderWidth + this.outlineWidth);
-      ctx.strokeStyle = this.outlineStyle;
-      ctx.stroke();
-
-      ctx.lineWidth = scaleU(this.borderWidth - this.outlineWidth);
-      ctx.strokeStyle = this.stroke;
-      ctx.stroke();
-   },
-
-   render: function(ctx) {
-      this._limitSize();
-      this.callSuper('render', ctx);
-   },
+   sizeLimits: [0.03, 0.4],
 
    /**
     * Resizes this shape using the two mouse coords (first is treated as the
@@ -51,48 +29,26 @@ var Circle = Fabric.util.createClass(Fabric.Circle, {
       var xdiff = x2 - this.left;
       var ydiff = y2 - this.top;
       var radius = Math.sqrt(xdiff * xdiff + ydiff * ydiff);
-      this.scaleToWidth(radius * 2);
+      var diameter = this._limitDimension(radius * 2);
+      this.setRadius(diameter / 2);
       this.setCoords();
-   },
-
-   /**
-    * Increment the size of the circle about its center.
-    */
-   incrementSize: function(increment) {
-      this.scaleToWidth(this.currentWidth + increment);
-      this.setCoords();
-   },
-
-   /**
-    * Enforce the min / max sizes if set.
-    */
-   _limitSize: function() {
-      var newRadius = this.getRadiusX();
-
-      if (this.minSize !== false && newRadius < this.minSize) {
-         this.scaleX = this.scaleY = this.minSize / this.radius;
-      } else if (this.maxSize !== false && newRadius > this.maxSize) {
-         this.scaleX = this.scaleY = this.maxSize / this.radius;
-      }
-      this.setCoords();
-   },
-
-   toObject: function(propertiesToInclude) {
-      return extend(this.callSuper('toObject', propertiesToInclude), {
-         color: this.color,
-         minSize: this.minSize,
-         maxSize: this.maxSize,
-         borderWidth: this.borderWidth,
-         stroke: this.stroke,
-         shapeName: this.shapeName,
-         outlineWidth: this.outlineWidth,
-         outlineStyle: this.outlineStyle
-      });
    }
 });
 
-Circle.fromObject = function(object) {
-   return new Circle(object);
+var proto = Circle.prototype;
+mixin(proto, require('./clone.mixin'));
+mixin(proto, require('./highlighted_stroke.mixin'));
+mixin(proto, require('./limit_size'));
+mixin(proto, require('./nudge'));
+
+/**
+ * Increment the size of the circle about its center.
+ * Note: At the end so it overwrites the one in the `nudge` mixin
+ */
+proto.incrementSize = function(increment) {
+   var r = this.radius + increment / 2;
+   this.setRadius(this._limitDimension(r * 2) / 2);
+   this.setCoords();
 };
 
 module.exports.klass = Circle;
