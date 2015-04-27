@@ -320,10 +320,10 @@ function ImageMarkupBuilder(fabricCanvas) {
       }
 
       var points = [
-         shape.from.x * resizeRatio,
-         shape.from.y * resizeRatio,
-         shape.to.x * resizeRatio,
-         shape.to.y * resizeRatio
+         shape.from.x * resizeRatio - imageOffset.x,
+         shape.from.y * resizeRatio - imageOffset.y,
+         shape.to.x * resizeRatio - imageOffset.x,
+         shape.to.y * resizeRatio - imageOffset.y
       ];
 
       var fabricLine = new klass(points, line);
