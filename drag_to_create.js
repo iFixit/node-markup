@@ -16,17 +16,31 @@ function setupMarkerCreation(markupBuilder) {
       mouseDownEvent = event.e;
    },'mouse:move': function(event) {
       if (!enabled) return;
+      var moveEvent = event.e;
       function updateShape() {
          currentShape._withSizeLimitations(function() {
-            currentShape.sizeByMousePos(x(mouseDownEvent), y(mouseDownEvent), x(event.e), y(event.e));
+            var x1 = x(mouseDownEvent),
+                y1 = y(mouseDownEvent),
+                x2 = x1 + xOff(mouseDownEvent, moveEvent),
+                y2 = y1 + yOff(mouseDownEvent, moveEvent);
+            currentShape.sizeByMousePos(x1, y1, x2, y2);
          });
          canvas.renderAll();
       }
       if (!dragging) {
          if (mouseDownEvent && !canvas.getActiveObject()) {
-            var dragDist = distance(mouseDownEvent, event.e);
+            var xdiff = xOff(mouseDownEvent, moveEvent);
+            var ydiff = yOff(mouseDownEvent, moveEvent);
+            var dragDist = distance(xdiff, ydiff);
             if (dragDist > 10) {
-               startDragging(mouseDownEvent, event.e);
+               var offset = {
+                  x: xdiff,
+                  y: ydiff
+               }, p1 = {
+                  x: x(mouseDownEvent),
+                  y: y(mouseDownEvent)
+               };
+               startDragging(p1, offset);
                updateShape();
             }
          }
@@ -38,10 +52,9 @@ function setupMarkerCreation(markupBuilder) {
          stopDragging();
    }});
 
-   function startDragging(mouseStart, mouseCurrent) {
+   function startDragging(p1, offset) {
       dragging = true;
-
-      var config = shapeCreators[shapeMode.get()](mouseStart, mouseCurrent);
+      var config = shapeCreators[shapeMode.get()](p1, offset);
       config.color = color;
       currentShape = markupBuilder.addShape(config);
       currentShape.perPixelTargetFind = true;
@@ -54,43 +67,42 @@ function setupMarkerCreation(markupBuilder) {
    }
 
    function lineCreator(type) {
-      return function(mouseStart, mouseCurrent) {
+      return function(p1, offset) {
          return {
             type: type,
             from: {
-               x: x(mouseStart),
-               y: y(mouseStart)
+               x: p1.x,
+               y: p1.y
             },
             to: {
-               x: x(mouseCurrent),
-               y: y(mouseCurrent)
+               x: p1.x + offset.x,
+               y: p1.y + offset.y
             }
          };
       };
    }
 
    var shapeCreators = {
-      'circle': function(e1, e2) {
+      'circle': function(p1, offset) {
          return {
             type: 'circle',
             from: {
-               x: x(e1),
-               y: y(e1),
+               x: p1.x,
+               y: p1.y
             },
-            radius: distance(e1, e2)
+            radius: distance(offset.x, offset.y)
          };
       },
-      'rectangle': function(mouseStart, mouseCurrent) {
-         var x1 = x(mouseStart), y1 = y(mouseStart);
+      'rectangle': function(p1, offset) {
          return {
             type: 'rectangle',
             from: {
-               x: x1,
-               y: y1
+               x: p1.x,
+               y: p1.y
             },
             size: {
-               width: x(mouseCurrent) - x1,
-               height: y(mouseCurrent) - y1
+               width: offset.x,
+               height: offset.y
             }
          };
       },
@@ -110,9 +122,7 @@ function setupMarkerCreation(markupBuilder) {
    };
 }
 
-function distance(e1, e2) {
-   var xdiff = x(e1) - x(e2);
-   var ydiff = y(e1) - y(e2);
+function distance(xdiff, ydiff) {
    return Math.sqrt(xdiff * xdiff + ydiff * ydiff);
 }
 
@@ -123,11 +133,19 @@ function x(e) {
    return e.offsetX == undefined ? e.layerX : e.offsetX;
 }
 
+function xOff(p1, p2) {
+   return p2.pageX - p1.pageX;
+}
+
 /**
  * Extracts the Y coord from a mouse event in a cross-browser way
  */
 function y(e) {
    return e.offsetY == undefined ? e.layerY : e.offsetY;
+}
+
+function yOff(p1, p2) {
+   return p2.pageY - p1.pageY;
 }
 
 /**
