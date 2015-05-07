@@ -11,8 +11,19 @@ module.exports = {
       }
       var deltaX = increment * portionW;
       var deltaY = increment * (1 - portionW);
-      deltaX = this._limitDimension(this.width  + deltaX) - this.width;
-      deltaY = this._limitDimension(this.height + deltaY) - this.height;
+      // There is a bit of mixing of concerns here (it'd be great for this to be
+      // in the limit_size mixin), but including some code for limiting here
+      // was necessary.
+      if (this._limitByDiagonal) {
+         var fakeScaleX = this.scaleX * ((deltaX + this.width) / this.width);
+         var fakeScaleY = this.scaleY * ((deltaY + this.height) / this.height);
+         if (this._exceedsDiagonalLimit(fakeScaleX, fakeScaleY)) {
+            return;
+         }
+      } else {
+         deltaX = this._limitDimension(this.width  + deltaX) - this.width;
+         deltaY = this._limitDimension(this.height + deltaY) - this.height;
+      }
       var newWidth  = this.width + deltaX;
       var newHeight = this.height + deltaY;
 

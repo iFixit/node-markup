@@ -68,8 +68,10 @@ module.exports = {
       var clampedRad = this._limitDimension(rad);
       if (rad !== clampedRad) {
          var ratio = clampedRad / rad;
-         this.callParent('scaleX', scaleX * ratio);
-         this.callParent('scaleY', scaleY * ratio);
+         // Use callSuper() here to bypass the _set() function we implemented
+         // above.
+         this.callSuper('_set', 'scaleX', scaleX * ratio);
+         this.callSuper('_set', 'scaleY', scaleY * ratio);
          return true;
       }
    },
