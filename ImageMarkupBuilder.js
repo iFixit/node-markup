@@ -155,6 +155,7 @@ function ImageMarkupBuilder(fabricCanvas) {
             whiteStroke = 1;
          }
          if (isNode) {
+            fabricCanvas.setBackgroundColor('#FFFFFF');
             require('fs').readFile(innerJSON.sourceFile, function (err, blob) {
                if (err) throw err;
 
