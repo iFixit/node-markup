@@ -548,8 +548,7 @@ function ImageMarkupBuilder(fabricCanvas) {
          var imagePath = innerJSON.sourceFile;
 
          crop = innerJSON.instructions.crop;
-         imageOffset = (typeof crop != "undefined" &&
-          crop.from.x >= 0 && crop.from.y >= 0) ? {
+         imageOffset = (typeof crop != "undefined") ? {
             'x': crop.from.x,
             'y': crop.from.y
          } : {
@@ -593,11 +592,9 @@ function ImageMarkupBuilder(fabricCanvas) {
          if (crop) {
             // Cut out cases where crop is used to offset non-4:3
             // images
-            if (crop.from.x >= 0 && crop.from.y >= 0) {
-               markupString += "crop," + crop.from.x + "x" +
-                crop.from.y + "," + crop.size.width + "x" +
-                crop.size.height + ";";
-            }
+            markupString += "crop," + crop.from.x + "x" +
+             crop.from.y + "," + crop.size.width + "x" +
+             crop.size.height + ";";
          }
 
          for (var i = 0; i < markupObjects.length; ++i) {
