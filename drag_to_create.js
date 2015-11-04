@@ -13,14 +13,16 @@ function setupMarkerCreation(markupBuilder) {
    canvas.on({
    'mouse:down': function(event) {
       if (!enabled) return;
-      mouseDownEvent = event.e;
+      mouseDownEvent = canvas.getPointer(event.e);
+      mouseDownEvent.pageX = event.e.pageX;
+      mouseDownEvent.pageY = event.e.pageY;
    },'mouse:move': function(event) {
       if (!enabled) return;
       var moveEvent = event.e;
       function updateShape() {
          currentShape._withSizeLimitations(function() {
-            var x1 = x(mouseDownEvent),
-                y1 = y(mouseDownEvent),
+            var x1 = mouseDownEvent.x,
+                y1 = mouseDownEvent.y,
                 x2 = x1 + xOff(mouseDownEvent, moveEvent),
                 y2 = y1 + yOff(mouseDownEvent, moveEvent);
             currentShape.sizeByMousePos(x1, y1, x2, y2);
@@ -37,8 +39,8 @@ function setupMarkerCreation(markupBuilder) {
                   x: xdiff,
                   y: ydiff
                }, p1 = {
-                  x: x(mouseDownEvent),
-                  y: y(mouseDownEvent)
+                  x: mouseDownEvent.x,
+                  y: mouseDownEvent.y
                };
                startDragging(p1, offset);
                updateShape();
@@ -126,22 +128,8 @@ function distance(xdiff, ydiff) {
    return Math.sqrt(xdiff * xdiff + ydiff * ydiff);
 }
 
-/**
- * Extracts the X coord from a mouse event in a cross-browser way
- */
-function x(e) {
-   return e.offsetX == undefined ? e.layerX : e.offsetX;
-}
-
 function xOff(p1, p2) {
    return p2.pageX - p1.pageX;
-}
-
-/**
- * Extracts the Y coord from a mouse event in a cross-browser way
- */
-function y(e) {
-   return e.offsetY == undefined ? e.layerY : e.offsetY;
 }
 
 function yOff(p1, p2) {
