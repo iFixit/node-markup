@@ -33,7 +33,7 @@ function processArgs() {
       usage();
    }
 
-   shadows = 
+   var shadows = 
       typeof(argv.shadows) == 'undefined'
       ? false
       : argv.shadows == 'true' || argv.shadows == true;
@@ -227,7 +227,7 @@ function printJSON(json, level) {
       printJSON(json, 1);
       console.log("}");
    } else {
-      for (property in json) {
+      for (var property in json) {
          console.log("\t".repeat(level) + property + ": " + json[property] +
           " [" + typeof(json[property]) + "]");
          if (typeof(json[property]) == 'object') {
@@ -257,7 +257,7 @@ function cleanJSON(json, context) {
      ,'strokeWidth'
    ];
 
-   for (property in json) {
+   for (var property in json) {
 
       if (typeof(json[property]) == 'object') {
          cleanJSON(json[property], context + '.' + property);

@@ -35,7 +35,7 @@ fs.readFile(schemaFile, function (err, data) {
          console.log('Validation FAILED');
 
          console.log('Errors reported:');
-         for (error in errors) {
+         for (var error in errors) {
             console.log(errors[error]);
          }
          process.exit(-1);
