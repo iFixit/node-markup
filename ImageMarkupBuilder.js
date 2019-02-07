@@ -38,7 +38,7 @@ function ImageMarkupBuilder(fabricCanvas) {
    var imageOffset;
    var resizeRatio = 1;
    var finalWidth = 0;
-   var markupObjects = new Array();
+   var markupObjects = [];
 
    var whiteStroke = isNode ? 1 : 0.5;
    var strokeWidth = null;

@@ -118,7 +118,7 @@ function convertMarkupToJSON(callback, markup, infile, outfile) {
             break;
          case 'circle':
             if (!json['instructions']['draw'])
-               json['instructions']['draw'] = new Array();
+               json['instructions']['draw'] = [];
 
             var position = args[1].split("x");
             position[0] = Int(position[0]);
@@ -139,7 +139,7 @@ function convertMarkupToJSON(callback, markup, infile, outfile) {
             json['instructions']['draw'].push({'circle': circle});
             break;
          case 'rectangle':
-            if (!json['instructions']['draw']) json['instructions']['draw'] = new Array();
+            if (!json['instructions']['draw']) json['instructions']['draw'] = [];
 
             var position = args[1].split("x");
             position[0] = Int(position[0]);
@@ -170,7 +170,7 @@ function convertMarkupToJSON(callback, markup, infile, outfile) {
          case 'line':
          case 'arrow':
          case 'gap':
-            if (!json['instructions']['draw']) json['instructions']['draw'] = new Array();
+            if (!json['instructions']['draw']) json['instructions']['draw'] = [];
 
             var p1 = args[1].split("x");
             var p2 = args[2].split("x");
