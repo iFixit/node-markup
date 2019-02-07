@@ -144,7 +144,7 @@ function ImageMarkupBuilder(fabricCanvas) {
       if (!innerJSON.sourceFile) {
          if (!innerJSON.finalDimensions) {
             var msg = "Need source file or final dimensions to create canvas";
-            throw Exception(msg);
+            throw new Error(msg);
          }
 
          //Apply markup to blank canvas
@@ -183,7 +183,7 @@ function ImageMarkupBuilder(fabricCanvas) {
                });
             });
          } else {
-            throw Exception('Source files not supported on frontend');
+            throw new Error('Source files not supported on frontend');
          }
       }
    }
