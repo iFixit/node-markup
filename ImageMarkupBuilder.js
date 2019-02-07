@@ -4,7 +4,7 @@ var isNode = typeof window == 'undefined';
  * Expects a Fabric.js Canvas
  */
 function ImageMarkupBuilder(fabricCanvas) {
-   var Fabric = require('fabric').fabric || fabric;
+   var Fabric = require('fabric').fabric;
 
    var Shapes = {
       Rectangle:  require("./shape_rectangle").klass,

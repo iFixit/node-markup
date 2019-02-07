@@ -1,4 +1,4 @@
-var Fabric = require('fabric').fabric || fabric;
+var Fabric = require('fabric').fabric;
 var isNode = typeof window == 'undefined';
 var mixin = require('./mixin');
 

@@ -1,4 +1,4 @@
-var Fabric = require('fabric').fabric || fabric;
+var Fabric = require('fabric').fabric;
 var mixin = require('./mixin');
 
 var Arrow = Fabric.util.createClass(require('./shape_line').klass, {

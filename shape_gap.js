@@ -1,4 +1,4 @@
-var Fabric = require('fabric').fabric || fabric;
+var Fabric = require('fabric').fabric;
 
 var Gap = Fabric.util.createClass(require('./shape_line').klass, {
    type: 'gap',
