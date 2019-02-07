@@ -38,12 +38,6 @@ function processArgs() {
       ? false
       : argv.shadows == 'true' || argv.shadows == true;
 
-   if (shadows) {
-      if (argv.step) {
-         shadowStep = Int(argv.step);
-      }
-   }
-
    var json;
    if (argv.json) {
       if (argv.markup) {
