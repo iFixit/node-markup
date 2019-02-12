@@ -4,7 +4,7 @@ var isNode = typeof window == 'undefined';
  * Expects a Fabric.js Canvas
  */
 function ImageMarkupBuilder(fabricCanvas) {
-   var Fabric = require('fabric').fabric || fabric;
+   var Fabric = require('fabric').fabric;
 
    var Shapes = {
       Rectangle:  require("./shape_rectangle").klass,
@@ -38,7 +38,7 @@ function ImageMarkupBuilder(fabricCanvas) {
    var imageOffset;
    var resizeRatio = 1;
    var finalWidth = 0;
-   var markupObjects = new Array();
+   var markupObjects = [];
 
    var whiteStroke = isNode ? 1 : 0.5;
    var strokeWidth = null;
@@ -87,7 +87,7 @@ function ImageMarkupBuilder(fabricCanvas) {
     */
    function clone(obj) {
       var newobj = {};
-      for (property in obj) {
+      for (var property in obj) {
          if (typeof obj[property] == 'object') {
             newobj[property] = clone(property);
          } else {
@@ -106,7 +106,7 @@ function ImageMarkupBuilder(fabricCanvas) {
       if (!context)
          context = "root";
 
-      for (property in json) {
+      for (var property in json) {
          if (typeof(json[property]) == 'object') {
             cleanJSON(json[property], context + '.' + property);
          }
@@ -144,7 +144,7 @@ function ImageMarkupBuilder(fabricCanvas) {
       if (!innerJSON.sourceFile) {
          if (!innerJSON.finalDimensions) {
             var msg = "Need source file or final dimensions to create canvas";
-            throw Exception(msg);
+            throw new Error(msg);
          }
 
          //Apply markup to blank canvas
@@ -160,7 +160,7 @@ function ImageMarkupBuilder(fabricCanvas) {
                if (err) throw err;
 
                var dimensions = innerJSON.dimensions;
-               img = {
+               var img = {
                   'width': dimensions.width,
                   'height': dimensions.height,
                   originX: 'left',
@@ -183,7 +183,7 @@ function ImageMarkupBuilder(fabricCanvas) {
                });
             });
          } else {
-            throw Exception('Source files not supported on frontend');
+            throw new Error('Source files not supported on frontend');
          }
       }
    }
@@ -200,12 +200,12 @@ function ImageMarkupBuilder(fabricCanvas) {
          strokeWidth = innerJSON.instructions.strokeWidth;
       }
 
-      for (instruction in innerJSON.instructions) {
+      for (var instruction in innerJSON.instructions) {
          switch (instruction) {
             case 'draw':
                innerJSON.instructions.draw.forEach(function (e) {
-               for (shapeName in e) {
-                  shape = e[shapeName];
+               for (var shapeName in e) {
+                  var shape = e[shapeName];
                   shape.shapeName = shapeName;
 
                   switch (shapeName) {
@@ -578,7 +578,7 @@ function ImageMarkupBuilder(fabricCanvas) {
           * will be written.
           */
          function translateRGBtoColorString(rgb) {
-            for (colorString in colorValues) {
+            for (var colorString in colorValues) {
                if (rgb == colorValues[colorString]) {
                   return colorString;
                }

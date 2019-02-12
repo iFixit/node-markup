@@ -33,16 +33,10 @@ function processArgs() {
       usage();
    }
 
-   shadows = 
+   var shadows = 
       typeof(argv.shadows) == 'undefined'
       ? false
       : argv.shadows == 'true' || argv.shadows == true;
-
-   if (shadows) {
-      if (argv.step) {
-         shadowStep = Int(argv.step);
-      }
-   }
 
    var json;
    if (argv.json) {
@@ -118,7 +112,7 @@ function convertMarkupToJSON(callback, markup, infile, outfile) {
             break;
          case 'circle':
             if (!json['instructions']['draw'])
-               json['instructions']['draw'] = new Array();
+               json['instructions']['draw'] = [];
 
             var position = args[1].split("x");
             position[0] = Int(position[0]);
@@ -139,7 +133,7 @@ function convertMarkupToJSON(callback, markup, infile, outfile) {
             json['instructions']['draw'].push({'circle': circle});
             break;
          case 'rectangle':
-            if (!json['instructions']['draw']) json['instructions']['draw'] = new Array();
+            if (!json['instructions']['draw']) json['instructions']['draw'] = [];
 
             var position = args[1].split("x");
             position[0] = Int(position[0]);
@@ -170,7 +164,7 @@ function convertMarkupToJSON(callback, markup, infile, outfile) {
          case 'line':
          case 'arrow':
          case 'gap':
-            if (!json['instructions']['draw']) json['instructions']['draw'] = new Array();
+            if (!json['instructions']['draw']) json['instructions']['draw'] = [];
 
             var p1 = args[1].split("x");
             var p2 = args[2].split("x");
@@ -233,7 +227,7 @@ function printJSON(json, level) {
       printJSON(json, 1);
       console.log("}");
    } else {
-      for (property in json) {
+      for (var property in json) {
          console.log("\t".repeat(level) + property + ": " + json[property] +
           " [" + typeof(json[property]) + "]");
          if (typeof(json[property]) == 'object') {
@@ -263,7 +257,7 @@ function cleanJSON(json, context) {
      ,'strokeWidth'
    ];
 
-   for (property in json) {
+   for (var property in json) {
 
       if (typeof(json[property]) == 'object') {
          cleanJSON(json[property], context + '.' + property);

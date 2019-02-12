@@ -1,4 +1,4 @@
-var Fabric = require('fabric').fabric || fabric;
+var Fabric = require('fabric').fabric;
 var extend = Fabric.util.object.extend;
 
 module.exports = {
