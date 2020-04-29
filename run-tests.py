@@ -70,9 +70,9 @@ def compareOutputs(basename, oracleFilename, destinationFilename):
          errMsg = basename + ': Image difference error = ' + str(absoluteError);
          raise RuntimeError(errMsg);
       else:
-         print basename + ': test comparison passed.';
+         print(basename + ': test comparison passed.');
          os.remove(destinationFilename);
-   except RuntimeError, runtimeErr:
+   except RuntimeError as runtimeErr:
       errMsg = 'Comparison string processing failed\n' \
          + str(runtimeErr);
 
@@ -91,12 +91,12 @@ def runNode(sourceFilename, destinationFilename, markupFilename):
 
    if proc.returncode != 0:
       errMsg = 'node-markup invocation failed';
-      print out,err
+      print(out,err)
       raise RuntimeError(errMsg);
 
    if out != markup:
-      print "Before: ", markup
-      print "After:  ", out
+      print("Before: ", markup)
+      print("After:  ", out)
       errMsg = "node-markup modified the markup string";
       raise RuntimeError(errMsg);
 
@@ -113,8 +113,8 @@ for filename in os.listdir(testDirectory):
          runNode(sourceFilename, testFilename, markupFilename);
          compareOutputs(basename, oracleFilename, testFilename);
 
-      except RuntimeError, msg:
-         print >> sys.stderr, basename + ':', msg;
+      except RuntimeError as msg:
+         print(basename + ':', msg, file=sys.stderr);
          errors += 1
          continue;
 sys.exit(errors)
