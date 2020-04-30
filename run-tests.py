@@ -55,6 +55,7 @@ def compareOutputs(basename, oracleFilename, destinationFilename):
 
    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE);
    (out, err) = proc.communicate();
+   out = out.decode().strip()
 
    retCode = proc.returncode;
    if retCode != 0:
@@ -87,7 +88,7 @@ def runNode(sourceFilename, destinationFilename, markupFilename):
 
    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE);
    (out, err) = proc.communicate();
-   out = out.strip()
+   out = out.decode().strip();
 
    if proc.returncode != 0:
       errMsg = 'node-markup invocation failed';
