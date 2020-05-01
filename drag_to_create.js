@@ -8,37 +8,57 @@ function setupMarkerCreation(markupBuilder) {
        mouseDownEvent,
        color,
        currentShape,
-       shapeMode = Enum(['circle', 'rectangle']);
+       shapeMode = Enum(['circle', 'rectangle', 'line', 'arrow', 'gap']);
 
    canvas.on({
    'mouse:down': function(event) {
       if (!enabled) return;
-      mouseDownEvent = event.e;
+      mouseDownEvent = canvas.getPointer(event.e);
+      mouseDownEvent.pageX = event.e.pageX;
+      mouseDownEvent.pageY = event.e.pageY;
    },'mouse:move': function(event) {
       if (!enabled) return;
+      var moveEvent = event.e;
+      function updateShape() {
+         currentShape._withSizeLimitations(function() {
+            var x1 = mouseDownEvent.x,
+                y1 = mouseDownEvent.y,
+                x2 = x1 + xOff(mouseDownEvent, moveEvent),
+                y2 = y1 + yOff(mouseDownEvent, moveEvent);
+            currentShape.sizeByMousePos(x1, y1, x2, y2);
+         });
+         canvas.renderAll();
+      }
       if (!dragging) {
          if (mouseDownEvent && !canvas.getActiveObject()) {
-            var dragDist = distance(mouseDownEvent, event.e);
+            var xdiff = xOff(mouseDownEvent, moveEvent);
+            var ydiff = yOff(mouseDownEvent, moveEvent);
+            var dragDist = distance(xdiff, ydiff);
             if (dragDist > 10) {
-               startDragging(mouseDownEvent, event.e);
+               var offset = {
+                  x: xdiff,
+                  y: ydiff
+               }, p1 = {
+                  x: mouseDownEvent.x,
+                  y: mouseDownEvent.y
+               };
+               startDragging(p1, offset);
+               updateShape();
             }
          }
       } else {
-         
-         currentShape.sizeByMousePos(x(mouseDownEvent), y(mouseDownEvent), x(event.e), y(event.e));
-         canvas.renderAll();
+         updateShape();
       }
    }, 'mouse:up': function() {
       if (mouseDownEvent)
          stopDragging();
    }});
 
-   function startDragging(mouseStart, mouseCurrent) {
+   function startDragging(p1, offset) {
       dragging = true;
-
-      var config = shapeCreators[shapeMode.get()](mouseStart, mouseCurrent);
+      var config = shapeCreators[shapeMode.get()](p1, offset);
       config.color = color;
-      currentShape = markupBuilder.addShape(config)
+      currentShape = markupBuilder.addShape(config);
       currentShape.perPixelTargetFind = true;
    }
 
@@ -48,31 +68,49 @@ function setupMarkerCreation(markupBuilder) {
       currentShape = null;
    }
 
+   function lineCreator(type) {
+      return function(p1, offset) {
+         return {
+            type: type,
+            from: {
+               x: p1.x,
+               y: p1.y
+            },
+            to: {
+               x: p1.x + offset.x,
+               y: p1.y + offset.y
+            }
+         };
+      };
+   }
+
    var shapeCreators = {
-      'circle': function(e1, e2) {
+      'circle': function(p1, offset) {
          return {
             type: 'circle',
             from: {
-               x: x(e1),
-               y: y(e1),
+               x: p1.x,
+               y: p1.y
             },
-            radius: distance(e1, e2)
+            radius: distance(offset.x, offset.y)
          };
       },
-      'rectangle': function(mouseStart, mouseCurrent) {
-         var x1 = x(mouseStart), y1 = y(mouseStart);
+      'rectangle': function(p1, offset) {
          return {
             type: 'rectangle',
             from: {
-               x: x1,
-               y: y1
+               x: p1.x,
+               y: p1.y
             },
             size: {
-               width: x(mouseCurrent) - x1,
-               height: y(mouseCurrent) - y1
+               width: offset.x,
+               height: offset.y
             }
          };
-      }
+      },
+      'line':  lineCreator('line'),
+      'arrow': lineCreator('arrow'),
+      'gap':   lineCreator('gap')
    }
 
    markupBuilder.shapeCreator = {
@@ -86,24 +124,16 @@ function setupMarkerCreation(markupBuilder) {
    };
 }
 
-function distance(e1, e2) {
-   var xdiff = x(e1) - x(e2);
-   var ydiff = y(e1) - y(e2);
+function distance(xdiff, ydiff) {
    return Math.sqrt(xdiff * xdiff + ydiff * ydiff);
 }
 
-/**
- * Extracts the X coord from a mouse event in a cross-browser way
- */
-function x(e) {
-   return e.offsetX == undefined ? e.layerX : e.offsetX;
+function xOff(p1, p2) {
+   return p2.pageX - p1.pageX;
 }
 
-/**
- * Extracts the Y coord from a mouse event in a cross-browser way
- */
-function y(e) {
-   return e.offsetY == undefined ? e.layerY : e.offsetY;
+function yOff(p1, p2) {
+   return p2.pageY - p1.pageY;
 }
 
 /**
