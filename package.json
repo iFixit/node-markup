@@ -18,7 +18,7 @@
     "url"         : "git://github.com/iFixit/node-markup.git"
   },
   "dependencies"    : {
-    "fabric"      : "git://github.com/iFixit/fabric.js.git#ifixit-production"
+    "fabric"      : "git://github.com/iFixit/fabric.js.git"
    ,"optimist"    : "git://github.com/substack/node-optimist.git"
    ,"gm"          : ">=1.8.1"
   },
