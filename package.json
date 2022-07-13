@@ -19,8 +19,8 @@
   },
   "dependencies"    : {
     "fabric"      : "https://github.com/iFixit/fabric.js.git"
-   ,"optimist"    : "https://github.com/substack/node-optimist.git"
-   ,"gm"          : ">=1.8.1"
+   ,"gm"          : ">=1.8.1",
+   "yargs": "^13.3.2"
   },
   "version"         : "0.0.2"
 }
