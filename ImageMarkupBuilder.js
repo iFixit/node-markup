@@ -7,11 +7,11 @@ function ImageMarkupBuilder(fabricCanvas) {
    var Fabric = require('fabric').fabric;
 
    var Shapes = {
-      Rectangle:  require("./shape_rectangle").klass,
-      Circle:     require("./shape_circle").klass,
-      Line:       require("./shape_line").klass,
-      Arrow:      require("./shape_arrow").klass,
-      Gap:        require("./shape_gap").klass
+      Rectangle:  require('./shapes/rectangle').klass,
+      Circle:     require('./shapes/circle').klass,
+      Line:       require('./shapes/line').klass,
+      Arrow:      require('./shapes/arrow').klass,
+      Gap:        require('./shapes/gap').klass
    };
 
    var colorValues = {

@@ -1,6 +1,6 @@
 var Fabric = require('fabric').fabric;
 var extend = Fabric.util.object.extend;
-var mixin = require('./src/mixin');
+var mixin = require('../src/mixin');
 
 var Circle = Fabric.util.createClass(Fabric.Circle, {
    // Inherited variables with new values.
@@ -35,10 +35,10 @@ var Circle = Fabric.util.createClass(Fabric.Circle, {
 });
 
 var proto = Circle.prototype;
-mixin(proto, require('./mixins/clone.mixin'));
-mixin(proto, require('./mixins/highlighted_stroke.mixin'));
-mixin(proto, require('./mixins/limit_size'));
-mixin(proto, require('./mixins/nudge'));
+mixin(proto, require('../mixins/clone.mixin'));
+mixin(proto, require('../mixins/highlighted_stroke.mixin'));
+mixin(proto, require('../mixins/limit_size'));
+mixin(proto, require('../mixins/nudge'));
 
 /**
  * Increment the size of the circle about its center.
