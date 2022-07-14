@@ -1,6 +1,6 @@
 var Fabric = require('fabric').fabric;
 var isNode = typeof window == 'undefined';
-var mixin = require('./mixin');
+var mixin = require('./src/mixin');
 
 var Rectangle = Fabric.util.createClass(Fabric.Rect, {
    // Inherited fields with new values.
