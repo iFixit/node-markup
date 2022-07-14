@@ -139,9 +139,9 @@ var Rectangle = Fabric.util.createClass(Fabric.Rect, {
 });
 
 var proto = Rectangle.prototype;
-mixin(proto, require('./clone.mixin'));
-mixin(proto, require('./highlighted_stroke.mixin'));
-mixin(proto, require('./limit_size'));
-mixin(proto, require('./nudge'));
+mixin(proto, require('./mixins/clone.mixin'));
+mixin(proto, require('./mixins/highlighted_stroke.mixin'));
+mixin(proto, require('./mixins/limit_size'));
+mixin(proto, require('./mixins/nudge'));
 
 module.exports.klass = Rectangle;
