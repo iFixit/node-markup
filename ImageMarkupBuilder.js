@@ -641,7 +641,7 @@ function ImageMarkupBuilder(fabricCanvas) {
    };
 
    // Setup drag-to-draw for this canvas
-   require('./drag_to_create').setup(publicInterface);
+   require('./src/drag_to_create').setup(publicInterface);
 
    return publicInterface;
 }
