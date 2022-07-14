@@ -11,6 +11,26 @@ testDirectory = "./test/";
 # These metrics print out Absoulte columns, which is expected.
 supportedMetrics = ["mae", "mse", "rmse", "pae"];
 
+def main():
+   errors = 0
+   for filename in os.listdir(testDirectory):
+      if filename.endswith(".markup"):
+         markupFilename = testDirectory + filename;
+         basename = regex.sub(r'(.+)\.markup', r'\1', filename);
+         sourceFilename = testDirectory + basename + '.source.jpg';
+         oracleFilename = testDirectory + basename + '.node.oracle.jpg';
+         testFilename = testDirectory + basename + '.node.test.jpg';
+
+         try:
+            runNode(sourceFilename, testFilename, markupFilename);
+            compareOutputs(basename, oracleFilename, testFilename);
+
+         except RuntimeError as msg:
+            print(basename + ':', msg, file=sys.stderr);
+            errors += 1
+            continue;
+   sys.exit(errors)
+
 def readMarkupFile(markupFilename):
    f = open(markupFilename, 'r');
    markup = f.read();
@@ -101,21 +121,5 @@ def runNode(sourceFilename, destinationFilename, markupFilename):
       errMsg = "node-markup modified the markup string";
       raise RuntimeError(errMsg);
 
-errors = 0
-for filename in os.listdir(testDirectory):
-   if filename.endswith(".markup"):
-      markupFilename = testDirectory + filename;
-      basename = regex.sub(r'(.+)\.markup', r'\1', filename);
-      sourceFilename = testDirectory + basename + '.source.jpg';
-      oracleFilename = testDirectory + basename + '.node.oracle.jpg';
-      testFilename = testDirectory + basename + '.node.test.jpg';
-
-      try:
-         runNode(sourceFilename, testFilename, markupFilename);
-         compareOutputs(basename, oracleFilename, testFilename);
-
-      except RuntimeError as msg:
-         print(basename + ':', msg, file=sys.stderr);
-         errors += 1
-         continue;
-sys.exit(errors)
+if __name__ == "__main__":
+   main()
