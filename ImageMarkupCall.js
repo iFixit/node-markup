@@ -1,3 +1,4 @@
+var { Int } = require('./src/utils');
 var ImageMarkupBuilder = require('./ImageMarkupBuilder').Builder;
 var Fabric = require('fabric').fabric;
 var argv = require('optimist').argv;
@@ -272,13 +273,6 @@ function cleanJSON(json, context) {
          }
       }
    }
-}
-
-/**
- * Just like parseInt, but fixed to base-10
- */
-function Int(str) {
-   return parseInt(str, 10);
 }
 
 processArgs();
