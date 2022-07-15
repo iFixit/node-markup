@@ -10,9 +10,7 @@ RUN curl -sL -o node.rpm https://rpm.nodesource.com/pub_6.x/fc/26/x86_64/nodesou
 
 RUN npm config set umask 002 \
  && npm config set unsafe-perm true \
- && npm install -g npm@6.13.7 strip-ansi@3.0.1
-
-RUN npm version
+ && npm install -g npm@6.13.7 strip-ansi@3.0.1 && npm version
 
 RUN npm build /usr/lib/node_modules/*
 
