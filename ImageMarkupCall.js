@@ -216,31 +216,6 @@ function processJSON(json) {
 }
 
 /**
- * Pretty-prints a JSON object to the console. The first invocation not set the
- * 'level' parameter.
- */
-function printJSON(json, level) {
-   String.prototype.repeat = function (num) {
-      return new Array(num+1).join(this);
-   }
-   if (!level) {
-      console.log("{");
-      printJSON(json, 1);
-      console.log("}");
-   } else {
-      for (var property in json) {
-         console.log("\t".repeat(level) + property + ": " + json[property] +
-          " [" + typeof(json[property]) + "]");
-         if (typeof(json[property]) == 'object') {
-            console.log("\t".repeat(level) + "{");
-            printJSON(json[property], level+1);
-            console.log("\t".repeat(level) + "}");
-         }
-      }
-   }
-}
-
-/**
  * Cycles through an object and changes all numeric fields to ints
  * where necessary. 'context' is used for exception reporting and can be
  * left unset upon invocation.
