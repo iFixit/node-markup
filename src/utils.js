@@ -31,7 +31,7 @@ module.exports = {
         }
         else if (isIntegerProperty(property)) {
            if (typeof(json[property]) == 'string') {
-            json[property] = parseInt(json[property]);
+            json[property] = Int(json[property]);
               if (isNaN(json[property])) {
                  var msg = "In '" + context + "': property '" + property +
                   "' is not a number.";
