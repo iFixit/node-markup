@@ -89,13 +89,20 @@ function ImageMarkupBuilder(fabricCanvas) {
       if (!context)
          context = "root";
 
+      var integerProperties = [
+         'x'
+        ,'y'
+        ,'width'
+        ,'height'
+        ,'radius'
+      ];
+      const isIntegerProperty = (property) => integerProperties.indexOf(property) != -1;
+
       for (var property in json) {
          if (typeof(json[property]) == 'object') {
             cleanJSON(json[property], context + '.' + property);
          }
-         else if (property == 'x' || property == 'y' ||
-          property == 'width' || property == 'height' ||
-          property == 'radius') {
+         else if (isIntegerProperty(property)) {
             if (typeof(json[property]) == 'string') {
              json[property] = parseInt(json[property]);
                if (isNaN(json[property])) {

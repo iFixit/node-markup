@@ -232,12 +232,13 @@ function cleanJSON(json, context) {
      ,'radius'
      ,'strokeWidth'
    ];
+   const isIntegerProperty = (property) => integerProperties.indexOf(property) != -1;
 
    for (var property in json) {
 
       if (typeof(json[property]) == 'object') {
          cleanJSON(json[property], context + '.' + property);
-      } else if (integerProperties.indexOf(property) != -1) {
+      } else if (isIntegerProperty(property)) {
          if (typeof(json[property]) == 'string') {
             json[property] = Int(json[property]);
             if (isNaN(json[property])) {
