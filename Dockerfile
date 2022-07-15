@@ -25,8 +25,7 @@ RUN dnf -y install \
  cairomm-devel libjpeg-turbo-devel pango pango-devel pangomm pangomm-devel giflib-devel \
  git make which
 
-RUN npm install -g --verbose node-gyp \
- && npm install -g --verbose canvas@1.x
+RUN npm install -g --verbose node-gyp
 
 COPY . .
 
