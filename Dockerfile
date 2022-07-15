@@ -10,9 +10,7 @@ RUN curl -sL -o node.rpm https://rpm.nodesource.com/pub_6.x/fc/26/x86_64/nodesou
 
 RUN npm config set umask 002 \
  && npm config set unsafe-perm true \
- && npm install -g npm@6.13.7 strip-ansi@3.0.1
-
-RUN npm version
+ && npm install -g npm@6.13.7 strip-ansi@3.0.1 && npm version
 
 RUN npm build /usr/lib/node_modules/*
 
@@ -25,11 +23,10 @@ RUN dnf -y install \
  cairomm-devel libjpeg-turbo-devel pango pango-devel pangomm pangomm-devel giflib-devel \
  git make which
 
-RUN npm install -g --verbose node-gyp \
- && npm install -g --verbose canvas@1.x
+RUN npm install -g --verbose node-gyp
 
-COPY . .
-
+COPY package.json .
 RUN npm install
+COPY . .
 
 RUN ./run-tests.py
