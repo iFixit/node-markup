@@ -80,23 +80,6 @@ function ImageMarkupBuilder(fabricCanvas) {
               rect.top + (strokeWidth * 2) > this.height);
    }
 
-
-   /**
-    * Simple clone function for use in deep-copying objects containing
-    * objects, arrays, and values. Does not support copying of functions.
-    */
-   function clone(obj) {
-      var newobj = {};
-      for (var property in obj) {
-         if (typeof obj[property] == 'object') {
-            newobj[property] = clone(property);
-         } else {
-            newobj[property] = obj[property];
-         }
-      }
-      return newobj;
-   }
-
    /**
     * Cycles through an object and changes all numeric fields to ints
     * where necessary. 'context' is used for exception reporting and can be
