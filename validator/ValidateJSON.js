@@ -1,6 +1,6 @@
 var sys = require('sys'),
     fs = require('fs'),
-    argv = require('optimist')
+    argv = require('yargs')
       .usage('Validate against a schema with a JSON file\n' +
              'Usage: $0 --schema [schema_file] --json [json_file]')
       .demand('schema')

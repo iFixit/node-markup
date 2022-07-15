@@ -1,6 +1,6 @@
 var ImageMarkupBuilder = require('./ImageMarkupBuilder').Builder;
 var Fabric = require('fabric').fabric;
-var argv = require('optimist').argv;
+var argv = require('yargs').argv;
 
 var colorValues = {
    'red': 'rgb(193,40,11)',
