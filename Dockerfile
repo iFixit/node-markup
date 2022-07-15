@@ -25,8 +25,8 @@ RUN dnf -y install \
 
 RUN npm install -g --verbose node-gyp
 
-COPY . .
-
+COPY package.json .
 RUN npm install
+COPY . .
 
 RUN ./run-tests.py
