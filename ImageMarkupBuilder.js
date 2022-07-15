@@ -95,6 +95,7 @@ function ImageMarkupBuilder(fabricCanvas) {
         ,'width'
         ,'height'
         ,'radius'
+        ,'strokeWidth'
       ];
       const isIntegerProperty = (property) => integerProperties.indexOf(property) != -1;
 
