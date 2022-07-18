@@ -3,17 +3,6 @@ var ImageMarkupBuilder = require("./ImageMarkupBuilder").Builder;
 var Fabric = require("fabric").fabric;
 var argv = require("yargs").argv;
 
-var colorValues = {
-  red: "rgb(193,40,11)",
-  orange: "rgb(255,144,36)",
-  yellow: "rgb(243,224,14)",
-  green: "rgb(22,220,129)",
-  lightblue: "rgb(27, 177, 233)",
-  blue: "rgb(35,67,232)",
-  violet: "rgb(220,84,183)",
-  black: "rgb(0,0,0)",
-};
-
 var stroke = null;
 
 function usage(err) {
