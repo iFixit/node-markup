@@ -1,6 +1,6 @@
 module.exports = function (proto, properties) {
   for (const property in properties) {
-    var value = properties[property];
+    const value = properties[property];
     if (proto[property] && typeof value == "function") {
       inherit(proto, property, value);
     } else {
