@@ -81,12 +81,12 @@ function convertMarkupToJSON(callback, markup, infile, outfile) {
             y: cropPosition[1],
           };
 
-          var dimensions = args[2].split("x");
-          dimensions[0] = Int(dimensions[0]);
-          dimensions[1] = Int(dimensions[1]);
+          var cropDimensions = args[2].split("x");
+          cropDimensions[0] = Int(cropDimensions[0]);
+          cropDimensions[1] = Int(cropDimensions[1]);
           var cropSize = {
-            width: dimensions[0],
-            height: dimensions[1],
+            width: cropDimensions[0],
+            height: cropDimensions[1],
           };
 
           var crop = {};
@@ -128,12 +128,12 @@ function convertMarkupToJSON(callback, markup, infile, outfile) {
             y: rectPosition[1],
           };
 
-          var dimensions = args[2].split("x");
-          dimensions[0] = Int(dimensions[0]);
-          dimensions[1] = Int(dimensions[1]);
+          var rectDimensions = args[2].split("x");
+          rectDimensions[0] = Int(rectDimensions[0]);
+          rectDimensions[1] = Int(rectDimensions[1]);
           var rectSize = {
-            width: dimensions[0],
-            height: dimensions[1],
+            width: rectDimensions[0],
+            height: rectDimensions[1],
           };
 
           var color = args[3];
