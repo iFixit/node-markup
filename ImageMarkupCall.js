@@ -25,7 +25,6 @@ function processArgs() {
     usage();
   }
 
-  var json;
   if (argv.json) {
     if (argv.markup) {
       console.error("Invalid usage: Processing JSON and Markup at once.");
@@ -35,8 +34,8 @@ function processArgs() {
       usage(-1);
     }
 
-    var json = JSON.parse(argv.json);
-    processJSON(json);
+    var parsed = JSON.parse(argv.json);
+    processJSON(parsed);
   } else if (argv.markup) {
     if (!argv.input || !argv.output) {
       console.error("Invalid usage. Input or output path missing.");
