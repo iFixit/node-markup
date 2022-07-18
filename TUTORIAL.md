@@ -12,12 +12,12 @@ The Builder JSON schema is made up of the following top elements:
 - `finalDimensions`: The final dimensions of the image/canvas. This is a (`height`, `width`) tuple.
 - `instructions`: A set of image modifcation instructions (described below).
 
-####_Node.js-specific elements_####
+#### Node.js-specific elements
 
 - `sourceFile`: The source JPEG to apply markup instructions to.
 - `destinationFile`: The destination JPEG to save to.
 
-####_Frontend- or HTML-specific elements_####
+#### Frontend- or HTML-specific elements
 
 - `previewInstructions`: Instructions (described below) to support downsizing an image to fit in a smaller container.
 
@@ -25,7 +25,7 @@ The Builder JSON schema is made up of the following top elements:
 
 _If `previewInstructions.ratio` is specified, give absolute pixel coordinates/sizes in `draw` instructions based on the preview size. They will be upscaled automatically._
 
-###Instructions Specification###
+### Instructions Specification
 
 `instructions` is a set of markup instructions:
 
@@ -37,7 +37,7 @@ _If `previewInstructions.ratio` is specified, give absolute pixel coordinates/si
 
 - `draw`: An array of markup drawing instructions (described below)
 
-####Markup Drawing Instructions####
+#### Markup Drawing Instructions
 
 - `circle`: Instructions to draw a circle
 
