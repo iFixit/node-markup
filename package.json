@@ -1,26 +1,26 @@
 {
-  "name"            : "imagemarkup",
-  "description"     : "iFixit's image markup backend library",
-  "homepage"        : "https://github.com/iFixit/node-markup",
-  "author"          : "iFixit",
-  "contributors"    : [
+  "name": "imagemarkup",
+  "description": "iFixit's image markup backend library",
+  "homepage": "https://github.com/iFixit/node-markup",
+  "author": "iFixit",
+  "contributors": [
     {
-      "name"      : "Cedric Wienold",
-      "email"     : "cedric@ifixit.com"
+      "name": "Cedric Wienold",
+      "email": "cedric@ifixit.com"
     },
     {
-      "name"      : "Daniel Beardsley",
-      "email"     : "daniel@ifixit.com"
+      "name": "Daniel Beardsley",
+      "email": "daniel@ifixit.com"
     }
   ],
-  "repository"      : {
-    "type"        : "git",
-    "url"         : "https://github.com/iFixit/node-markup.git"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iFixit/node-markup.git"
   },
-  "dependencies"    : {
-    "fabric"      : "https://github.com/iFixit/fabric.js.git"
-   ,"gm"          : ">=1.8.1",
-   "yargs": "^13.3.2"
+  "dependencies": {
+    "fabric": "https://github.com/iFixit/fabric.js.git",
+    "gm": ">=1.8.1",
+    "yargs": "^13.3.2"
   },
-  "version"         : "0.0.2"
+  "version": "0.0.2"
 }
