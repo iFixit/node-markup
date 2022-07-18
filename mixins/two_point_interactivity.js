@@ -27,13 +27,10 @@ module.exports = (function () {
       var xd = x2 - x1;
       var yd = y2 - y1;
       var rad = Math.sqrt(xd * xd + yd * yd);
-      let ratio;
       if (!rad) {
         xd = yd = this._limitDimension(rad);
-        ratio = 1;
-      } else {
-        ratio = this._limitDimension(rad) / rad;
       }
+      const ratio = rad ? this._limitDimension(rad) / rad : 1;
       this.x1 = x1;
       this.y1 = y1;
       this.x2 = x1 + ratio * xd;
