@@ -73,12 +73,12 @@ function convertMarkupToJSON(callback, markup, infile, outfile) {
       var command = args[0];
       switch (command) {
         case "crop":
-          var position = args[1].split("x");
-          position[0] = Int(position[0]);
-          position[1] = Int(position[1]);
+          var cropPosition = args[1].split("x");
+          cropPosition[0] = Int(cropPosition[0]);
+          cropPosition[1] = Int(cropPosition[1]);
           var from = {
-            x: position[0],
-            y: position[1],
+            x: cropPosition[0],
+            y: cropPosition[1],
           };
 
           var dimensions = args[2].split("x");
@@ -99,12 +99,12 @@ function convertMarkupToJSON(callback, markup, infile, outfile) {
         case "circle":
           if (!json["instructions"]["draw"]) json["instructions"]["draw"] = [];
 
-          var position = args[1].split("x");
-          position[0] = Int(position[0]);
-          position[1] = Int(position[1]);
+          var circlePosition = args[1].split("x");
+          circlePosition[0] = Int(circlePosition[0]);
+          circlePosition[1] = Int(circlePosition[1]);
           var from = {
-            x: position[0],
-            y: position[1],
+            x: circlePosition[0],
+            y: circlePosition[1],
           };
 
           var radius = Int(args[2]);
@@ -120,12 +120,12 @@ function convertMarkupToJSON(callback, markup, infile, outfile) {
         case "rectangle":
           if (!json["instructions"]["draw"]) json["instructions"]["draw"] = [];
 
-          var position = args[1].split("x");
-          position[0] = Int(position[0]);
-          position[1] = Int(position[1]);
+          var rectPosition = args[1].split("x");
+          rectPosition[0] = Int(rectPosition[0]);
+          rectPosition[1] = Int(rectPosition[1]);
           var from = {
-            x: position[0],
-            y: position[1],
+            x: rectPosition[0],
+            y: rectPosition[1],
           };
 
           var dimensions = args[2].split("x");
