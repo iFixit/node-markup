@@ -1,5 +1,4 @@
-var sys = require("sys"),
-  fs = require("fs"),
+var fs = require("fs"),
   argv = require("yargs")
     .usage(
       "Validate against a schema with a JSON file\n" +
