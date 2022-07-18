@@ -182,6 +182,6 @@
       }
     ]
   },
-  "sourceFile": ".\/monitor.jpg",
-  "destinationFile": ".\/out.json.jpg"
+  "sourceFile": "./monitor.jpg",
+  "destinationFile": "./out.json.jpg"
 }
