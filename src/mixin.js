@@ -1,4 +1,4 @@
-module.exports = function (proto, properties) {
+function Mixin(proto, properties) {
   for (const property in properties) {
     const value = properties[property];
     if (proto[property] && typeof value == "function") {
@@ -7,7 +7,7 @@ module.exports = function (proto, properties) {
       proto[property] = value;
     }
   }
-};
+}
 
 function inherit(proto, name, func) {
   var parentFunc = proto[name];
@@ -21,3 +21,5 @@ function inherit(proto, name, func) {
     return ret;
   };
 }
+
+module.exports = Mixin;
