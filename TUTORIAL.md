@@ -57,8 +57,8 @@ _If `previewInstructions.ratio` is specified, give absolute pixel coordinates/si
 
 ## Sample JSON String
 
-<!-- prettier-ignore -->
-`{
+```json
+{
   "dimensions": {
     "width": 3260,
     "height": 2445
@@ -106,7 +106,8 @@ _If `previewInstructions.ratio` is specified, give absolute pixel coordinates/si
   },
   "sourceFile": ".\/source.jpg",
   "destinationFile": ".\/destination.jpg"
-}`
+}
+```
 
 # Builder Markup String
 
