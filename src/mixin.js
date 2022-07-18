@@ -10,11 +10,11 @@ function Mixin(proto, properties) {
 }
 
 function inherit(proto, property, func) {
-  var parentFunc = proto[property];
+  const parentFunc = proto[property];
   proto[property] = function () {
-    var old = this.callParent;
+    const old = this.callParent;
     this.callParent = parentFunc;
-    var ret = func.apply(this, arguments);
+    const ret = func.apply(this, arguments);
     if (old) {
       this.callParent = old;
     }
