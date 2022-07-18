@@ -100,7 +100,7 @@ module.exports = (function () {
      * We don't want line-based shapes to have a bounding box (it looks dumb
      * around lines.
      */
-    drawBorders: function (ctx) {
+    drawBorders: function () {
       return this;
     },
 
