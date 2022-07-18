@@ -17,7 +17,7 @@ var colorValues = {
 var stroke = null;
 
 function usage(err) {
-  var filename = __filename.replace(/^.*[\\\/]/, "");
+  var filename = __filename.replace(/^.*[\\/]/, "");
   console.log("Example Usage:");
   console.log("node " + filename + " [--help|-h] - Show this information");
   console.log(
