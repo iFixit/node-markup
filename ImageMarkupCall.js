@@ -76,7 +76,7 @@ function convertMarkupToJSON(callback, markup, infile, outfile) {
           var cropPosition = args[1].split("x");
           cropPosition[0] = Int(cropPosition[0]);
           cropPosition[1] = Int(cropPosition[1]);
-          var from = {
+          var cropFrom = {
             x: cropPosition[0],
             y: cropPosition[1],
           };
@@ -90,7 +90,7 @@ function convertMarkupToJSON(callback, markup, infile, outfile) {
           };
 
           var crop = {};
-          crop["from"] = from;
+          crop["from"] = cropFrom;
           crop["size"] = cropSize;
 
           json["instructions"]["crop"] = crop;
@@ -102,7 +102,7 @@ function convertMarkupToJSON(callback, markup, infile, outfile) {
           var circlePosition = args[1].split("x");
           circlePosition[0] = Int(circlePosition[0]);
           circlePosition[1] = Int(circlePosition[1]);
-          var from = {
+          var circleFrom = {
             x: circlePosition[0],
             y: circlePosition[1],
           };
@@ -111,7 +111,7 @@ function convertMarkupToJSON(callback, markup, infile, outfile) {
           var color = args[3];
 
           var circle = {};
-          circle["from"] = from;
+          circle["from"] = circleFrom;
           circle["radius"] = radius;
           circle["color"] = color;
 
@@ -123,7 +123,7 @@ function convertMarkupToJSON(callback, markup, infile, outfile) {
           var rectPosition = args[1].split("x");
           rectPosition[0] = Int(rectPosition[0]);
           rectPosition[1] = Int(rectPosition[1]);
-          var from = {
+          var rectFrom = {
             x: rectPosition[0],
             y: rectPosition[1],
           };
@@ -139,7 +139,7 @@ function convertMarkupToJSON(callback, markup, infile, outfile) {
           var color = args[3];
 
           var rectangle = {
-            from: from,
+            from: rectFrom,
             size: rectSize,
             color: color,
           };
