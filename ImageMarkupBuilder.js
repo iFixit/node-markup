@@ -219,13 +219,9 @@ function ImageMarkupBuilder(fabricCanvas) {
    * Returns a strokeWidth calculated based on the dimensions of the canvas.
    */
   function getStrokeWidth(finalWidth) {
-    if (strokeWidth != null) {
-      var width = strokeWidth;
-    } else {
-      var width = Math.max(Math.round((finalWidth / 300) * 2), 4);
-    }
-
-    return width;
+    return strokeWidth != null
+      ? strokeWidth
+      : Math.max(Math.round((finalWidth / 300) * 2), 4);
   }
 
   function drawRectangle(shape) {
