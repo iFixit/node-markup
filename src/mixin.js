@@ -1,10 +1,10 @@
 module.exports = function (proto, properties) {
-  for (name in properties) {
-    var val = properties[name];
-    if (proto[name] && typeof val == "function") {
-      inherit(proto, name, val);
+  for (const property in properties) {
+    var value = properties[property];
+    if (proto[property] && typeof value == "function") {
+      inherit(proto, property, value);
     } else {
-      proto[name] = val;
+      proto[property] = value;
     }
   }
 };
