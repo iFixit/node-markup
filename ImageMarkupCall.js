@@ -108,12 +108,12 @@ function convertMarkupToJSON(callback, markup, infile, outfile) {
           };
 
           var radius = Int(args[2]);
-          var color = args[3];
+          var circleColor = args[3];
 
           var circle = {};
           circle["from"] = circleFrom;
           circle["radius"] = radius;
-          circle["color"] = color;
+          circle["color"] = circleColor;
 
           json["instructions"]["draw"].push({ circle: circle });
           break;
@@ -136,12 +136,12 @@ function convertMarkupToJSON(callback, markup, infile, outfile) {
             height: rectDimensions[1],
           };
 
-          var color = args[3];
+          var rectColor = args[3];
 
           var rectangle = {
             from: rectFrom,
             size: rectSize,
-            color: color,
+            color: rectColor,
           };
 
           json["instructions"]["draw"].push({ rectangle: rectangle });
