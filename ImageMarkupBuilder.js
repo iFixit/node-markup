@@ -32,17 +32,11 @@ function ImageMarkupBuilder(fabricCanvas) {
   // Reference to the json object from processJSON
   var innerJSON;
 
-  // Expected group indexes
-  var borderIndex = 0;
-  var inlineIndex = 1;
-  var shapeIndex = 2;
-
   var imageOffset;
   var resizeRatio = 1;
   var finalWidth = 0;
   var markupObjects = [];
 
-  var whiteStroke = isNode ? 1 : 0.5;
   var strokeWidth = null;
   var crop = null;
 
@@ -109,9 +103,6 @@ function ImageMarkupBuilder(fabricCanvas) {
       applyMarkup(callback);
     } else {
       finalWidth = innerJSON.finalDimensions.width;
-      if (finalWidth <= 1800) {
-        whiteStroke = 1;
-      }
       if (isNode) {
         fabricCanvas.setBackgroundColor("#FFFFFF");
         require("fs").readFile(innerJSON.sourceFile, function (err, blob) {
@@ -500,8 +491,6 @@ function ImageMarkupBuilder(fabricCanvas) {
       cleanJSON(json);
 
       innerJSON = json;
-
-      var imagePath = innerJSON.sourceFile;
 
       crop = innerJSON.instructions.crop;
       imageOffset =
