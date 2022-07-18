@@ -57,6 +57,7 @@ The Builder JSON schema is made up of the following top elements:
 
 ## Sample JSON String ##
 
+<!-- prettier-ignore -->
 `{
   "dimensions": {
     "width": 3260,
