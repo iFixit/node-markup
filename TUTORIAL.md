@@ -104,8 +104,8 @@ _If `previewInstructions.ratio` is specified, give absolute pixel coordinates/si
       }
     ]
   },
-  "sourceFile": ".\/source.jpg",
-  "destinationFile": ".\/destination.jpg"
+  "sourceFile": "./source.jpg",
+  "destinationFile": "./destination.jpg"
 }
 ```
 
