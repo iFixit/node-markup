@@ -84,14 +84,14 @@ function convertMarkupToJSON(callback, markup, infile, outfile) {
           var dimensions = args[2].split("x");
           dimensions[0] = Int(dimensions[0]);
           dimensions[1] = Int(dimensions[1]);
-          var size = {
+          var cropSize = {
             width: dimensions[0],
             height: dimensions[1],
           };
 
           var crop = {};
           crop["from"] = from;
-          crop["size"] = size;
+          crop["size"] = cropSize;
 
           json["instructions"]["crop"] = crop;
           json["finalDimensions"] = crop["size"];
@@ -131,7 +131,7 @@ function convertMarkupToJSON(callback, markup, infile, outfile) {
           var dimensions = args[2].split("x");
           dimensions[0] = Int(dimensions[0]);
           dimensions[1] = Int(dimensions[1]);
-          var size = {
+          var rectSize = {
             width: dimensions[0],
             height: dimensions[1],
           };
@@ -140,7 +140,7 @@ function convertMarkupToJSON(callback, markup, infile, outfile) {
 
           var rectangle = {
             from: from,
-            size: size,
+            size: rectSize,
             color: color,
           };
 
@@ -188,8 +188,8 @@ function convertMarkupToJSON(callback, markup, infile, outfile) {
 function processJSON(json) {
   cleanJSON(json);
 
-  var size = json["finalDimensions"];
-  var canvas = Fabric.createCanvasForNode(size["width"], size["height"]);
+  var finalSize = json["finalDimensions"];
+  var canvas = Fabric.createCanvasForNode(finalSize["width"], finalSize["height"]);
   var builder = ImageMarkupBuilder(canvas);
 
   builder.processJSON(json, function () {
