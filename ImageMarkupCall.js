@@ -25,11 +25,6 @@ function processArgs() {
     usage();
   }
 
-  var shadows =
-    typeof argv.shadows == "undefined"
-      ? false
-      : argv.shadows == "true" || argv.shadows == true;
-
   var json;
   if (argv.json) {
     if (argv.markup) {
