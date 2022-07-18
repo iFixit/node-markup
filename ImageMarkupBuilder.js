@@ -553,7 +553,7 @@ function ImageMarkupBuilder(fabricCanvas) {
 
         switch (object.shapeName) {
           case "circle":
-            var from = {
+            var circleFrom = {
               x: Math.round(object.left / resizeRatio) + imageOffset.x,
               y: Math.round(object.top / resizeRatio) + imageOffset.y,
             };
@@ -562,9 +562,9 @@ function ImageMarkupBuilder(fabricCanvas) {
 
             markupString +=
               "circle," +
-              from.x +
+              circleFrom.x +
               "x" +
-              from.y +
+              circleFrom.y +
               "," +
               radius +
               "," +
@@ -572,7 +572,7 @@ function ImageMarkupBuilder(fabricCanvas) {
               ";";
             break;
           case "rectangle":
-            var from = {
+            var rectFrom = {
               x: Math.round(object.left / resizeRatio) + imageOffset.x,
               y: Math.round(object.top / resizeRatio) + imageOffset.y,
             };
@@ -584,9 +584,9 @@ function ImageMarkupBuilder(fabricCanvas) {
 
             markupString +=
               "rectangle," +
-              from.x +
+              rectFrom.x +
               "x" +
-              from.y +
+              rectFrom.y +
               "," +
               size.width +
               "x" +
