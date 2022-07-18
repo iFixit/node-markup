@@ -558,7 +558,7 @@ function ImageMarkupBuilder(fabricCanvas) {
               y: Math.round(object.top / resizeRatio) + imageOffset.y,
             };
             var radius = Math.round(object.getRadiusX() / resizeRatio);
-            var color = translateRGBtoColorString(object.stroke);
+            var circleColor = translateRGBtoColorString(object.stroke);
 
             markupString +=
               "circle," +
@@ -568,7 +568,7 @@ function ImageMarkupBuilder(fabricCanvas) {
               "," +
               radius +
               "," +
-              color +
+              circleColor +
               ";";
             break;
           case "rectangle":
@@ -580,7 +580,7 @@ function ImageMarkupBuilder(fabricCanvas) {
               width: Math.round(object.width / resizeRatio),
               height: Math.round(object.height / resizeRatio),
             };
-            var color = translateRGBtoColorString(object.stroke);
+            var rectColor = translateRGBtoColorString(object.stroke);
 
             markupString +=
               "rectangle," +
@@ -592,7 +592,7 @@ function ImageMarkupBuilder(fabricCanvas) {
               "x" +
               size.height +
               "," +
-              color +
+              rectColor +
               ";";
             break;
           case "gap":
