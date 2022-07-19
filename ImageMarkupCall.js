@@ -1,5 +1,5 @@
 var { Int, cleanJSON } = require("./src/utils");
-var { convertMarkupToJSON } = require("./src/markup_to_json");
+var convertMarkupToJSON = require("./src/markup_to_json");
 var ImageMarkupBuilder = require("./ImageMarkupBuilder").Builder;
 var Fabric = require("fabric").fabric;
 var argv = require("yargs").argv;
