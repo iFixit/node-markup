@@ -1,4 +1,5 @@
 const { cleanJSON } = require("./src/utils");
+const Shapes = require("./shapes");
 
 var isNode = typeof window == "undefined";
 
@@ -7,14 +8,6 @@ var isNode = typeof window == "undefined";
  */
 function ImageMarkupBuilder(fabricCanvas) {
   var Fabric = require("fabric").fabric;
-
-  var Shapes = {
-    Rectangle: require("./shapes/rectangle").klass,
-    Circle: require("./shapes/circle").klass,
-    Line: require("./shapes/line").klass,
-    Arrow: require("./shapes/arrow").klass,
-    Gap: require("./shapes/gap").klass,
-  };
 
   var colorValues = {
     red: "#C1280B",
