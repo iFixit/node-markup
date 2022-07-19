@@ -1,4 +1,4 @@
-var { Int } = require("./src/utils");
+var { Int } = require("./utils");
 
 function convertMarkupToJSON(callback, markup, infile, outfile, stroke) {
   var json = {};
