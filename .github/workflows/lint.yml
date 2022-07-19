@@ -16,7 +16,7 @@ jobs:
         with:
           node-version: 18
 
-      - name: Pettier
+      - name: Prettier
         run: npx prettier --check .
 
       - name: Eslint
