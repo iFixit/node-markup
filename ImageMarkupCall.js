@@ -4,8 +4,6 @@ var ImageMarkupBuilder = require("./ImageMarkupBuilder").Builder;
 var Fabric = require("fabric").fabric;
 var argv = require("yargs").argv;
 
-var stroke = null;
-
 function usage(err) {
   var filename = __filename.replace(/^.*[\\/]/, "");
   console.log("Example Usage:");
@@ -43,11 +41,15 @@ function processArgs() {
       usage(-1);
     }
 
-    if (argv.stroke) {
-      stroke = Int(argv.stroke);
-    }
+    const stroke = argv.stroke ? Int(argv.stroke) : null;
 
-    convertMarkupToJSON(processJSON, argv.markup, argv.input, argv.output);
+    convertMarkupToJSON(
+      processJSON,
+      argv.markup,
+      argv.input,
+      argv.output,
+      stroke
+    );
   } else {
     console.error("Invalid uage.");
     usage(-1);

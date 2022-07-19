@@ -1,6 +1,6 @@
 var { Int } = require("./src/utils");
 
-function convertMarkupToJSON(callback, markup, infile, outfile) {
+function convertMarkupToJSON(callback, markup, infile, outfile, stroke) {
   var json = {};
 
   var GM = require("gm");
