@@ -3,21 +3,10 @@ var ImageMarkupBuilder = require("./ImageMarkupBuilder").Builder;
 var Fabric = require("fabric").fabric;
 var argv = require("yargs").argv;
 
-var colorValues = {
-  red: "rgb(193,40,11)",
-  orange: "rgb(255,144,36)",
-  yellow: "rgb(243,224,14)",
-  green: "rgb(22,220,129)",
-  lightblue: "rgb(27, 177, 233)",
-  blue: "rgb(35,67,232)",
-  violet: "rgb(220,84,183)",
-  black: "rgb(0,0,0)",
-};
-
 var stroke = null;
 
 function usage(err) {
-  var filename = __filename.replace(/^.*[\\\/]/, "");
+  var filename = __filename.replace(/^.*[\\/]/, "");
   console.log("Example Usage:");
   console.log("node " + filename + " [--help|-h] - Show this information");
   console.log(
@@ -36,12 +25,6 @@ function processArgs() {
     usage();
   }
 
-  var shadows =
-    typeof argv.shadows == "undefined"
-      ? false
-      : argv.shadows == "true" || argv.shadows == true;
-
-  var json;
   if (argv.json) {
     if (argv.markup) {
       console.error("Invalid usage: Processing JSON and Markup at once.");
@@ -51,8 +34,8 @@ function processArgs() {
       usage(-1);
     }
 
-    var json = JSON.parse(argv.json);
-    processJSON(json);
+    var parsed = JSON.parse(argv.json);
+    processJSON(parsed);
   } else if (argv.markup) {
     if (!argv.input || !argv.output) {
       console.error("Invalid usage. Input or output path missing.");
@@ -90,25 +73,25 @@ function convertMarkupToJSON(callback, markup, infile, outfile) {
       var command = args[0];
       switch (command) {
         case "crop":
-          var position = args[1].split("x");
-          position[0] = Int(position[0]);
-          position[1] = Int(position[1]);
-          var from = {
-            x: position[0],
-            y: position[1],
+          var cropPosition = args[1].split("x");
+          cropPosition[0] = Int(cropPosition[0]);
+          cropPosition[1] = Int(cropPosition[1]);
+          var cropFrom = {
+            x: cropPosition[0],
+            y: cropPosition[1],
           };
 
-          var dimensions = args[2].split("x");
-          dimensions[0] = Int(dimensions[0]);
-          dimensions[1] = Int(dimensions[1]);
-          var size = {
-            width: dimensions[0],
-            height: dimensions[1],
+          var cropDimensions = args[2].split("x");
+          cropDimensions[0] = Int(cropDimensions[0]);
+          cropDimensions[1] = Int(cropDimensions[1]);
+          var cropSize = {
+            width: cropDimensions[0],
+            height: cropDimensions[1],
           };
 
           var crop = {};
-          crop["from"] = from;
-          crop["size"] = size;
+          crop["from"] = cropFrom;
+          crop["size"] = cropSize;
 
           json["instructions"]["crop"] = crop;
           json["finalDimensions"] = crop["size"];
@@ -116,49 +99,49 @@ function convertMarkupToJSON(callback, markup, infile, outfile) {
         case "circle":
           if (!json["instructions"]["draw"]) json["instructions"]["draw"] = [];
 
-          var position = args[1].split("x");
-          position[0] = Int(position[0]);
-          position[1] = Int(position[1]);
-          var from = {
-            x: position[0],
-            y: position[1],
+          var circlePosition = args[1].split("x");
+          circlePosition[0] = Int(circlePosition[0]);
+          circlePosition[1] = Int(circlePosition[1]);
+          var circleFrom = {
+            x: circlePosition[0],
+            y: circlePosition[1],
           };
 
           var radius = Int(args[2]);
-          var color = args[3];
+          var circleColor = args[3];
 
           var circle = {};
-          circle["from"] = from;
+          circle["from"] = circleFrom;
           circle["radius"] = radius;
-          circle["color"] = color;
+          circle["color"] = circleColor;
 
           json["instructions"]["draw"].push({ circle: circle });
           break;
         case "rectangle":
           if (!json["instructions"]["draw"]) json["instructions"]["draw"] = [];
 
-          var position = args[1].split("x");
-          position[0] = Int(position[0]);
-          position[1] = Int(position[1]);
-          var from = {
-            x: position[0],
-            y: position[1],
+          var rectPosition = args[1].split("x");
+          rectPosition[0] = Int(rectPosition[0]);
+          rectPosition[1] = Int(rectPosition[1]);
+          var rectFrom = {
+            x: rectPosition[0],
+            y: rectPosition[1],
           };
 
-          var dimensions = args[2].split("x");
-          dimensions[0] = Int(dimensions[0]);
-          dimensions[1] = Int(dimensions[1]);
-          var size = {
-            width: dimensions[0],
-            height: dimensions[1],
+          var rectDimensions = args[2].split("x");
+          rectDimensions[0] = Int(rectDimensions[0]);
+          rectDimensions[1] = Int(rectDimensions[1]);
+          var rectSize = {
+            width: rectDimensions[0],
+            height: rectDimensions[1],
           };
 
-          var color = args[3];
+          var rectColor = args[3];
 
           var rectangle = {
-            from: from,
-            size: size,
-            color: color,
+            from: rectFrom,
+            size: rectSize,
+            color: rectColor,
           };
 
           json["instructions"]["draw"].push({ rectangle: rectangle });
@@ -205,8 +188,8 @@ function convertMarkupToJSON(callback, markup, infile, outfile) {
 function processJSON(json) {
   cleanJSON(json);
 
-  var size = json["finalDimensions"];
-  var canvas = Fabric.createCanvasForNode(size["width"], size["height"]);
+  var finalSize = json["finalDimensions"];
+  var canvas = Fabric.createCanvasForNode(finalSize["width"], finalSize["height"]);
   var builder = ImageMarkupBuilder(canvas);
 
   builder.processJSON(json, function () {
