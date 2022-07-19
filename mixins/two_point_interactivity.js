@@ -29,10 +29,8 @@ module.exports = (function () {
       var rad = Math.sqrt(xd * xd + yd * yd);
       if (!rad) {
         xd = yd = this._limitDimension(rad);
-        var ratio = 1;
-      } else {
-        var ratio = this._limitDimension(rad) / rad;
       }
+      const ratio = rad ? this._limitDimension(rad) / rad : 1;
       this.x1 = x1;
       this.y1 = y1;
       this.x2 = x1 + ratio * xd;
@@ -99,7 +97,7 @@ module.exports = (function () {
      * We don't want line-based shapes to have a bounding box (it looks dumb
      * around lines.
      */
-    drawBorders: function (ctx) {
+    drawBorders: function () {
       return this;
     },
 
