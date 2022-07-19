@@ -8,7 +8,6 @@ var Gap = Fabric.util.createClass(require("./line").klass, {
 
   _stroke: function (ctx) {
     var angle = this._getAngle();
-    var rad = this._getLength();
     var canvasSize = this._canvasSize();
 
     var size = Math.max(this.borderWidth * 2, canvasSize / 46);

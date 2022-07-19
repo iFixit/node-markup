@@ -1,5 +1,4 @@
 var Fabric = require("fabric").fabric;
-var extend = Fabric.util.object.extend;
 var mixin = require("../src/mixin");
 
 var Circle = Fabric.util.createClass(Fabric.Circle, {

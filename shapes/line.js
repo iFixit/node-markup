@@ -1,5 +1,4 @@
 var Fabric = require("fabric").fabric;
-var isNode = typeof window == "undefined";
 var mixin = require("../src/mixin");
 
 var Line = Fabric.util.createClass(Fabric.Line, {
