@@ -32,17 +32,11 @@ function ImageMarkupBuilder(fabricCanvas) {
   // Reference to the json object from processJSON
   var innerJSON;
 
-  // Expected group indexes
-  var borderIndex = 0;
-  var inlineIndex = 1;
-  var shapeIndex = 2;
-
   var imageOffset;
   var resizeRatio = 1;
   var finalWidth = 0;
   var markupObjects = [];
 
-  var whiteStroke = isNode ? 1 : 0.5;
   var strokeWidth = null;
   var crop = null;
 
@@ -109,9 +103,6 @@ function ImageMarkupBuilder(fabricCanvas) {
       applyMarkup(callback);
     } else {
       finalWidth = innerJSON.finalDimensions.width;
-      if (finalWidth <= 1800) {
-        whiteStroke = 1;
-      }
       if (isNode) {
         fabricCanvas.setBackgroundColor("#FFFFFF");
         require("fs").readFile(innerJSON.sourceFile, function (err, blob) {
@@ -228,13 +219,9 @@ function ImageMarkupBuilder(fabricCanvas) {
    * Returns a strokeWidth calculated based on the dimensions of the canvas.
    */
   function getStrokeWidth(finalWidth) {
-    if (strokeWidth != null) {
-      var width = strokeWidth;
-    } else {
-      var width = Math.max(Math.round((finalWidth / 300) * 2), 4);
-    }
-
-    return width;
+    return strokeWidth != null
+      ? strokeWidth
+      : Math.max(Math.round((finalWidth / 300) * 2), 4);
   }
 
   function drawRectangle(shape) {
@@ -501,8 +488,6 @@ function ImageMarkupBuilder(fabricCanvas) {
 
       innerJSON = json;
 
-      var imagePath = innerJSON.sourceFile;
-
       crop = innerJSON.instructions.crop;
       imageOffset =
         typeof crop != "undefined"
@@ -568,26 +553,26 @@ function ImageMarkupBuilder(fabricCanvas) {
 
         switch (object.shapeName) {
           case "circle":
-            var from = {
+            var circleFrom = {
               x: Math.round(object.left / resizeRatio) + imageOffset.x,
               y: Math.round(object.top / resizeRatio) + imageOffset.y,
             };
             var radius = Math.round(object.getRadiusX() / resizeRatio);
-            var color = translateRGBtoColorString(object.stroke);
+            var circleColor = translateRGBtoColorString(object.stroke);
 
             markupString +=
               "circle," +
-              from.x +
+              circleFrom.x +
               "x" +
-              from.y +
+              circleFrom.y +
               "," +
               radius +
               "," +
-              color +
+              circleColor +
               ";";
             break;
           case "rectangle":
-            var from = {
+            var rectFrom = {
               x: Math.round(object.left / resizeRatio) + imageOffset.x,
               y: Math.round(object.top / resizeRatio) + imageOffset.y,
             };
@@ -595,19 +580,19 @@ function ImageMarkupBuilder(fabricCanvas) {
               width: Math.round(object.width / resizeRatio),
               height: Math.round(object.height / resizeRatio),
             };
-            var color = translateRGBtoColorString(object.stroke);
+            var rectColor = translateRGBtoColorString(object.stroke);
 
             markupString +=
               "rectangle," +
-              from.x +
+              rectFrom.x +
               "x" +
-              from.y +
+              rectFrom.y +
               "," +
               size.width +
               "x" +
               size.height +
               "," +
-              color +
+              rectColor +
               ";";
             break;
           case "gap":
