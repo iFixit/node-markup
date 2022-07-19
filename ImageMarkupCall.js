@@ -138,6 +138,7 @@ function convertMarkupToJSON(callback, markup, infile, outfile) {
 
           var rectColor = args[3];
 
+          var rectangle;
           var rectangle = {
             from: rectFrom,
             size: rectSize,
