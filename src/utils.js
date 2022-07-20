@@ -1,3 +1,5 @@
+const isNode = typeof window == "undefined";
+
 /**
  * Just like parseInt, but fixed to base-10
  */
@@ -45,6 +47,7 @@ function cleanJSON(json, context) {
 }
 
 module.exports = {
+  isNode,
   Int,
   cleanJSON,
 };
