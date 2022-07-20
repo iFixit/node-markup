@@ -11,10 +11,9 @@ function convertMarkupToJSON(markup, infile, outfile, stroke) {
       json["instructions"] = {};
 
       var instructions = markup.split(";");
-      for (var i = 0; i < instructions.length; ++i) {
+      instructions.forEach((instruction) => {
         if (instructions[i] == "") continue;
-
-        var args = instructions[i].split(",");
+        var args = instruction.split(",");
         var command = args[0];
         switch (command) {
           case "crop":
