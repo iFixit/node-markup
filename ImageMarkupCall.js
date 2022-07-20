@@ -48,6 +48,7 @@ var yargs = require("yargs")
         describe: "String of Markup",
         string: true,
         conflicts: "json",
+        implies: ["input", "output"],
       },
       input: {
         requiresArg: true,
@@ -114,10 +115,6 @@ function shimForFlags(argv) {
   }
 
   if (argv.markup) {
-    if (!argv.input || !argv.output) {
-      console.error("input and output options are required for markup");
-      process.exit(-1);
-    }
     argv.markup_string = argv.markup;
     return markupCommand(argv);
   }
