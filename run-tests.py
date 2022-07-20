@@ -1,125 +1,137 @@
 #!/usr/bin/python3
 
-import os;
-import sys;
-import subprocess;
-import glob;
-import re as regex;
+import os
+import sys
+import subprocess
+import glob
+import re as regex
 
-testDirectory = "./test/";
+testDirectory = "./test/"
 
 # These metrics print out Absoulte columns, which is expected.
-supportedMetrics = ["mae", "mse", "rmse", "pae"];
+supportedMetrics = ["mae", "mse", "rmse", "pae"]
+
 
 def main():
-   errors = 0
-   for filename in os.listdir(testDirectory):
-      if filename.endswith(".markup"):
-         markupFilename = testDirectory + filename;
-         basename = regex.sub(r'(.+)\.markup', r'\1', filename);
-         sourceFilename = testDirectory + basename + '.source.jpg';
-         oracleFilename = testDirectory + basename + '.node.oracle.jpg';
-         testFilename = testDirectory + basename + '.node.test.jpg';
+    errors = 0
+    for filename in os.listdir(testDirectory):
+        if filename.endswith(".markup"):
+            markupFilename = testDirectory + filename
+            basename = regex.sub(r"(.+)\.markup", r"\1", filename)
+            sourceFilename = testDirectory + basename + ".source.jpg"
+            oracleFilename = testDirectory + basename + ".node.oracle.jpg"
+            testFilename = testDirectory + basename + ".node.test.jpg"
 
-         try:
-            runNode(sourceFilename, testFilename, markupFilename);
-            compareOutputs(basename, oracleFilename, testFilename);
+            try:
+                runNode(sourceFilename, testFilename, markupFilename)
+                compareOutputs(basename, oracleFilename, testFilename)
 
-         except RuntimeError as msg:
-            print(basename + ':', msg, file=sys.stderr);
-            errors += 1
-            continue;
-   sys.exit(errors)
+            except RuntimeError as msg:
+                print(basename + ":", msg, file=sys.stderr)
+                errors += 1
+                continue
+    sys.exit(errors)
+
 
 def readMarkupFile(markupFilename):
-   f = open(markupFilename, 'r');
-   markup = f.read();
-   return markup;
+    f = open(markupFilename, "r")
+    markup = f.read()
+    return markup
+
 
 def processComparison(compareOutput):
-   # Sample compareOutput:
+    # Sample compareOutput:
 
-   # Image Difference (MeanAbsoluteError):
-   #            Normalized    Absolute
-   #           ============  ==========
-   #      Red: 0.0000000000        0.0
-   #    Green: 0.0000000000        0.0
-   #     Blue: 0.0000000000        0.0
-   #    Total: 0.0000000000        0.0
+    # Image Difference (MeanAbsoluteError):
+    #            Normalized    Absolute
+    #           ============  ==========
+    #      Red: 0.0000000000        0.0
+    #    Green: 0.0000000000        0.0
+    #     Blue: 0.0000000000        0.0
+    #    Total: 0.0000000000        0.0
 
-   channelNameIndex = 0;
-   absoluteColumnIndex = 2;
-   totalChannelName = 'Total:';
+    channelNameIndex = 0
+    absoluteColumnIndex = 2
+    totalChannelName = "Total:"
 
-   for line in compareOutput.split('\n'):
-      # Strip trailing and leading spaces and replace multiple spaces
-      # for parsing
-      lineSet = regex.sub(r'\s+', ' ', line.strip()).split(' ');
-      if lineSet[channelNameIndex] == totalChannelName:
-         absoluteError = lineSet[absoluteColumnIndex];
-         return absoluteError;
+    for line in compareOutput.split("\n"):
+        # Strip trailing and leading spaces and replace multiple spaces
+        # for parsing
+        lineSet = regex.sub(r"\s+", " ", line.strip()).split(" ")
+        if lineSet[channelNameIndex] == totalChannelName:
+            absoluteError = lineSet[absoluteColumnIndex]
+            return absoluteError
 
-   # If we're here, the Total line did not exist as expected
-   errMsg = totalChannelName + ' row not found in comparison.';
-   raise RuntimeError(errMsg);
+    # If we're here, the Total line did not exist as expected
+    errMsg = totalChannelName + " row not found in comparison."
+    raise RuntimeError(errMsg)
 
 
 def compareOutputs(basename, oracleFilename, destinationFilename):
-   metric = "mae";
+    metric = "mae"
 
-   if metric not in supportedMetrics:
-      errMsg = metric + " is not a supported metric.";
-      raise RuntimeError(errMsg);
+    if metric not in supportedMetrics:
+        errMsg = metric + " is not a supported metric."
+        raise RuntimeError(errMsg)
 
-   cmd = ["gm","compare","-metric",metric,oracleFilename,destinationFilename];
+    cmd = ["gm", "compare", "-metric", metric, oracleFilename, destinationFilename]
 
-   proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE);
-   (out, err) = proc.communicate();
-   out = out.decode().strip()
+    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    (out, err) = proc.communicate()
+    out = out.decode().strip()
 
-   retCode = proc.returncode;
-   if retCode != 0:
-      errMsg = "Compare invocation failed with exit code: " + str(retCode);
-      errMsg += "\nTo reproduce run:\n";
-      errMsg += ' '.join(cmd);
-      raise RuntimeError(errMsg);
+    retCode = proc.returncode
+    if retCode != 0:
+        errMsg = "Compare invocation failed with exit code: " + str(retCode)
+        errMsg += "\nTo reproduce run:\n"
+        errMsg += " ".join(cmd)
+        raise RuntimeError(errMsg)
 
-   try:
-      absoluteError = float(processComparison(out));
+    try:
+        absoluteError = float(processComparison(out))
 
-      if absoluteError != 0.0:
-         errMsg = basename + ': Image difference error = ' + str(absoluteError);
-         raise RuntimeError(errMsg);
-      else:
-         print(basename + ': test comparison passed.');
-         os.remove(destinationFilename);
-   except RuntimeError as runtimeErr:
-      errMsg = 'Comparison string processing failed\n' \
-         + str(runtimeErr);
+        if absoluteError != 0.0:
+            errMsg = basename + ": Image difference error = " + str(absoluteError)
+            raise RuntimeError(errMsg)
+        else:
+            print(basename + ": test comparison passed.")
+            os.remove(destinationFilename)
+    except RuntimeError as runtimeErr:
+        errMsg = "Comparison string processing failed\n" + str(runtimeErr)
 
-      raise RuntimeError(errMsg);
+        raise RuntimeError(errMsg)
 
 
 def runNode(sourceFilename, destinationFilename, markupFilename):
-   markup = readMarkupFile(markupFilename).strip();
+    markup = readMarkupFile(markupFilename).strip()
 
-   cmd = ["bash", "node-markup.sh", "--input", sourceFilename, "--output",
-      destinationFilename, "--markup", markup, "--debug"];
+    cmd = [
+        "bash",
+        "node-markup.sh",
+        "--input",
+        sourceFilename,
+        "--output",
+        destinationFilename,
+        "--markup",
+        markup,
+        "--debug",
+    ]
 
-   proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE);
-   (out, err) = proc.communicate();
-   out = out.decode().strip();
+    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    (out, err) = proc.communicate()
+    out = out.decode().strip()
 
-   if proc.returncode != 0:
-      errMsg = 'node-markup invocation failed';
-      print(out,err)
-      raise RuntimeError(errMsg);
+    if proc.returncode != 0:
+        errMsg = "node-markup invocation failed"
+        print(out, err)
+        raise RuntimeError(errMsg)
 
-   if out != markup:
-      print("Before: ", markup)
-      print("After:  ", out)
-      errMsg = "node-markup modified the markup string";
-      raise RuntimeError(errMsg);
+    if out != markup:
+        print("Before: ", markup)
+        print("After:  ", out)
+        errMsg = "node-markup modified the markup string"
+        raise RuntimeError(errMsg)
+
 
 if __name__ == "__main__":
-   main()
+    main()
