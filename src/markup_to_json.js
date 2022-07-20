@@ -10,9 +10,10 @@ function convertMarkupToJSON(markup, infile, outfile, stroke) {
 
       json["instructions"] = {};
 
-      var instructions = markup.split(";");
+      const nonEmpty = instruction => instruction != "";
+      var instructions = markup.split(";").filter(nonEmpty);
+
       instructions.forEach((instruction) => {
-        if (instructions[i] == "") continue;
         var args = instruction.split(",");
         var command = args[0];
         switch (command) {
