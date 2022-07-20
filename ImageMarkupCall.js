@@ -41,7 +41,7 @@ var yargs = require("yargs")
         requiresArg: true,
         describe: "String of JSON",
         string: true,
-        conflicts: "markup",
+        conflicts: ["markup", "input", "output", "stroke"],
       },
       markup: {
         requiresArg: true,
