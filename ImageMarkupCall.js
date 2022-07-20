@@ -85,12 +85,11 @@ function markupCommand(argv) {
   const stroke = argv.stroke ? Int(argv.stroke) : null;
 
   convertMarkupToJSON(
-    processJSON,
     argv.markup_string,
     argv.input,
     argv.output,
     stroke
-  );
+  ).then(processJSON);
 }
 
 // Support flag form arguments (--json and --markup) for backwards CLI

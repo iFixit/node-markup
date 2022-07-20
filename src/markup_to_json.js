@@ -1,6 +1,7 @@
 var { Int } = require("./utils");
 
-function convertMarkupToJSON(callback, markup, infile, outfile, stroke) {
+function convertMarkupToJSON(markup, infile, outfile, stroke) {
+  return new Promise((resolve) => {
   var json = {};
 
   var GM = require("gm");
@@ -128,7 +129,8 @@ function convertMarkupToJSON(callback, markup, infile, outfile, stroke) {
       json.instructions.strokeWidth = stroke;
     }
 
-    callback(json);
+    resolve(json);
+  });
   });
 }
 
