@@ -129,10 +129,10 @@ function JSONFromMarkup(instruction, json) {
               },
               color: args[3],
             };
-            var instruction = {};
-            instruction[command] = line;
+            var gapInstruction = {};
+            gapInstruction[command] = line;
 
-            json["instructions"]["draw"].push(instruction);
+            json["instructions"]["draw"].push(gapInstruction);
             break;
           default:
         }
