@@ -30,7 +30,10 @@ var yargs = require("yargs")
   )
   // Lets use check once we have deprecated flag form commands
   //.check((argv) => argv._.length === 1 || RequiredCommands)
-  .command("$0", "Default command (shim for flags)", {
+  .command(
+    "$0",
+    "Default command (shim for flags)",
+    {
       json: {
         describe: "String of JSON",
         string: true,
@@ -53,7 +56,9 @@ var yargs = require("yargs")
         describe: "Stroke width to apply.",
         number: true,
       },
-   }, shimForFlags)
+    },
+    shimForFlags
+  )
   .option("debug", {
     describe: "Enable debug output.",
   })
@@ -90,24 +95,24 @@ function markupCommand(argv) {
 // the `command $0` default command, and resume the `check` for exactly one
 // command.
 function shimForFlags(argv) {
-   if (!argv.json && !argv.markup) {
-      console.error(RequiredCommands);
+  if (!argv.json && !argv.markup) {
+    console.error(RequiredCommands);
+    process.exit(-1);
+  }
+
+  if (argv.json) {
+    argv.json_string = argv.json;
+    return jsonCommand(argv);
+  }
+
+  if (argv.markup) {
+    if (!argv.input || !argv.output) {
+      console.error("input and output options are required for markup");
       process.exit(-1);
-   }
-
-   if (argv.json) {
-      argv.json_string = argv.json;
-      return jsonCommand(argv);
-   }
-
-   if (argv.markup) {
-      if (!argv.input || !argv.output) {
-         console.error("input and output options are required for markup");
-         process.exit(-1);
-      }
-      argv.markup_string = argv.markup
-      return markupCommand(argv);
-   }
+    }
+    argv.markup_string = argv.markup;
+    return markupCommand(argv);
+  }
 }
 
 function processJSON(json) {
