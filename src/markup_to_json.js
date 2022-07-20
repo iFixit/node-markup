@@ -1,10 +1,9 @@
-var { Int } = require("./utils");
+const { Int } = require("./utils");
+const GM = require("gm");
 
 function convertMarkupToJSON(markup, infile, outfile, stroke) {
   return new Promise((resolve) => {
     var json = {};
-
-    var GM = require("gm");
     GM(infile).size(function (err, size) {
       if (err) throw err;
 
