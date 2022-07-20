@@ -33,27 +33,35 @@ function processArgs() {
       usage(-1);
     }
 
-    var parsed = JSON.parse(argv.json);
-    processJSON(parsed);
+    jsonCommand(argv);
   } else if (argv.markup) {
     if (!argv.input || !argv.output) {
       console.error("Invalid usage. Input or output path missing.");
       usage(-1);
     }
 
-    const stroke = argv.stroke ? Int(argv.stroke) : null;
-
-    convertMarkupToJSON(
-      processJSON,
-      argv.markup,
-      argv.input,
-      argv.output,
-      stroke
-    );
+    markupCommand(argv);
   } else {
     console.error("Invalid uage.");
     usage(-1);
   }
+}
+
+function jsonCommand(argv) {
+  var parsed = JSON.parse(argv.json);
+  processJSON(parsed);
+}
+
+function markupCommand(argv) {
+  const stroke = argv.stroke ? Int(argv.stroke) : null;
+
+  convertMarkupToJSON(
+    processJSON,
+    argv.markup,
+    argv.input,
+    argv.output,
+    stroke
+  );
 }
 
 function processJSON(json) {
