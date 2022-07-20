@@ -1,7 +1,5 @@
-const { cleanJSON } = require("./src/utils");
+const { isNode, cleanJSON } = require("./src/utils");
 const Shapes = require("./shapes");
-
-var isNode = typeof window == "undefined";
 
 /**
  * Expects a Fabric.js Canvas
