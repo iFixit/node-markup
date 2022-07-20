@@ -22,5 +22,8 @@
     "gm": ">=1.8.1",
     "yargs": "^13.3.2"
   },
-  "version": "0.0.2"
+  "version": "0.0.2",
+  "scripts": {
+    "lint": "npx prettier --write . && echo Eslint && npx eslint . && echo ✓"
+  }
 }
