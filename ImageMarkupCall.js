@@ -78,6 +78,15 @@ function markupCommand(argv) {
   );
 }
 
+// Support flag form arguments (--json and --markup) for backwards CLI
+// compatibility. Yargs is not able to support commands with long flag format.
+// Even using aliases, the parser gets confused. Admittedly using options flags
+// as commands was misguided on the original interface. In order preserve the
+// existing behavior, we can continue to use flags, and this shim, to support
+// flag form commands (actually options, just on the default command).
+// Once we've deprecated these, we can drop this function, drop
+// the `command $0` default command, and resume the `check` for exactly one
+// command.
 function shimForFlags(argv) {
    if ((argv.json && argv.markup) || (!argv.json && !argv.markup)) {
       console.error(RequiredCommands);
