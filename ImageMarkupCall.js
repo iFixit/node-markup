@@ -28,6 +28,8 @@ var yargs = require("yargs")
     },
     markupCommand
   )
+  // Lets use check once we have deprecated flag form commands
+  //.check((argv) => argv._.length === 1 || RequiredCommands)
   .command("$0", "Default command (shim for flags)", {
       json: {
         describe: "String of JSON",
@@ -54,7 +56,6 @@ var yargs = require("yargs")
     describe: "Enable debug output.",
   })
   .alias("h", "help")
-  .check((argv) => argv._.length === 1 || RequiredCommands)
   .strict()
   .wrap(null);
 
