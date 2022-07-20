@@ -112,7 +112,7 @@ def runNode(sourceFilename, destinationFilename, markupFilename):
         sourceFilename,
         "--output",
         destinationFilename,
-        "--markup",
+        "markup",
         markup,
         "--debug",
     ]
