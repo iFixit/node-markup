@@ -34,10 +34,12 @@ var yargs = require("yargs")
       json: {
         describe: "String of JSON",
         string: true,
+        conflicts: "markup",
       },
       markup: {
         describe: "String of Markup",
         string: true,
+        conflicts: "json",
       },
       input: {
         describe: "Input image file to apply markup on",
@@ -88,7 +90,7 @@ function markupCommand(argv) {
 // the `command $0` default command, and resume the `check` for exactly one
 // command.
 function shimForFlags(argv) {
-   if ((argv.json && argv.markup) || (!argv.json && !argv.markup)) {
+   if (!argv.json && !argv.markup) {
       console.error(RequiredCommands);
       process.exit(-1);
    }
