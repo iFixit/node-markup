@@ -4,9 +4,7 @@ const GM = require("gm");
 function convertMarkupToJSON(markup, infile, outfile, stroke) {
   return new Promise((resolve) => {
     var json = {};
-    GM(infile).size(function (err, size) {
-      if (err) throw err;
-
+    GMGetSize(infile).then((size) => {
       json["dimensions"] = size;
       json["finalDimensions"] = size;
 
@@ -132,6 +130,17 @@ function convertMarkupToJSON(markup, infile, outfile, stroke) {
       }
 
       resolve(json);
+    });
+  });
+}
+
+function GMGetSize(infile) {
+  return new Promise((resolve, reject) => {
+    GM(infile).size(function (err, size) {
+      if (err) {
+        reject(err);
+      }
+      resolve(size);
     });
   });
 }
