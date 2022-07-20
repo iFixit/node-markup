@@ -2,53 +2,44 @@ var { Int, cleanJSON } = require("./src/utils");
 var convertMarkupToJSON = require("./src/markup_to_json");
 var ImageMarkupBuilder = require("./ImageMarkupBuilder").Builder;
 var Fabric = require("fabric").fabric;
-var argv = require("yargs").argv;
 
-function usage(err) {
-  var filename = __filename.replace(/^.*[\\/]/, "");
-  console.log("Example Usage:");
-  console.log("node " + filename + " [--help|-h] - Show this information");
-  console.log(
-    "node " +
-      filename +
-      " --input infile.jpg --output outfile.jpg --markup '[markup_string]'"
-  );
-  console.log("node " + filename + " --json '[json_string]'");
-  //TODO: "See README file for specification"
-  if (err) process.exit(err);
-  else process.exit(0);
-}
+const RequiredCommands =
+  "Invalid usage: Please provide exactly one of the `markup` or the `json` commands";
+var yargs = require("yargs")
+  .command("json <json_string>", "Process JSON input", {}, jsonCommand)
+  .command(
+    "markup <markup_string>",
+    "Process markup string input",
+    {
+      input: {
+        demandOption: true,
+        describe: "Input image file to apply markup on",
+        string: true,
+      },
+      output: {
+        demandOption: true,
+        describe: "Output image file to write to",
+        string: true,
+      },
+      stroke: {
+        describe: "Stroke width to apply.",
+        number: true,
+      },
+    },
+    markupCommand
+  )
+  .option("debug", {
+    describe: "Enable debug output.",
+  })
+  .alias("h", "help")
+  .check((argv) => argv._.length === 1 || RequiredCommands)
+  .strict()
+  .wrap(null);
 
-function processArgs() {
-  if (argv.help || argv.h) {
-    usage();
-  }
-
-  if (argv.json) {
-    if (argv.markup) {
-      console.error("Invalid usage: Processing JSON and Markup at once.");
-      usage(-1);
-    } else if (argv.stroke) {
-      console.log("Invalid usage: 'stroke' with JSON in command line.");
-      usage(-1);
-    }
-
-    jsonCommand(argv);
-  } else if (argv.markup) {
-    if (!argv.input || !argv.output) {
-      console.error("Invalid usage. Input or output path missing.");
-      usage(-1);
-    }
-
-    markupCommand(argv);
-  } else {
-    console.error("Invalid uage.");
-    usage(-1);
-  }
-}
+var argv = yargs.argv;
 
 function jsonCommand(argv) {
-  var parsed = JSON.parse(argv.json);
+  var parsed = JSON.parse(argv.json_string);
   processJSON(parsed);
 }
 
@@ -57,7 +48,7 @@ function markupCommand(argv) {
 
   convertMarkupToJSON(
     processJSON,
-    argv.markup,
+    argv.markup_string,
     argv.input,
     argv.output,
     stroke
@@ -80,5 +71,3 @@ function processJSON(json) {
     }
   });
 }
-
-processArgs();
