@@ -28,6 +28,28 @@ var yargs = require("yargs")
     },
     markupCommand
   )
+  .command("$0", "Default command (shim for flags)", {
+      json: {
+        describe: "String of JSON",
+        string: true,
+      },
+      markup: {
+        describe: "String of Markup",
+        string: true,
+      },
+      input: {
+        describe: "Input image file to apply markup on",
+        string: true,
+      },
+      output: {
+        describe: "Output image file to write to",
+        string: true,
+      },
+      stroke: {
+        describe: "Stroke width to apply.",
+        number: true,
+      },
+   }, shimForFlags)
   .option("debug", {
     describe: "Enable debug output.",
   })
@@ -53,6 +75,27 @@ function markupCommand(argv) {
     argv.output,
     stroke
   );
+}
+
+function shimForFlags(argv) {
+   if ((argv.json && argv.markup) || (!argv.json && !argv.markup)) {
+      console.error(RequiredCommands);
+      process.exit(-1);
+   }
+
+   if (argv.json) {
+      argv.json_string = argv.json;
+      return jsonCommand(argv);
+   }
+
+   if (argv.markup) {
+      if (!argv.input || !argv.output) {
+         console.error("input and output options are required for markup");
+         process.exit(-1);
+      }
+      argv.markup_string = argv.markup
+      return markupCommand(argv);
+   }
 }
 
 function processJSON(json) {
