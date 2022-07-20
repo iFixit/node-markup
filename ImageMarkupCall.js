@@ -12,16 +12,19 @@ var yargs = require("yargs")
     "Process markup string input",
     {
       input: {
+        requiresArg: true,
         demandOption: true,
         describe: "Input image file to apply markup on",
         string: true,
       },
       output: {
+        requiresArg: true,
         demandOption: true,
         describe: "Output image file to write to",
         string: true,
       },
       stroke: {
+        requiresArg: true,
         describe: "Stroke width to apply.",
         number: true,
       },
@@ -35,24 +38,29 @@ var yargs = require("yargs")
     "Default command (shim for flags)",
     {
       json: {
+        requiresArg: true,
         describe: "String of JSON",
         string: true,
         conflicts: "markup",
       },
       markup: {
+        requiresArg: true,
         describe: "String of Markup",
         string: true,
         conflicts: "json",
       },
       input: {
+        requiresArg: true,
         describe: "Input image file to apply markup on",
         string: true,
       },
       output: {
+        requiresArg: true,
         describe: "Output image file to write to",
         string: true,
       },
       stroke: {
+        requiresArg: true,
         describe: "Stroke width to apply.",
         number: true,
       },
