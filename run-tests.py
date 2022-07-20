@@ -104,7 +104,7 @@ def runNode(sourceFilename, destinationFilename, markupFilename):
    markup = readMarkupFile(markupFilename).strip();
 
    cmd = ["bash", "node-markup.sh", "--input", sourceFilename, "--output",
-      destinationFilename, "--markup", markup, "--debug"];
+      destinationFilename, "markup", markup, "--debug"];
 
    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE);
    (out, err) = proc.communicate();
