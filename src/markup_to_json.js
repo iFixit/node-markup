@@ -14,6 +14,22 @@ function convertMarkupToJSON(markup, infile, outfile, stroke) {
       var instructions = markup.split(";").filter(nonEmpty);
 
       instructions.forEach((instruction) => {
+         JSONFromMarkup(instruction, json);
+      });
+
+      json["sourceFile"] = infile;
+      json["destinationFile"] = outfile;
+
+      if (stroke != null) {
+        json.instructions.strokeWidth = stroke;
+      }
+
+      resolve(json);
+    });
+  });
+}
+
+function JSONFromMarkup(instruction, json) {
         var args = instruction.split(",");
         var command = args[0];
         switch (command) {
@@ -120,18 +136,6 @@ function convertMarkupToJSON(markup, infile, outfile, stroke) {
             break;
           default:
         }
-      }
-
-      json["sourceFile"] = infile;
-      json["destinationFile"] = outfile;
-
-      if (stroke != null) {
-        json.instructions.strokeWidth = stroke;
-      }
-
-      resolve(json);
-    });
-  });
 }
 
 function GMGetSize(infile) {
