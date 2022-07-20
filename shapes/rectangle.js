@@ -1,5 +1,5 @@
+const { isNode } = require("../src/utils");
 var Fabric = require("fabric").fabric;
-var isNode = typeof window == "undefined";
 var mixin = require("../src/mixin");
 
 var Rectangle = Fabric.util.createClass(Fabric.Rect, {
