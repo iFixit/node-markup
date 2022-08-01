@@ -1,6 +1,6 @@
 FROM node:16-alpine
 
-RUN apk --no-cache --update add graphicsmagick python3
+RUN apk --no-cache --update add graphicsmagick python3 bash
 
 RUN mkdir -p /opt/node-markup
 WORKDIR /opt/node-markup
