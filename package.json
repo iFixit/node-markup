@@ -20,7 +20,8 @@
   "dependencies": {
     "fabric": "5.2",
     "gm": "1.23.1",
-    "yargs": "^13.3.2"
+    "yargs": "^13.3.2",
+    "canvas": "2.9.3"
   },
   "version": "0.0.2",
   "scripts": {
