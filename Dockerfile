@@ -1,6 +1,12 @@
 FROM node:16-alpine
 
-RUN apk --no-cache --update add graphicsmagick python3 bash
+RUN apk --no-cache --update add graphicsmagick python3 bash \
+    build-base \
+    g++ \
+    cairo-dev \
+    jpeg-dev \
+    pango-dev \
+    giflib-dev
 
 RUN mkdir -p /opt/node-markup
 WORKDIR /opt/node-markup
