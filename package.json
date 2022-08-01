@@ -18,8 +18,8 @@
     "url": "https://github.com/iFixit/node-markup.git"
   },
   "dependencies": {
-    "fabric": "https://github.com/iFixit/fabric.js.git",
-    "gm": ">=1.8.1",
+    "fabric": "5.2",
+    "gm": "1.23.1",
     "yargs": "^13.3.2"
   },
   "version": "0.0.2",
