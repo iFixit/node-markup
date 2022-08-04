@@ -1,6 +1,7 @@
 FROM node:16-alpine
 
 RUN apk --no-cache --update add graphicsmagick python3 bash \
+    git \
     build-base \
     g++ \
     cairo-dev \
