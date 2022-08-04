@@ -106,7 +106,8 @@ function ImageMarkupBuilder(fabricCanvas) {
           src: "file://" + path.resolve(innerJSON.sourceFile),
         };
 
-        Fabric.Image.fromObject(img, function (fimg) {
+        Fabric.Image.fromObject(img, function (fimg, err) {
+          if (!fimg || err) throw err;
           var top = -imageOffset.y;
           if (top % 1 != 0) {
             top -= 0.5;
