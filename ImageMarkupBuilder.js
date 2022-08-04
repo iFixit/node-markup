@@ -1,5 +1,6 @@
 const { isNode, cleanJSON } = require("./src/utils");
 const Shapes = require("./shapes");
+const path = require("path");
 
 /**
  * Expects a Fabric.js Canvas
@@ -102,7 +103,7 @@ function ImageMarkupBuilder(fabricCanvas) {
           height: dimensions.height,
           originX: "left",
           originY: "top",
-          src: innerJSON.sourceFile,
+          src: "file://" + path.resolve(innerJSON.sourceFile),
         };
 
         Fabric.Image.fromObject(img, function (fimg) {
