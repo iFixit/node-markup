@@ -1,6 +1,58 @@
 const { Int } = require("./utils");
 const GM = require("gm");
 
+const pos = (x, y) => ({ x: Int(x), y: Int(y) });
+const dim = (x, y) => ({ width: Int(x), height: Int(y) });
+
+const MarkupParser = {
+  crop: {
+    regex: /crop,(\d+)x(\d+),(\d+)x(\d+)/,
+    t: (m) => ({
+      block: "crop",
+      instruction: {
+        from: pos(m[1], m[2]),
+        size: dim(m[3], m[4]),
+      },
+    }),
+  },
+  circle: {
+    regex: /circle,(\d+)x(\d+),(\d+),(\w+)/,
+    t: (m) => ({
+      block: "draw",
+      id: "circle",
+      instruction: {
+        from: pos(m[1], m[2]),
+        radius: Int(m[3]),
+        color: m[4],
+      },
+    }),
+  },
+  rectangle: {
+    regex: /rectangle,(\d+)x(\d+),(\d+)x(\d+),(\w+)/,
+    t: (m) => ({
+      block: "draw",
+      id: "rectangle",
+      instruction: {
+        from: pos(m[1], m[2]),
+        size: dim(m[3], m[4]),
+        color: m[5],
+      },
+    }),
+  },
+  line: {
+    regex: /(line|arrow|gap),(\d+)x(\d+),(\d+)x(\d+),(\w+)/,
+    t: (m) => ({
+      block: "draw",
+      id: m[1],
+      instruction: {
+        from: pos(m[2], m[3]),
+        to: pos(m[4], m[5]),
+        color: m[6],
+      },
+    }),
+  },
+};
+
 function convertMarkupToJSON(markup, infile, outfile, stroke) {
   return new Promise((resolve) => {
     var json = {};
