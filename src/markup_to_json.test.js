@@ -30,3 +30,23 @@ describe("markup_to_jsonJSON", () => {
     });
   });
 });
+
+const newConvertMarkupToJSON = require("./new_markup_to_json");
+
+describe("New Markup parser `newConvertMarkupToJSON`", () => {
+  test("converts to expected JSON", async () => {
+    TestCases.forEach(async (testcase) => {
+      const testMarkup = fs.readFileSync(`./test/${testcase}.markup`, "utf8");
+      const expectedJSON = JSON.parse(
+        fs.readFileSync(`./test/${testcase}.json`, "utf8")
+      );
+      const testJSON = await newConvertMarkupToJSON(
+        testMarkup,
+        `./test/${testcase}.source.jpg`,
+        "./literally.anywhere"
+      );
+
+      expect(testJSON).toEqual(expectedJSON);
+    });
+  });
+});
