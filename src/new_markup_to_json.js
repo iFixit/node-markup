@@ -3,7 +3,7 @@ const GM = require("gm");
 
 const pos = (x, y) => ({ x: Int(x), y: Int(y) });
 const dim = (x, y) => ({ width: Int(x), height: Int(y) });
-const color = '()'
+const color = "(black|red|orange|yellow|green|blue|indigo|violet)";
 
 const MarkupParser = {
   crop: {
@@ -17,7 +17,7 @@ const MarkupParser = {
     }),
   },
   circle: {
-    regex: new RegExp(`circle,(\\d+)x(\\d+),(\\d+),(\\w+)`),
+    regex: new RegExp(`circle,(\\d+)x(\\d+),(\\d+),${color}`),
     t: (m) => ({
       block: "draw",
       id: "circle",
@@ -29,7 +29,7 @@ const MarkupParser = {
     }),
   },
   rectangle: {
-    regex: new RegExp(`rectangle,(\\d+)x(\\d+),(\\d+)x(\\d+),(\\w+)`),
+    regex: new RegExp(`rectangle,(\\d+)x(\\d+),(\\d+)x(\\d+),${color}`),
     t: (m) => ({
       block: "draw",
       id: "rectangle",
@@ -41,7 +41,7 @@ const MarkupParser = {
     }),
   },
   line: {
-    regex: new RegExp(`(line|arrow|gap),(\\d+)x(\\d+),(\\d+)x(\\d+),(\\w+)`),
+    regex: new RegExp(`(line|arrow|gap),(\\d+)x(\\d+),(\\d+)x(\\d+),${color}`),
     t: (m) => ({
       block: "draw",
       id: m[1],
