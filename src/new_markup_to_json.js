@@ -62,8 +62,10 @@ function convertMarkupToJSON(markup, infile, outfile, stroke) {
 
       json["instructions"] = {};
 
-      const nonEmpty = (instruction) => instruction != "";
-      var instructions = markup.split(";").filter(nonEmpty);
+      var instructions = markup
+        .trim()
+        .split(";")
+        .filter((_) => _);
 
       instructions.forEach((instruction) => {
         JSONFromMarkup(instruction, json);
