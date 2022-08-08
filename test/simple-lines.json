@@ -1,0 +1,42 @@
+{
+  "dimensions": { "width": 1200, "height": 900 },
+  "finalDimensions": { "width": 1024, "height": 768 },
+  "instructions": {
+    "crop": {
+      "from": { "x": 20, "y": 40 },
+      "size": { "width": 1024, "height": 768 }
+    },
+    "draw": [
+      {
+        "line": {
+          "from": { "x": 300, "y": 200 },
+          "to": { "x": 200, "y": 100 },
+          "color": "yellow"
+        }
+      },
+      {
+        "line": {
+          "from": { "x": 350, "y": 100 },
+          "to": { "x": 350, "y": 200 },
+          "color": "black"
+        }
+      },
+      {
+        "arrow": {
+          "from": { "x": 201, "y": 192 },
+          "to": { "x": 523, "y": 440 },
+          "color": "red"
+        }
+      },
+      {
+        "gap": {
+          "from": { "x": 305, "y": 84 },
+          "to": { "x": 973, "y": 84 },
+          "color": "red"
+        }
+      }
+    ]
+  },
+  "sourceFile": "./test/simple-lines.source.jpg",
+  "destinationFile": "./literally.anywhere"
+}

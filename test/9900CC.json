@@ -1,0 +1,42 @@
+{
+  "dimensions": { "width": 1200, "height": 900 },
+  "finalDimensions": { "width": 1200, "height": 900 },
+  "instructions": {
+    "crop": {
+      "from": { "x": 0, "y": 0 },
+      "size": { "width": 1200, "height": 900 }
+    },
+    "draw": [
+      {
+        "circle": {
+          "from": { "x": 400, "y": 424 },
+          "radius": 53,
+          "color": "black"
+        }
+      },
+      {
+        "circle": {
+          "from": { "x": 288, "y": 422 },
+          "radius": 24,
+          "color": "red"
+        }
+      },
+      {
+        "rectangle": {
+          "from": { "x": 465, "y": 372 },
+          "size": { "width": 93, "height": 153 },
+          "color": "yellow"
+        }
+      },
+      {
+        "rectangle": {
+          "from": { "x": 829, "y": 370 },
+          "size": { "width": 131, "height": 151 },
+          "color": "green"
+        }
+      }
+    ]
+  },
+  "sourceFile": "./test/9900CC.source.jpg",
+  "destinationFile": "./literally.anywhere"
+}

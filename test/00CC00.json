@@ -1,0 +1,42 @@
+{
+  "dimensions": { "width": 1200, "height": 900 },
+  "finalDimensions": { "width": 800, "height": 600 },
+  "instructions": {
+    "crop": {
+      "from": { "x": 399, "y": 0 },
+      "size": { "width": 800, "height": 600 }
+    },
+    "draw": [
+      {
+        "circle": {
+          "from": { "x": 944, "y": 406 },
+          "radius": 85,
+          "color": "red"
+        }
+      },
+      {
+        "rectangle": {
+          "from": { "x": 518, "y": 264 },
+          "size": { "width": 32, "height": 226 },
+          "color": "blue"
+        }
+      },
+      {
+        "rectangle": {
+          "from": { "x": 684, "y": 112 },
+          "size": { "width": 362, "height": 32 },
+          "color": "orange"
+        }
+      },
+      {
+        "circle": {
+          "from": { "x": 677, "y": 443 },
+          "radius": 11,
+          "color": "orange"
+        }
+      }
+    ]
+  },
+  "sourceFile": "./test/00CC00.source.jpg",
+  "destinationFile": "./literally.anywhere"
+}
