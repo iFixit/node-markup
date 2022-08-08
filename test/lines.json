@@ -1,0 +1,192 @@
+{
+  "dimensions": { "width": 1200, "height": 900 },
+  "finalDimensions": { "width": 1200, "height": 900 },
+  "instructions": {
+    "draw": [
+      {
+        "circle": {
+          "from": { "x": 77, "y": 207 },
+          "radius": 20,
+          "color": "red"
+        }
+      },
+      {
+        "circle": {
+          "from": { "x": 89, "y": 612 },
+          "radius": 20,
+          "color": "red"
+        }
+      },
+      {
+        "circle": {
+          "from": { "x": 909, "y": 201 },
+          "radius": 20,
+          "color": "orange"
+        }
+      },
+      {
+        "circle": {
+          "from": { "x": 549, "y": 197 },
+          "radius": 20,
+          "color": "orange"
+        }
+      },
+      {
+        "arrow": {
+          "from": { "x": 201, "y": 192 },
+          "to": { "x": 523, "y": 440 },
+          "color": "red"
+        }
+      },
+      {
+        "arrow": {
+          "from": { "x": 331, "y": 542 },
+          "to": { "x": 373, "y": 580 },
+          "color": "red"
+        }
+      },
+      {
+        "arrow": {
+          "from": { "x": 300, "y": 353 },
+          "to": { "x": 470, "y": 490 },
+          "color": "red"
+        }
+      },
+      {
+        "arrow": {
+          "from": { "x": 341, "y": 475 },
+          "to": { "x": 416, "y": 538 },
+          "color": "red"
+        }
+      },
+      {
+        "arrow": {
+          "from": { "x": 302, "y": 582 },
+          "to": { "x": 334, "y": 608 },
+          "color": "red"
+        }
+      },
+      {
+        "gap": {
+          "from": { "x": 305, "y": 84 },
+          "to": { "x": 973, "y": 84 },
+          "color": "red"
+        }
+      },
+      {
+        "gap": {
+          "from": { "x": 483, "y": 181 },
+          "to": { "x": 973, "y": 181 },
+          "color": "red"
+        }
+      },
+      {
+        "gap": {
+          "from": { "x": 621, "y": 296 },
+          "to": { "x": 967, "y": 296 },
+          "color": "red"
+        }
+      },
+      {
+        "gap": {
+          "from": { "x": 734, "y": 391 },
+          "to": { "x": 966, "y": 391 },
+          "color": "red"
+        }
+      },
+      {
+        "gap": {
+          "from": { "x": 842, "y": 482 },
+          "to": { "x": 967, "y": 482 },
+          "color": "red"
+        }
+      },
+      {
+        "gap": {
+          "from": { "x": 899, "y": 554 },
+          "to": { "x": 967, "y": 554 },
+          "color": "red"
+        }
+      },
+      {
+        "gap": {
+          "from": { "x": 935, "y": 638 },
+          "to": { "x": 966, "y": 638 },
+          "color": "red"
+        }
+      },
+      {
+        "line": {
+          "from": { "x": 100, "y": 100 },
+          "to": { "x": 200, "y": 200 },
+          "color": "red"
+        }
+      },
+      {
+        "line": {
+          "from": { "x": 300, "y": 200 },
+          "to": { "x": 200, "y": 100 },
+          "color": "yellow"
+        }
+      },
+      {
+        "line": {
+          "from": { "x": 350, "y": 100 },
+          "to": { "x": 350, "y": 200 },
+          "color": "black"
+        }
+      },
+      {
+        "line": {
+          "from": { "x": 400, "y": 100 },
+          "to": { "x": 500, "y": 100 },
+          "color": "orange"
+        }
+      },
+      {
+        "line": {
+          "from": { "x": 400, "y": 200 },
+          "to": { "x": 500, "y": 200 },
+          "color": "orange"
+        }
+      },
+      {
+        "line": {
+          "from": { "x": 400, "y": 300 },
+          "to": { "x": 500, "y": 300 },
+          "color": "orange"
+        }
+      },
+      {
+        "line": {
+          "from": { "x": 100, "y": 300 },
+          "to": { "x": 100, "y": 400 },
+          "color": "orange"
+        }
+      },
+      {
+        "line": {
+          "from": { "x": 100, "y": 300 },
+          "to": { "x": 100, "y": 400 },
+          "color": "black"
+        }
+      },
+      {
+        "line": {
+          "from": { "x": 200, "y": 300 },
+          "to": { "x": 200, "y": 400 },
+          "color": "black"
+        }
+      },
+      {
+        "line": {
+          "from": { "x": 200, "y": 300 },
+          "to": { "x": 200, "y": 400 },
+          "color": "black"
+        }
+      }
+    ]
+  },
+  "sourceFile": "./test/lines.source.jpg",
+  "destinationFile": "./literally.anywhere"
+}
