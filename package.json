@@ -18,10 +18,10 @@
     "url": "https://github.com/iFixit/node-markup.git"
   },
   "dependencies": {
-    "fabric": "5.2",
+    "canvas": "2.9.3",
     "gm": "1.23.1",
-    "yargs": "^13.3.2",
-    "canvas": "2.9.3"
+    "fabric": "https://github.com/iFixit/fabric.js.git#try-v521",
+    "yargs": "^13.3.2"
   },
   "version": "0.0.2",
   "scripts": {
