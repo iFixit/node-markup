@@ -68,7 +68,18 @@ function convertMarkupToJSON(markup, infile, outfile, stroke) {
         .filter((_) => _);
 
       instructions.forEach((instruction) => {
-        JSONFromMarkup(instruction, json);
+        const result = parseInstruction(instruction);
+        if (result.block === "crop") {
+          json["instructions"]["crop"] = result.instruction;
+          json["finalDimensions"] = result.instruction["size"];
+        }
+        if (result.block === "draw") {
+          if (!json["instructions"]["draw"]) {
+            json["instructions"]["draw"] = [];
+          }
+          const drawCommand = { [result.id]: result.instruction };
+          json["instructions"]["draw"].push(drawCommand);
+        }
       });
 
       json["sourceFile"] = infile;
