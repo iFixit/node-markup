@@ -20,7 +20,7 @@
   "dependencies": {
     "canvas": "2.9.3",
     "gm": "1.23.1",
-    "fabric": "https://github.com/iFixit/fabric.js.git#v521",
+    "fabric": "https://github.com/iFixit/fabric.js.git#try-v521",
     "yargs": "^13.3.2"
   },
   "version": "0.0.2",
