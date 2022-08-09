@@ -66,7 +66,7 @@ function convertMarkupToJSON(markup, infile, outfile, stroke) {
       var instructions = markup
         .trim()
         .split(";")
-        .filter((_) => _);
+        .filter((x) => x);
 
       instructions.forEach((instruction) => {
         const result = parseInstruction(instruction);
