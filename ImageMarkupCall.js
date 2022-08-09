@@ -122,6 +122,7 @@ function processJSON(json) {
   var canvas = new Fabric.StaticCanvas(null, {
     width: finalSize["width"],
     height: finalSize["height"],
+    renderOnAddRemove: false,
   });
   var builder = ImageMarkupBuilder(canvas);
 
