@@ -14,7 +14,7 @@ const TestCases = [
 const convertMarkupToJSON = require("./markup_to_json");
 
 describe("markup_to_jsonJSON", () => {
-  test("Markup converts to expected JSON", async () => {
+  test("converts markup to expected JSON", async () => {
     TestCases.forEach(async (testcase) => {
       const testMarkup = fs.readFileSync(`./test/${testcase}.markup`, "utf8");
       const expectedJSON = JSON.parse(
