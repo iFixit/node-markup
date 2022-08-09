@@ -119,10 +119,10 @@ function processJSON(json) {
   cleanJSON(json);
 
   var finalSize = json["finalDimensions"];
-  var canvas = Fabric.createCanvasForNode(
-    finalSize["width"],
-    finalSize["height"]
-  );
+  var canvas = new Fabric.StaticCanvas(null, {
+    width: finalSize["width"],
+    height: finalSize["height"],
+  });
   var builder = ImageMarkupBuilder(canvas);
 
   builder.processJSON(json, function () {
