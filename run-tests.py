@@ -106,8 +106,8 @@ def runNode(sourceFilename, destinationFilename, markupFilename):
     markup = readMarkupFile(markupFilename).strip()
 
     cmd = [
-        "bash",
-        "node-markup.sh",
+        "node",
+        "ImageMarkupCall.js",
         "--input",
         sourceFilename,
         "--output",
