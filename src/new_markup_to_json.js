@@ -56,12 +56,16 @@ const MarkupParser = {
 
 function convertMarkupToJSON(markup, infile, outfile, stroke) {
   return new Promise((resolve) => {
-    var json = {};
     GMGetSize(infile).then((size) => {
-      json["dimensions"] = size;
-      json["finalDimensions"] = size;
+      const json = {
+        sourceFile: infile,
+        destinationFile: outfile,
 
-      json["instructions"] = {};
+        dimensions: size,
+        finalDimensions: size,
+
+        instructions: {},
+      };
 
       var instructions = markup
         .trim()
@@ -82,9 +86,6 @@ function convertMarkupToJSON(markup, infile, outfile, stroke) {
           json["instructions"]["draw"].push(drawCommand);
         }
       });
-
-      json["sourceFile"] = infile;
-      json["destinationFile"] = outfile;
 
       if (stroke != null) {
         json.instructions.strokeWidth = stroke;
