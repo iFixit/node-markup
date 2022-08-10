@@ -1,5 +1,6 @@
 const { isNode, cleanJSON } = require("./src/utils");
 const Shapes = require("./shapes");
+const path = require("path");
 
 /**
  * Expects a Fabric.js Canvas
@@ -96,31 +97,28 @@ function ImageMarkupBuilder(fabricCanvas) {
       finalWidth = innerJSON.finalDimensions.width;
       if (isNode) {
         fabricCanvas.setBackgroundColor("#FFFFFF");
-        require("fs").readFile(innerJSON.sourceFile, function (err, blob) {
-          if (err) throw err;
+        var dimensions = innerJSON.dimensions;
+        var img = {
+          width: dimensions.width,
+          height: dimensions.height,
+          originX: "left",
+          originY: "top",
+          src: "file://" + path.resolve(innerJSON.sourceFile),
+        };
 
-          var dimensions = innerJSON.dimensions;
-          var img = {
-            width: dimensions.width,
-            height: dimensions.height,
-            originX: "left",
-            originY: "top",
-            src: blob,
-          };
+        Fabric.Image.fromObject(img, function (fimg, err) {
+          if (!fimg || err) throw err;
+          var top = -imageOffset.y;
+          if (top % 1 != 0) {
+            top -= 0.5;
+          }
+          var left = -imageOffset.x;
+          if (left % 1 != 0) {
+            left -= 0.5;
+          }
 
-          Fabric.Image.fromObject(img, function (fimg) {
-            var top = -imageOffset.y;
-            if (top % 1 != 0) {
-              top -= 0.5;
-            }
-            var left = -imageOffset.x;
-            if (left % 1 != 0) {
-              left -= 0.5;
-            }
-
-            fabricCanvas.add(fimg.set("top", top).set("left", left));
-            applyMarkup(callback);
-          });
+          fabricCanvas.add(fimg.set("top", top).set("left", left));
+          applyMarkup(callback);
         });
       } else {
         throw new Error("Source files not supported on frontend");
