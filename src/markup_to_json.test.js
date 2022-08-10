@@ -1,5 +1,4 @@
 const fs = require("fs");
-const assert = require("node:assert").strict;
 
 const convertMarkupToJSON = require("./markup_to_json");
 
