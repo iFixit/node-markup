@@ -1,3 +1,5 @@
+const { describe, expect, test } = require("@jest/globals");
+
 const fs = require("fs");
 
 const convertMarkupToJSON = require("./markup_to_json");
