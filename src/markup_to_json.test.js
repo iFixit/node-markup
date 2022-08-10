@@ -35,7 +35,7 @@ const expectedJSON = {
 };
 
 describe("markup_to_jsonJSON", () => {
-  test('Markup converts to expected JSON', async () => {
+  test("Markup converts to expected JSON", async () => {
     const testMarkup = fs.readFileSync("./test/993333.markup", "utf8");
     const testJSON = await convertMarkupToJSON(
       testMarkup,
@@ -44,6 +44,5 @@ describe("markup_to_jsonJSON", () => {
     );
 
     expect(testJSON).toEqual(expectedJSON);
-  })
+  });
 });
-
