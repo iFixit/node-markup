@@ -3,19 +3,19 @@ const { describe, expect, test } = require("@jest/globals");
 const fs = require("fs");
 
 const TestCases = [
-  "000066",
-  "00CC00",
-  "66CCFF",
-  "9900CC",
-  "993333",
-  "lines",
-  "simple-lines",
+  ["000066"],
+  ["00CC00"],
+  ["66CCFF"],
+  ["9900CC"],
+  ["993333"],
+  ["lines"],
+  ["simple-lines"],
 ];
 
 const convertMarkupToJSON = require("./markup_to_json");
 
 describe("convertMarkupToJSON", () => {
-  test("converts markup to expected JSON", async () => {
+  test.each(TestCases)("converts markup to expected JSON", async () => {
     TestCases.forEach(async (testcase) => {
       const testMarkup = fs.readFileSync(`./test/${testcase}.markup`, "utf8");
       const expectedJSON = JSON.parse(
@@ -34,7 +34,7 @@ describe("convertMarkupToJSON", () => {
 const newConvertMarkupToJSON = require("./new_markup_to_json");
 
 describe("New Markup parser `newConvertMarkupToJSON`", () => {
-  test("converts to expected JSON", async () => {
+  test.each(TestCases)("converts to expected JSON", async () => {
     TestCases.forEach(async (testcase) => {
       const testMarkup = fs.readFileSync(`./test/${testcase}.markup`, "utf8");
       const expectedJSON = JSON.parse(
