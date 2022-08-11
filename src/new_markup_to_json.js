@@ -1,4 +1,4 @@
-const util = require('util');
+const util = require("util");
 const { Int } = require("./utils");
 const GM = require("gm");
 
@@ -58,43 +58,45 @@ const MarkupParser = {
 };
 
 function convertMarkupToJSON(markup, infile, outfile, stroke) {
-  return GM(infile).sizeAsync().then((size) => {
-    const json = {
-      sourceFile: infile,
-      destinationFile: outfile,
+  return GM(infile)
+    .sizeAsync()
+    .then((size) => {
+      const json = {
+        sourceFile: infile,
+        destinationFile: outfile,
 
-      dimensions: size,
-      finalDimensions: size,
+        dimensions: size,
+        finalDimensions: size,
 
-      instructions: {},
-    };
+        instructions: {},
+      };
 
-    const instructions = markup
-      .trim()
-      .split(";")
-      .filter((x) => x);
+      const instructions = markup
+        .trim()
+        .split(";")
+        .filter((x) => x);
 
-    instructions.forEach((instruction) => {
-      const result = parseInstruction(instruction);
-      if (result.block === "crop") {
-        json["instructions"]["crop"] = result.instruction;
-        json["finalDimensions"] = result.instruction["size"];
-      }
-      if (result.block === "draw") {
-        if (!json["instructions"]["draw"]) {
-          json["instructions"]["draw"] = [];
+      instructions.forEach((instruction) => {
+        const result = parseInstruction(instruction);
+        if (result.block === "crop") {
+          json["instructions"]["crop"] = result.instruction;
+          json["finalDimensions"] = result.instruction["size"];
         }
-        const drawCommand = { [result.id]: result.instruction };
-        json["instructions"]["draw"].push(drawCommand);
+        if (result.block === "draw") {
+          if (!json["instructions"]["draw"]) {
+            json["instructions"]["draw"] = [];
+          }
+          const drawCommand = { [result.id]: result.instruction };
+          json["instructions"]["draw"].push(drawCommand);
+        }
+      });
+
+      if (stroke != null) {
+        json.instructions.strokeWidth = stroke;
       }
+
+      return json;
     });
-
-    if (stroke != null) {
-      json.instructions.strokeWidth = stroke;
-    }
-
-    return json;
-  });
 }
 
 function parseInstruction(instruction) {
