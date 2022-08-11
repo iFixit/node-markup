@@ -1,0 +1,35 @@
+{
+  "dimensions": { "width": 1200, "height": 900 },
+  "finalDimensions": { "width": 100, "height": 100 },
+  "instructions": {
+    "crop": {
+      "from": { "x": 100, "y": 100 },
+      "size": { "width": 100, "height": 100 }
+    },
+    "draw": [
+      {
+        "circle": {
+          "from": { "x": 150, "y": 150 },
+          "radius": 30,
+          "color": "yellow"
+        }
+      },
+      {
+        "rectangle": {
+          "from": { "x": 105, "y": 105 },
+          "size": { "width": 90, "height": 90 },
+          "color": "red"
+        }
+      },
+      {
+        "rectangle": {
+          "from": { "x": 115, "y": 115 },
+          "size": { "width": 70, "height": 70 },
+          "color": "orange"
+        }
+      }
+    ]
+  },
+  "sourceFile": "./test/66CCFF.source.jpg",
+  "destinationFile": "./literally.anywhere"
+}
