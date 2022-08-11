@@ -55,8 +55,7 @@ const MarkupParser = {
 };
 
 function convertMarkupToJSON(markup, infile, outfile, stroke) {
-  return new Promise((resolve) => {
-    GMGetSize(infile).then((size) => {
+    return GMGetSize(infile).then((size) => {
       const json = {
         sourceFile: infile,
         destinationFile: outfile,
@@ -91,8 +90,7 @@ function convertMarkupToJSON(markup, infile, outfile, stroke) {
         json.instructions.strokeWidth = stroke;
       }
 
-      resolve(json);
-    });
+      return json;
   });
 }
 
