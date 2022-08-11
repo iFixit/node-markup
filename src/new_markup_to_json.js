@@ -99,7 +99,7 @@ function convertMarkupToJSON(markup, infile, outfile, stroke) {
 function parseInstruction(instruction) {
   for (const { regex, t } of Object.values(MarkupParser)) {
     const match = regex.exec(instruction);
-    if (match) {
+    if (match && match[0] === instruction) {
       return t(match);
     }
   }
