@@ -12,7 +12,7 @@ const TestCases = [
   ["simple-lines"],
 ];
 
-const convertMarkupToJSON = require("./new_markup_to_json");
+const convertMarkupToJSON = require("./markup_to_json");
 
 describe("New Markup parser `newConvertMarkupToJSON`", () => {
   test.each(TestCases)("converts to expected JSON", async (testcase) => {
