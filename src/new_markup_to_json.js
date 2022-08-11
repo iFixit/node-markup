@@ -1,5 +1,8 @@
+const util = require('util');
 const { Int } = require("./utils");
 const GM = require("gm");
+
+GM.prototype.sizeAsync = util.promisify(GM.prototype.size);
 
 const pos = (x, y) => ({ x: Int(x), y: Int(y) });
 const dim = (x, y) => ({ width: Int(x), height: Int(y) });
@@ -55,7 +58,7 @@ const MarkupParser = {
 };
 
 function convertMarkupToJSON(markup, infile, outfile, stroke) {
-  return GMGetSize(infile).then((size) => {
+  return GM(infile).sizeAsync().then((size) => {
     const json = {
       sourceFile: infile,
       destinationFile: outfile,
@@ -102,17 +105,6 @@ function parseInstruction(instruction) {
     }
   }
   throw `Could not parse markup instruction: '${instruction}'`;
-}
-
-function GMGetSize(infile) {
-  return new Promise((resolve, reject) => {
-    GM(infile).size(function (err, size) {
-      if (err) {
-        reject(err);
-      }
-      resolve(size);
-    });
-  });
 }
 
 module.exports = convertMarkupToJSON;
