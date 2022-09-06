@@ -93,11 +93,14 @@ function ImageMarkupBuilder(fabricCanvas) {
 
       //Apply markup to blank canvas
       applyMarkup(callback);
-    } else {
-      finalWidth = innerJSON.finalDimensions.width;
+      return;
+    }
+
       if (!isNode) {
         throw new Error("Source files not supported on frontend");
       }
+
+      finalWidth = innerJSON.finalDimensions.width;
         fabricCanvas.setBackgroundColor("#FFFFFF");
         var dimensions = innerJSON.dimensions;
         var img = {
@@ -122,7 +125,6 @@ function ImageMarkupBuilder(fabricCanvas) {
           fabricCanvas.add(fimg.set("top", top).set("left", left));
           applyMarkup(callback);
         });
-    }
   }
 
   /**
