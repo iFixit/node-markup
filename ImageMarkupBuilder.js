@@ -110,7 +110,9 @@ function ImageMarkupBuilder(fabricCanvas) {
       applyMarkup(callback);
     } else {
       finalWidth = innerJSON.finalDimensions.width;
-      if (isNode) {
+      if (!isNode) {
+        throw new Error("Source files not supported on frontend");
+      }
         fabricCanvas.setBackgroundColor("#FFFFFF");
         var dimensions = innerJSON.dimensions;
         var img = {
@@ -135,9 +137,6 @@ function ImageMarkupBuilder(fabricCanvas) {
           fabricCanvas.add(fimg.set("top", top).set("left", left));
           applyMarkup(callback);
         });
-      } else {
-        throw new Error("Source files not supported on frontend");
-      }
     }
   }
 
