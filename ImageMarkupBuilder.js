@@ -21,6 +21,21 @@ function ImageMarkupBuilder(fabricCanvas) {
     black: "#000000",
   };
 
+  /**
+   * Translate RGB value to applicable color string. Unknown
+   * RGB values will will become black and a console.error message
+   * will be written.
+   */
+  function translateRGBtoColorString(rgb) {
+    for (var colorString in colorValues) {
+      if (rgb == colorValues[colorString]) {
+        return colorString;
+      }
+    }
+    console.error("No mapping from RGB to Color String Found: " + rgb);
+    return "black";
+  }
+
   // Reference to the json object from processJSON
   var innerJSON;
 
@@ -475,21 +490,6 @@ function ImageMarkupBuilder(fabricCanvas) {
      * to produce the same markup results as represented in this builder.
      */
     getMarkupString: function getMarkupString() {
-      /**
-       * Translate RGB value to applicable color string. Unknown
-       * RGB values will will become black and a console.error message
-       * will be written.
-       */
-      function translateRGBtoColorString(rgb) {
-        for (var colorString in colorValues) {
-          if (rgb == colorValues[colorString]) {
-            return colorString;
-          }
-        }
-        console.error("No mapping from RGB to Color String Found: " + rgb);
-        return "black";
-      }
-
       var markupString = ";";
 
       if (crop) {
