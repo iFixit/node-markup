@@ -108,37 +108,38 @@ function ImageMarkupBuilder(fabricCanvas) {
 
       //Apply markup to blank canvas
       applyMarkup(callback);
-    } else {
-      finalWidth = innerJSON.finalDimensions.width;
-      if (isNode) {
-        fabricCanvas.setBackgroundColor("#FFFFFF");
-        var dimensions = innerJSON.dimensions;
-        var img = {
-          width: dimensions.width,
-          height: dimensions.height,
-          originX: "left",
-          originY: "top",
-          src: "file://" + path.resolve(innerJSON.sourceFile),
-        };
-
-        Fabric.Image.fromObject(img, function (fimg, err) {
-          if (!fimg || err) throw err;
-          var top = -imageOffset.y;
-          if (top % 1 != 0) {
-            top -= 0.5;
-          }
-          var left = -imageOffset.x;
-          if (left % 1 != 0) {
-            left -= 0.5;
-          }
-
-          fabricCanvas.add(fimg.set("top", top).set("left", left));
-          applyMarkup(callback);
-        });
-      } else {
-        throw new Error("Source files not supported on frontend");
-      }
+      return;
     }
+
+    if (!isNode) {
+      throw new Error("Source files not supported on frontend");
+    }
+
+    finalWidth = innerJSON.finalDimensions.width;
+    fabricCanvas.setBackgroundColor("#FFFFFF");
+    var dimensions = innerJSON.dimensions;
+    var img = {
+      width: dimensions.width,
+      height: dimensions.height,
+      originX: "left",
+      originY: "top",
+      src: "file://" + path.resolve(innerJSON.sourceFile),
+    };
+
+    Fabric.Image.fromObject(img, function (fimg, err) {
+      if (!fimg || err) throw err;
+      var top = -imageOffset.y;
+      if (top % 1 != 0) {
+        top -= 0.5;
+      }
+      var left = -imageOffset.x;
+      if (left % 1 != 0) {
+        left -= 0.5;
+      }
+
+      fabricCanvas.add(fimg.set("top", top).set("left", left));
+      applyMarkup(callback);
+    });
   }
 
   /**
