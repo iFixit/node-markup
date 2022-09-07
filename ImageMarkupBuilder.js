@@ -21,6 +21,21 @@ function ImageMarkupBuilder(fabricCanvas) {
     black: "#000000",
   };
 
+  /**
+   * Translate RGB value to applicable color string. Unknown
+   * RGB values will will become black and a console.error message
+   * will be written.
+   */
+  function translateRGBtoColorString(rgb) {
+    for (var colorString in colorValues) {
+      if (rgb == colorValues[colorString]) {
+        return colorString;
+      }
+    }
+    console.error("No mapping from RGB to Color String Found: " + rgb);
+    return "black";
+  }
+
   // Reference to the json object from processJSON
   var innerJSON;
 
@@ -364,36 +379,6 @@ function ImageMarkupBuilder(fabricCanvas) {
     },
 
     /**
-     * Adds and tracks a given data object following the ShapeData schema
-     * to the fabric canvas. This ignores the "type" attribute of the object
-     * and just adds a circle. To be deprecated by addShape().
-     *
-     * @return a reference to the tracked shape.
-     */
-    addCircle: function addCircle(data) {
-      console.warn("Deprecated function: addCircle(). Use addShape() instead.");
-
-      if (data.type !== "circle") data.type = "circle";
-      return this.addShape(data);
-    },
-
-    /**
-     * Adds and tracks a given data object following the ShapeData schema
-     * to the fabric canvas. This ignores the "type" attribute of the object
-     * and just adds a rectangle. To be deprecated by addShape().
-     *
-     * @return a reference to the tracked shape.
-     */
-    addRectangle: function addRectangle(data) {
-      console.warn(
-        "Deprecated function: addRectangle(). Use addShape() instead."
-      );
-
-      if (data.type !== "rectangle") data.type = "rectangle";
-      return this.addShape(data);
-    },
-
-    /**
      * Sets the color of a tracked shape.
      */
     setColor: function setColor(shape, colorName) {
@@ -505,21 +490,6 @@ function ImageMarkupBuilder(fabricCanvas) {
      * to produce the same markup results as represented in this builder.
      */
     getMarkupString: function getMarkupString() {
-      /**
-       * Translate RGB value to applicable color string. Unknown
-       * RGB values will will become black and a console.error message
-       * will be written.
-       */
-      function translateRGBtoColorString(rgb) {
-        for (var colorString in colorValues) {
-          if (rgb == colorValues[colorString]) {
-            return colorString;
-          }
-        }
-        console.error("No mapping from RGB to Color String Found: " + rgb);
-        return "black";
-      }
-
       var markupString = ";";
 
       if (crop) {
