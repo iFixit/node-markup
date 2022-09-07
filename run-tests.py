@@ -120,6 +120,7 @@ def runNode(sourceFilename, destinationFilename, markupFilename):
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     (out, err) = proc.communicate()
     out = out.decode().strip()
+    err = err.decode().strip()
 
     if proc.returncode != 0:
         errMsg = "node-markup invocation failed"
@@ -131,6 +132,8 @@ def runNode(sourceFilename, destinationFilename, markupFilename):
         print("After:  ", out)
         errMsg = "node-markup modified the markup string"
         raise RuntimeError(errMsg)
+    if err != "":
+        print(err)
 
 
 if __name__ == "__main__":
