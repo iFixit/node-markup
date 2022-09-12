@@ -4,7 +4,7 @@ var Arrow = Fabric.util.createClass(require("./line").klass, {
   type: "arrow",
   shapeName: "arrow",
 
-  _stroke: function (ctx) {
+  _renderStroke: function (ctx) {
     var angle = this._getAngle();
     var rad = this._getLength();
     var canvasSize = this._canvasSize();
@@ -20,7 +20,7 @@ var Arrow = Fabric.util.createClass(require("./line").klass, {
     ctx.lineTo(0, 0);
     ctx.lineTo(x2, y2);
 
-    this.callSuper("_stroke", ctx);
+    this.callSuper("_renderStroke", ctx);
   },
 });
 
