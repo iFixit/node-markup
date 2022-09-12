@@ -239,6 +239,7 @@ function ImageMarkupBuilder(fabricCanvas) {
       height: shape.size.height,
       borderWidth: shape.stroke,
       stroke: colorValues[shape.color],
+      strokeWidth: shape.strokeWidth,
       color: shape.color,
     };
 
@@ -267,6 +268,7 @@ function ImageMarkupBuilder(fabricCanvas) {
     var line = {
       borderWidth: shape.stroke,
       stroke: colorValues[shape.color],
+      strokeWidth: shape.strokeWidth,
       color: shape.color,
     };
 
@@ -300,6 +302,7 @@ function ImageMarkupBuilder(fabricCanvas) {
       radius: shape.radius,
       borderWidth: shape.stroke,
       stroke: colorValues[shape.color],
+      strokeWidth: shape.strokeWidth,
       color: shape.color,
     };
     circle.left *= resizeRatio;
