@@ -230,16 +230,15 @@ function ImageMarkupBuilder(fabricCanvas) {
   }
 
   function drawRectangle(shape) {
-    shape.stroke = getStrokeWidth(finalWidth);
+    shape.strokeWidth = getStrokeWidth(finalWidth);
 
     var rect = {
       left: shape.from.x - imageOffset.x,
       top: shape.from.y - imageOffset.y,
       width: shape.size.width,
       height: shape.size.height,
-      borderWidth: shape.stroke,
       stroke: colorValues[shape.color],
-      color: shape.color,
+      strokeWidth: shape.strokeWidth,
     };
 
     //Fabric調整
@@ -262,12 +261,11 @@ function ImageMarkupBuilder(fabricCanvas) {
   }
 
   function drawLineBasedShape(klass, shape) {
-    shape.stroke = getStrokeWidth(finalWidth);
+    shape.strokeWidth = getStrokeWidth(finalWidth);
 
     var line = {
-      borderWidth: shape.stroke,
       stroke: colorValues[shape.color],
-      color: shape.color,
+      strokeWidth: shape.strokeWidth,
     };
 
     var points = [
@@ -292,15 +290,14 @@ function ImageMarkupBuilder(fabricCanvas) {
   }
 
   function drawCircle(shape) {
-    shape.stroke = getStrokeWidth(finalWidth);
+    shape.strokeWidth = getStrokeWidth(finalWidth);
 
     var circle = {
       left: shape.from.x - imageOffset.x,
       top: shape.from.y - imageOffset.y,
       radius: shape.radius,
-      borderWidth: shape.stroke,
       stroke: colorValues[shape.color],
-      color: shape.color,
+      strokeWidth: shape.strokeWidth,
     };
     circle.left *= resizeRatio;
     circle.top *= resizeRatio;
