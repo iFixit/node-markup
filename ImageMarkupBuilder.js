@@ -237,7 +237,6 @@ function ImageMarkupBuilder(fabricCanvas) {
       top: shape.from.y - imageOffset.y,
       width: shape.size.width,
       height: shape.size.height,
-      borderWidth: shape.stroke,
       stroke: colorValues[shape.color],
       strokeWidth: shape.strokeWidth,
       color: shape.color,
@@ -266,7 +265,6 @@ function ImageMarkupBuilder(fabricCanvas) {
     shape.strokeWidth = getStrokeWidth(finalWidth);
 
     var line = {
-      borderWidth: shape.stroke,
       stroke: colorValues[shape.color],
       strokeWidth: shape.strokeWidth,
       color: shape.color,
@@ -300,7 +298,6 @@ function ImageMarkupBuilder(fabricCanvas) {
       left: shape.from.x - imageOffset.x,
       top: shape.from.y - imageOffset.y,
       radius: shape.radius,
-      borderWidth: shape.stroke,
       stroke: colorValues[shape.color],
       strokeWidth: shape.strokeWidth,
       color: shape.color,
