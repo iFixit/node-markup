@@ -4,6 +4,8 @@ module.exports = {
   // in percentage of borderWidth
   outlineWidth: 0.2,
   outlineStyle: "#FFF",
+  strokeLineCap: "round",
+  strokeLineJoin: "round",
 
   /**
    * Provide a custom stroke function that draws a fat white line THEN a
@@ -15,6 +17,10 @@ module.exports = {
     function scale(x) {
       return Math.round(x) / myScale;
     }
+
+    ctx.lineCap = this.strokeLineCap;
+    ctx.lineJoin = this.strokeLineJoin;
+
     ctx.lineWidth = scale(this.borderWidth + outline);
     ctx.strokeStyle = this.outlineStyle;
     ctx.stroke();
