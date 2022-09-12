@@ -230,7 +230,7 @@ function ImageMarkupBuilder(fabricCanvas) {
   }
 
   function drawRectangle(shape) {
-    shape.stroke = getStrokeWidth(finalWidth);
+    shape.strokeWidth = getStrokeWidth(finalWidth);
 
     var rect = {
       left: shape.from.x - imageOffset.x,
@@ -262,7 +262,7 @@ function ImageMarkupBuilder(fabricCanvas) {
   }
 
   function drawLineBasedShape(klass, shape) {
-    shape.stroke = getStrokeWidth(finalWidth);
+    shape.strokeWidth = getStrokeWidth(finalWidth);
 
     var line = {
       borderWidth: shape.stroke,
@@ -292,7 +292,7 @@ function ImageMarkupBuilder(fabricCanvas) {
   }
 
   function drawCircle(shape) {
-    shape.stroke = getStrokeWidth(finalWidth);
+    shape.strokeWidth = getStrokeWidth(finalWidth);
 
     var circle = {
       left: shape.from.x - imageOffset.x,
