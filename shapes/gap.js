@@ -6,7 +6,7 @@ var Gap = Fabric.util.createClass(require("./line").klass, {
   // Min and Max size to enforce (false == no enforcement)
   sizeLimits: [0.03, 0.95],
 
-  _stroke: function (ctx) {
+  _renderStroke: function (ctx) {
     var angle = this._getAngle();
     var canvasSize = this._canvasSize();
 
@@ -23,7 +23,7 @@ var Gap = Fabric.util.createClass(require("./line").klass, {
     ctx.moveTo(x, y);
     ctx.lineTo(x2, y2);
 
-    this.callSuper("_stroke", ctx);
+    this.callSuper("_renderStroke", ctx);
   },
 });
 
