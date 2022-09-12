@@ -9,7 +9,7 @@ module.exports = {
    * Provide a custom stroke function that draws a fat white line THEN a
    * narrower colored line on top.
    */
-  _stroke: function (ctx) {
+  _renderStroke: function (ctx) {
     var myScale = this.scaleX;
     var outline = this._outlineWidth();
     function scale(x) {
