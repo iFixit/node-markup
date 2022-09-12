@@ -239,7 +239,6 @@ function ImageMarkupBuilder(fabricCanvas) {
       height: shape.size.height,
       stroke: colorValues[shape.color],
       strokeWidth: shape.strokeWidth,
-      color: shape.color,
     };
 
     //Fabric調整
@@ -267,7 +266,6 @@ function ImageMarkupBuilder(fabricCanvas) {
     var line = {
       stroke: colorValues[shape.color],
       strokeWidth: shape.strokeWidth,
-      color: shape.color,
     };
 
     var points = [
@@ -300,7 +298,6 @@ function ImageMarkupBuilder(fabricCanvas) {
       radius: shape.radius,
       stroke: colorValues[shape.color],
       strokeWidth: shape.strokeWidth,
-      color: shape.color,
     };
     circle.left *= resizeRatio;
     circle.top *= resizeRatio;
