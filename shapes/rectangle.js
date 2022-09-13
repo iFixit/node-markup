@@ -12,7 +12,6 @@ var Rectangle = Fabric.util.createClass(Fabric.Rect, {
   hasRotatingPoint: false,
   hasBorders: false,
   fill: "transparent",
-  strokeLineJoin: "round",
 
   // New fields.
   shapeName: "rectangle",

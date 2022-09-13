@@ -6,8 +6,6 @@ var Line = Fabric.util.createClass(Fabric.Line, {
   lockRotation: true,
   transparentCorners: false,
   hasRotatingPoint: false,
-  strokeLineCap: "round",
-  strokeLineJoin: "round",
   fill: "transparent",
 
   // New fields.
