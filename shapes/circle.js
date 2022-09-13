@@ -9,7 +9,6 @@ var Circle = Fabric.util.createClass(Fabric.Circle, {
   originY: "center",
   lockRotation: true,
   transparentCorners: false,
-  hasRotatingPoint: false,
   lockUniScaling: true,
   fill: "transparent",
   centeredScaling: true,
