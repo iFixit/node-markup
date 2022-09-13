@@ -459,7 +459,7 @@ function ImageMarkupBuilder(fabricCanvas) {
     processJSON: function processJSON(json, callback) {
       //Make sure not to render every addition on server end
       fabricCanvas.renderOnAddition = !isNode;
-      fabricCanvas.uniScaleTransform = true;
+      fabricCanvas.uniformScaling = true;
 
       cleanJSON(json);
 
