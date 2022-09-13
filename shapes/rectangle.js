@@ -79,6 +79,11 @@ var Rectangle = Fabric.util.createClass(Fabric.Rect, {
       this.height += partialY * 2;
     }
 
+    const offFactor = this.borderWidth / 2.0;
+
+    this.top -= offFactor;
+    this.left -= offFactor;
+
     callback.call(this);
 
     this.width = old.w;

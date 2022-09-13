@@ -10,6 +10,15 @@ var Line = Fabric.util.createClass(Fabric.Line, {
   // New fields.
   shapeName: "line",
   sizeLimits: [0.04, 0.4],
+
+  render: function (ctx) {
+    const offFactor = this.borderWidth / 2.0;
+
+    this.top -= offFactor;
+    this.left -= offFactor;
+
+    this.callSuper("render", ctx);
+  },
 });
 
 var proto = Line.prototype;
