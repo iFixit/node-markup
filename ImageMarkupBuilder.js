@@ -208,7 +208,7 @@ function ImageMarkupBuilder(fabricCanvas) {
     fabricCanvas.renderAll();
     var outstream = require("fs").createWriteStream(innerJSON.destinationFile),
       stream = fabricCanvas.createJPEGStream({
-        quality: 93,
+        quality: 0.93,
         progressive: true,
       });
 
