@@ -6,6 +6,7 @@ var Line = Fabric.util.createClass(Fabric.Line, {
   lockRotation: true,
   transparentCorners: false,
   fill: "transparent",
+  objectCaching: false,
 
   // New fields.
   shapeName: "line",

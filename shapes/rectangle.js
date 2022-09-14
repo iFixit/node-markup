@@ -11,6 +11,7 @@ var Rectangle = Fabric.util.createClass(Fabric.Rect, {
   transparentCorners: true,
   hasBorders: false,
   fill: "transparent",
+  objectCaching: false,
 
   // New fields.
   shapeName: "rectangle",

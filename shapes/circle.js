@@ -11,6 +11,7 @@ var Circle = Fabric.util.createClass(Fabric.Circle, {
   transparentCorners: false,
   fill: "transparent",
   centeredScaling: true,
+  objectCaching: false,
 
   // New fields.
   shapeName: "circle",
