@@ -5,12 +5,21 @@ var Line = Fabric.util.createClass(Fabric.Line, {
   type: "line",
   lockRotation: true,
   transparentCorners: false,
-  hasRotatingPoint: false,
   fill: "transparent",
+  objectCaching: false,
 
   // New fields.
   shapeName: "line",
   sizeLimits: [0.04, 0.4],
+
+  render: function (ctx) {
+    const offFactor = this.borderWidth / 2.0;
+
+    this.top -= offFactor;
+    this.left -= offFactor;
+
+    this.callSuper("render", ctx);
+  },
 });
 
 var proto = Line.prototype;

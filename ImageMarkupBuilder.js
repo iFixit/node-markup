@@ -206,18 +206,20 @@ function ImageMarkupBuilder(fabricCanvas) {
    */
   function writeCanvas(callback) {
     fabricCanvas.renderAll();
-    var outstream = require("fs").createWriteStream(innerJSON.destinationFile),
-      stream = fabricCanvas.createJPEGStream({
-        quality: 93,
-        progressive: true,
-      });
+    const outstream = require("fs").createWriteStream(
+      innerJSON.destinationFile
+    );
 
-    stream.on("data", function (chunk) {
-      outstream.write(chunk);
+    const stream = fabricCanvas.createJPEGStream({
+      quality: 0.93,
+      progressive: true,
     });
+
     stream.on("end", function () {
       callback(fabricCanvas);
     });
+
+    stream.pipe(outstream);
   }
 
   /**
@@ -457,7 +459,7 @@ function ImageMarkupBuilder(fabricCanvas) {
     processJSON: function processJSON(json, callback) {
       //Make sure not to render every addition on server end
       fabricCanvas.renderOnAddition = !isNode;
-      fabricCanvas.uniScaleTransform = true;
+      fabricCanvas.uniformScaling = true;
 
       cleanJSON(json);
 

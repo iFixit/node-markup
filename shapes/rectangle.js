@@ -9,9 +9,9 @@ var Rectangle = Fabric.util.createClass(Fabric.Rect, {
   originY: "top",
   lockRotation: true,
   transparentCorners: true,
-  hasRotatingPoint: false,
   hasBorders: false,
   fill: "transparent",
+  objectCaching: false,
 
   // New fields.
   shapeName: "rectangle",
@@ -79,6 +79,11 @@ var Rectangle = Fabric.util.createClass(Fabric.Rect, {
       this.top -= partialY;
       this.height += partialY * 2;
     }
+
+    const offFactor = this.borderWidth / 2.0;
+
+    this.top -= offFactor;
+    this.left -= offFactor;
 
     callback.call(this);
 
