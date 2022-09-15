@@ -3,16 +3,21 @@ import { useRef, useEffect } from "react";
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
+import * as Fabric from '../../node_modules/fabric'
+import * as ImageMarkup from '../../ImageMarkupBuilder.js'
 
 const Canvas = (props) => {
    const canvasRef = useRef(null);
 
    useEffect(() => {
      const canvas = canvasRef.current;
-     const context = canvas.getContext("2d");
-     //Our first draw
-     context.fillStyle = "#F00000";
-     context.fillRect(0, 0, context.canvas.width / 2, context.canvas.height / 2);
+     const fabric = new Fabric.fabric.Canvas(canvasRef.current, {
+      hoverCursor: 'pointer',
+      moveCursor: 'move',
+      defaultCursor: 'crosshair',
+
+     });
+     ImageMarkup.Builder(fabric);
    }, []);
 
    return (
