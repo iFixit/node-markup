@@ -3,6 +3,7 @@ const Shapes = require("./shapes");
 const path = require("path");
 
 const Fabric = require("fabric").fabric;
+module.exports.Fabric = Fabric;
 
 /**
  * Expects a Fabric.js Canvas
