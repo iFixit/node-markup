@@ -17,4 +17,4 @@ RUN npm install
 COPY . .
 
 RUN npm run test
-RUN ./run-tests.py || true
+RUN ./run-tests.py
