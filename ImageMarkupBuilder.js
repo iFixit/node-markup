@@ -9,7 +9,6 @@ module.exports.Fabric = Fabric;
  * Expects a Fabric.js Canvas
  */
 function ImageMarkupBuilder(fabricCanvas) {
-
   var colorValues = {
     red: "#C1280B",
     orange: "#FF9024",
