@@ -3,6 +3,8 @@ var convertMarkupToJSON = require("./src/markup_to_json");
 var ImageMarkupBuilder = require("./ImageMarkupBuilder").Builder;
 var Fabric = require("fabric").fabric;
 
+const path = require("path");
+
 const RequiredCommands =
   "Invalid usage: Please provide exactly one of the `markup` or the `json` commands";
 var yargs = require("yargs")
@@ -117,6 +119,10 @@ function shimForFlags(argv) {
 
 function processJSON(json) {
   cleanJSON(json);
+
+  if (json.sourceFile) {
+    json.sourceFile = `file://${path.resolve(json.sourceFile)}`;
+  }
 
   var finalSize = json["finalDimensions"];
   var canvas = new Fabric.StaticCanvas(null, {
