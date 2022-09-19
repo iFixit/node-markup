@@ -2,12 +2,13 @@ const { isNode, cleanJSON } = require("./src/utils");
 const Shapes = require("./shapes");
 const path = require("path");
 
+const Fabric = require("fabric").fabric;
+module.exports.Fabric = Fabric;
+
 /**
  * Expects a Fabric.js Canvas
  */
 function ImageMarkupBuilder(fabricCanvas) {
-  var Fabric = require("fabric").fabric;
-
   var colorValues = {
     red: "#C1280B",
     orange: "#FF9024",
