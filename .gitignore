@@ -4,3 +4,4 @@ test/*.test.jpg
 
 # Ignore vim swap files
 .*.sw?
+package-lock.json
